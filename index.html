@@ -10,6 +10,8 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="dialogue.css" />
+    <script src="dialogues.js" defer></script>
     <script src="teaching-media.js" defer></script>
     <script src="lessons.js" defer></script>
     <script src="app.js" defer></script>
@@ -33,8 +35,8 @@
         <div class="start-story">
           <p class="eyebrow"><span class="zh">8–12岁 · 游戏化财商与商业管理</span><span class="en">AGES 8–12 · MONEY & BUSINESS GAME</span></p>
           <h1><span class="zh">欢迎来到<br /><em>财商经营岛</em></span><span class="en">Welcome to<br /><em>Money Quest Island</em></span></h1>
-          <p class="start-lede"><span class="zh">如果只有10枚星币，先买什么呢？和小芽一起数一数、选一选，从生活里的小问题开始，慢慢学会照顾自己的钱。</span><span class="en">If you had just 10 coins, what would you buy first? Count and choose with Sunny. Start with small everyday questions and learn to look after your money.</span></p>
-          <div class="mascot-welcome"><img src="sunny-mascot.png" width="96" height="96" alt="" /><p><span class="zh">我是小芽！我会讲给你听，<br />再陪你动手试一试。</span><span class="en">I'm Sunny! Listen to a story,<br />then let's try it together.</span></p></div>
+          <p class="start-lede"><span class="zh">10 枚星币，先买什么？<br />和小芽、团团一起聊一聊，再动手试试。</span><span class="en">10 coins. What comes first?<br />Chat with Sunny and Tuan, then have a go.</span></p>
+          <div class="mascot-welcome"><span class="sunny-sprite" data-mood="welcome" aria-hidden="true"></span><p><span class="zh">小芽：慢慢来，我陪你！<br />团团：咦，钱够不够呀？</span><span class="en">Sunny: Take your time. I'm here!<br />Tuan: Hmm, do we have enough?</span></p><img class="tuan-welcome" src="tuan-buddy.png" width="96" height="96" alt="" /></div>
           <div class="game-loop" aria-label="Game loop">
             <span>📚 <b><span class="zh">学习</span><span class="en">Learn</span></b></span>
             <i>→</i><span>🎮 <b><span class="zh">挑战</span><span class="en">Play</span></b></span>
@@ -189,7 +191,7 @@
         <aside class="study-clock"><span id="study-time">本次 0:00</span><button type="button" id="pause-study">暂停休息</button></aside>
       </header>
       <p class="break-reminder" id="break-reminder" hidden role="status"><span class="zh">已经学了一会儿，可以保存进度，起来活动一下。不用今天学完。</span><span class="en">You have been learning for a while. Save your place and stretch; no need to finish today.</span></p>
-      <div id="study-pause" class="study-pause" hidden><div role="dialog" aria-modal="true" aria-labelledby="pause-title"><img src="sunny-mascot.png" width="128" height="128" alt="" /><h2 id="pause-title">休息一下，进度帮你留着</h2><button class="primary-button" id="resume-study" type="button">我准备好了，继续</button></div></div>
+      <div id="study-pause" class="study-pause" hidden><div role="dialog" aria-modal="true" aria-labelledby="pause-title"><span class="sunny-sprite" data-mood="gentle" aria-hidden="true"></span><h2 id="pause-title">休息一下，进度帮你留着</h2><button class="primary-button" id="resume-study" type="button">我准备好了，继续</button></div></div>
 
       <main class="mission-content">
         <section class="mission-screen" id="guided-lesson" data-mission="guided"></section>
@@ -223,8 +225,9 @@
         </section>
 
         <section class="mission-screen" id="mission-4" data-mission="mission-4">
-          <header class="mission-title purple"><span>📈</span><div><p><span class="zh">任务04 · 市场实验室</span><span class="en">MISSION 04 · MARKET LABORATORY</span></p><h1><span class="zh">买股票，就是买下一小份公司</span><span class="en">A share is a tiny piece of a company</span></h1><p><span class="zh">使用100枚实验币观察价格变化。这些公司和价格全部是虚构的。</span><span class="en">Use 100 lab coins to observe price changes. Every company and price is fictional.</span></p></div></header>
-          <div class="market-safety"><span>🛡️</span><p><strong><span class="zh">安全实验</span><span class="en">SAFE SIMULATION</span></strong><span class="zh">没有真实股票、真实账户或真实收益。实验结果不能预测未来。</span><span class="en">No real stocks, accounts or returns. Simulation results cannot predict the future.</span></p></div>
+          <header class="mission-title purple"><span>📈</span><div><p><span class="zh">选学 · 市场实验室</span><span class="en">OPTIONAL · MARKET LAB</span></p><h1><span class="zh">公司的价格会变吗？</span><span class="en">Can a company's share price change?</span></h1></div></header>
+          <div class="dialogue-slot" id="market-dialogue"></div>
+          <div class="market-safety"><span>🛡️</span><p><span class="zh">全是虚构 · 不用真钱 · 不预测真实投资</span><span class="en">All pretend · No real money · Not an investment prediction</span></p></div>
           <div class="market-wallet"><div><span><span class="zh">可用实验币</span><span class="en">LAB CASH</span></span><strong id="market-cash">100 🪙</strong></div><div><span><span class="zh">组合当前价值</span><span class="en">PORTFOLIO VALUE</span></span><strong id="portfolio-value">100 🪙</strong></div><div><span><span class="zh">持有公司</span><span class="en">COMPANIES OWNED</span></span><strong id="company-count">0 / 3</strong></div></div>
           <div class="company-grid" id="company-grid"></div>
           <div class="market-event" id="market-event" hidden><span>📰</span><div><strong><span class="zh">市场一周后</span><span class="en">ONE MARKET WEEK LATER</span></strong><p id="market-event-copy"></p></div></div>

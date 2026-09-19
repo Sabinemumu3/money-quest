@@ -256,7 +256,7 @@
     $("#player-name").textContent = name;
     $("#player-avatar").textContent = data.emoji;
     $("#shop-name").textContent = isEnglish() ? data.shopEn : data.shopZh;
-    $("#shop-brief").textContent = t("小芽陪你从第一枚星币开始。先看一看，一起做一做，再试试自己的办法。今天学一小课就好。", "Sunny will help, one coin at a time. Watch, try together, then have your own turn. One small lesson is enough for today.");
+    $("#shop-brief").textContent = t("小芽：今天发现一点点就好！团团：一起聊聊，再试试吧。", "Sunny: One little discovery is plenty today! Tuan: Let's chat, then try it.");
     $("#store-sign").textContent = data.sign;
     $("#store-emoji").textContent = data.emoji;
   }
@@ -654,6 +654,21 @@
       setMessage($("#market-feedback"), `一周后组合价值为${portfolioValue()}实验币。价格变化不等于保证未来结果。`, `After one week, the portfolio is worth ${portfolioValue()} lab coins. Past movement does not guarantee future results.`, true);
     }
     $$('[data-risk-answer]').forEach((button) => button.classList.toggle("is-selected", state.market.riskAnswer === button.dataset.riskAnswer));
+    renderMarketDialogue();
+  }
+
+  function renderMarketDialogue() {
+    if (activeMission !== "mission-4") return;
+    const screen = $("#mission-4"), key = `${state.language}:${state.market.ran}:${state.market.riskAnswer || ""}`;
+    if (screen.dataset.dialogueKey === key && screen.querySelector(".character-conversation")) return;
+    screen.dataset.dialogueKey = key;
+    if (state.market.dialogueKey !== key) { state.market.dialogueKey = key; state.market.dialogue = 0; }
+    window.TeachingMedia.mount(screen, {
+      english: isEnglish(), stage: 0, text: "",
+      dialogue: window.MoneyDialogues.market(isEnglish(), state.market.ran, portfolioValue(), state.market.riskAnswer),
+      dialogueIndex: state.market.dialogue || 0,
+      onDialogueChange(index) { state.market.dialogue = index; saveState(); },
+    });
   }
 
   function tradeShare(key, amount) {
@@ -684,6 +699,7 @@
 
     $$('[data-risk-answer]').forEach((button) => {
       button.addEventListener("click", () => {
+        if (!state.market.ran || state.completed["mission-4"]) return;
         state.market.riskAnswer = button.dataset.riskAnswer;
         saveState();
         renderMarket();

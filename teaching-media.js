@@ -56,7 +56,7 @@
   }
   const savePrefs = () => { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* Session still works. */ } };
   const reduced = () => prefs.reduce || motionQuery.matches;
-  const supported = () => "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+  const supported = () => Boolean(window.speechSynthesis) && typeof window.SpeechSynthesisUtterance === "function";
   const ids = (start, end, prefix = "coin") => Array.from({ length: end - start }, (_, i) => `${prefix}-${start + i}`);
   const group = (label, tokens, unit = "coin") => ({ label, tokens, unit });
   const h = (text) => String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -133,11 +133,23 @@
     dispose();
     const t = (zh, en) => config.english ? en : zh;
     const frames = config.stage === 1 ? framesFor(config.lessonId, config.demo, t, config.text) : [];
+    const turns = frames.length ? window.MoneyDialogues.demo(config, frames) : config.dialogue || [];
+    let turnIndex = Math.max(0, Math.min(turns.length - 1, config.dialogueIndex || 0));
+    const conversation = document.createElement("section");
+    conversation.className = "character-conversation";
+    conversation.setAttribute("aria-label", t("小芽和团团的对话", "Sunny and Tuan's conversation"));
+    conversation.innerHTML = `<div class="dialogue-cast" aria-hidden="true"><span class="dialogue-actor actor-sunny"><span class="sunny-sprite" data-mood="welcome"></span><span>${t("小芽", "Sunny")}</span></span><span class="cast-caption">${t("小小问题 · 一起发现", "Little questions · Big discoveries")}</span><span class="dialogue-actor actor-tuan"><img src="tuan-buddy.png" width="128" height="128" alt="" /><span>${t("团团", "Tuan")}</span></span></div><div class="dialogue-bubble" role="status" aria-atomic="true"><strong class="dialogue-speaker"></strong><p class="dialogue-line"></p></div><div class="dialogue-controls"><button type="button" data-dialogue="back" aria-label="${t("上一句", "Previous line")}">←</button><span class="dialogue-count"></span><button type="button" data-dialogue="next">${t("接着聊 →", "Next line →")}</button></div>`;
+    (root.querySelector(".dialogue-slot") || root).append(conversation);
     const bar = document.createElement("section");
     bar.className = "narration-bar";
     bar.setAttribute("aria-label", t("讲解播放设置", "Explanation playback controls"));
     bar.innerHTML = `<div class="narration-controls"><button type="button" data-media="listen" class="listen-button">▶ ${t("听小芽讲", "Listen to Sunny")}</button><button type="button" data-media="stop" disabled>${t("停止朗读", "Stop voice")}</button><label>${t("语速", "Speed")}<select data-media="rate"><option value="0.7">${t("更慢", "Slower")}</option><option value="0.85">${t("慢慢讲", "Gentle")}</option><option value="0.95">${t("轻松聊", "Easy pace")}</option><option value="1">${t("正常", "Normal")}</option></select></label><label><input type="checkbox" data-media="muted" />${t("静音", "Mute")}</label><label><input type="checkbox" data-media="reduce" />${t("减少动画", "Less motion")}</label></div><details class="voice-options"><summary>${t("换个声音试试", "Try another voice")}</summary><div class="narration-controls"><label>${t("讲述方式", "Delivery")}<select data-media="style"><option value="warm">${t("小芽讲故事", "Sunny's story pace")}</option><option value="plain">${t("平稳朗读", "Steady reading")}</option></select></label><label class="voice-picker">${t("设备声线", "Device voice")}<select data-media="voice"></select></label></div><p>${t("讲故事会留出思考停顿，轻轻变化语调。音色取决于设备，这还不是专门录制的情感配音；部分声音由浏览器联网提供。", "Story mode leaves thinking pauses and gently varies pitch. Voices depend on your device; this is not a specially recorded character voice. Some browser voices use the network.")}</p></details><p class="voice-status" role="status"></p><p class="spoken-caption" hidden></p>`;
-    root.querySelector(".lesson-teacher").after(bar);
+    conversation.after(bar);
+    // Leave two clear playback buttons; less-used settings stay tucked away.
+    const settings = bar.querySelector(".voice-options .narration-controls");
+    [...bar.querySelector(".narration-controls").querySelectorAll("label")].forEach(label => settings.append(label));
+    bar.querySelector(".voice-options summary").textContent = t("声音与动画设置", "Voice & motion settings");
+    bar.querySelector(".voice-options").append(bar.querySelector(".voice-status"));
     const $ = sel => bar.querySelector(sel);
     $('[data-media="rate"]').value = String(prefs.rate);
     $('[data-media="style"]').value = prefs.style;
@@ -148,6 +160,22 @@
     $('[data-media="reduce"]').disabled = motionQuery.matches;
     let index = 0, timer = null, speechWatch = null, speechPause = null, speechRun = 0, speaking = false, playing = false, utterance = null, live = true;
     let animations = [], diagram = null;
+
+    function showTurn(next, animate = true) {
+      if (!turns.length) return;
+      turnIndex = Math.max(0, Math.min(turns.length - 1, next));
+      const turn = turns[turnIndex];
+      conversation.dataset.speaker = turn.who;
+      conversation.querySelector(".dialogue-speaker").textContent = turn.who === "tuan" ? t("团团", "Tuan") : t("小芽", "Sunny");
+      conversation.querySelector(".dialogue-line").textContent = turn.text;
+      conversation.querySelector(".sunny-sprite").dataset.mood = turn.mood || "welcome";
+      conversation.querySelector(".dialogue-count").textContent = `${turnIndex + 1} / ${turns.length}`;
+      conversation.querySelector('[data-dialogue="back"]').disabled = turnIndex === 0;
+      conversation.querySelector('[data-dialogue="next"]').disabled = turnIndex === turns.length - 1;
+      conversation.querySelector('[data-dialogue="next"]').textContent = turnIndex === turns.length - 1 ? t("轮到你啦 ✓", "Your turn ✓") : t("接着聊 →", "Next line →");
+      if (turn.frame !== undefined) showFrame(turn.frame, animate);
+      config.onDialogueChange?.(turnIndex, turnIndex === turns.length - 1);
+    }
 
     const voiceKey = v => `${v.voiceURI || v.name || "voice"}|${v.lang}`;
     function availableVoices() {
@@ -163,7 +191,10 @@
       const candidates = availableVoices();
       return candidates.find(v => voiceKey(v) === prefs.voices[config.english ? "en" : "zh"]) || candidates.sort((a, b) => voiceScore(b) - voiceScore(a))[0] || null;
     }
-    function status(text) { $(".voice-status").textContent = text; }
+    function status(text) {
+      $(".voice-status").textContent = text;
+      if (/没有|未能|不支持|等待|没有成功|did not|not support|unavailable|No English|Waiting for/i.test(text)) $(".voice-options").open = true;
+    }
     function refreshVoices() {
       if (!live || speaking) return;
       const available = selectedVoice();
@@ -213,7 +244,7 @@
       if (supported()) window.speechSynthesis.cancel();
       utterance = null; root.classList.remove("is-narrating");
       $('[data-media="stop"]').disabled = true;
-      $('[data-media="listen"]').textContent = `▶ ${t("听小芽讲", "Listen to Sunny")}`;
+      $('[data-media="listen"]').textContent = `▶ ${t("听她们聊", "Listen to the chat")}`;
     }
     function stop(message) {
       clearTimeout(timer); timer = null; playing = false; cancelSpeech(); stopChime(); finishMotion(); updateAnimationButtons();
@@ -224,7 +255,8 @@
       const voice = selectedVoice();
       if (prefs.muted || !supported()) { refreshVoices(); return; }
       if (!voice) { status(t("这个设备还没有可用的中文声音。可以用无声演示，或在系统设置中安装中文语音后重试。", "No English voice is available on this device. Use the silent demonstration, or install an English system voice and try again.")); return; }
-      const sequence = frames.length ? frames.map((f, i) => ({ text: f.caption, frame: i })) : config.text.split(/(?<=[。！？.!?])\s*/u).filter(Boolean).map(text => ({ text }));
+      const start = turnIndex === turns.length - 1 ? 0 : turnIndex;
+      const sequence = turns.length ? turns.slice(start).map((part, i) => ({ ...part, turn: start + i })) : [{ text: config.text }];
       if (!sequence.length) return;
       const run = ++speechRun;
       speaking = true;
@@ -234,19 +266,20 @@
         if (!live || run !== speechRun) return;
         if (n >= sequence.length) { speaking = false; utterance = null; root.classList.remove("is-narrating"); $('[data-media="stop"]').disabled = true; status(t("讲完啦。你可以重听，也可以自己试试。", "Finished. Listen again or have your own turn.")); return; }
         const part = sequence[n];
-        if (part.frame !== undefined) showFrame(part.frame);
-        const caption = $(".spoken-caption"); caption.hidden = false; caption.textContent = part.text;
+        if (part.turn !== undefined) showTurn(part.turn);
+        const caption = $(".spoken-caption"); caption.hidden = true;
         const u = new SpeechSynthesisUtterance(part.text.replace(/−/g, t("减", " minus ")).replace(/×/g, t("乘", " times ")).replace(/=/g, t("等于", " equals ")));
         const question = /[？?]/.test(part.text), encouragement = /没关系|别着急|慢慢|Take your time|okay/i.test(part.text), delighted = /发现啦|太棒|真好|You found|Well done/i.test(part.text);
         utterance = u; u.voice = voice; u.lang = voice.lang;
         u.rate = prefs.rate * (prefs.style === "warm" && encouragement ? 0.97 : 1);
         u.pitch = prefs.style === "plain" ? 1 : encouragement ? 1.01 : question || delighted ? 1.07 : 1.03;
-        u.onstart = () => { if (run !== speechRun) return; clearTimeout(speechWatch); root.classList.add("is-narrating"); status(t("小芽正在讲解……可以随时停止。", "Sunny is explaining… Stop whenever you like.")); };
+        if (prefs.style === "warm" && part.who === "tuan") u.pitch = Math.min(1.14, u.pitch + 0.05);
+        u.onstart = () => { if (run !== speechRun) return; clearTimeout(speechWatch); root.classList.add("is-narrating"); status(t("正在对话……可以随时停止。", "Conversation playing… Stop whenever you like.")); };
         u.onend = () => {
           if (run !== speechRun) return;
           clearTimeout(speechWatch);
           if (n === sequence.length - 1 || prefs.style === "plain") speakAt(n + 1);
-          else speechPause = setTimeout(() => speakAt(n + 1), question ? 650 : 220);
+          else speechPause = setTimeout(() => speakAt(n + 1), question || sequence[n + 1]?.who !== part.who ? 650 : 260);
         };
         u.onerror = () => { if (run !== speechRun) return; stop(t("这次没有成功播放。请检查设备音量，或重试；文字和无声演示仍可使用。", "Speech did not play. Check device volume or try again; text and the silent demo still work.")); };
         // Some browsers expose speech but never start an unavailable voice.
@@ -274,13 +307,21 @@
         timer = setTimeout(advance, 3200); updateAnimationButtons();
       });
       ["back", "next"].forEach(direction => diagram.querySelector(`[data-scene="${direction}"]`).addEventListener("click", () => { stop(); showFrame(index + (direction === "next" ? 1 : -1)); }));
+      // Dialogue drives each visual frame; avoid two competing sets of next buttons.
+      diagram.querySelector(".scene-controls").hidden = true;
+      diagram.querySelector(".scene-caption").hidden = true;
+      diagram.lastElementChild.hidden = true;
     }
+    conversation.querySelector('[data-dialogue="back"]').addEventListener("click", () => { stop(); showTurn(turnIndex - 1); });
+    conversation.querySelector('[data-dialogue="next"]').addEventListener("click", () => { stop(); showTurn(turnIndex + 1); });
+    showTurn(turnIndex, false);
+    $('[data-media="listen"]').textContent = `▶ ${t("听她们聊", "Listen to the chat")}`;
     $('[data-media="listen"]').addEventListener("click", speakSequence);
-    $('[data-media="stop"]').addEventListener("click", () => stop(t("已停止朗读。再点“听小芽讲”可从头听。", "Voice stopped. Click Listen to Sunny to hear it again.")));
+    $('[data-media="stop"]').addEventListener("click", () => stop(t("已停止。再点“听她们聊”可以接着听。", "Stopped. Click Listen to the chat to continue.")));
     $('[data-media="muted"]').addEventListener("change", e => { prefs.muted = e.target.checked; savePrefs(); stop(); refreshVoices(); });
-    $('[data-media="rate"]').addEventListener("change", e => { prefs.rate = Number(e.target.value); savePrefs(); stop(t("语速已调整，再点“听小芽讲”即可。", "Speed changed. Click Listen to Sunny when ready.")); });
-    $('[data-media="style"]').addEventListener("change", e => { prefs.style = e.target.value; savePrefs(); stop(t("讲述方式换好了，点“听小芽讲”试听。", "Delivery changed. Click Listen to Sunny to try it.")); });
-    $('[data-media="voice"]').addEventListener("change", e => { prefs.voices[config.english ? "en" : "zh"] = e.target.value; savePrefs(); stop(t("声线换好了，点“听小芽讲”试听。", "Voice changed. Click Listen to Sunny to try it.")); });
+    $('[data-media="rate"]').addEventListener("change", e => { prefs.rate = Number(e.target.value); savePrefs(); stop(t("语速已调整，再点“听她们聊”即可。", "Speed changed. Click Listen to the chat when ready.")); });
+    $('[data-media="style"]').addEventListener("change", e => { prefs.style = e.target.value; savePrefs(); stop(t("讲述方式换好了，点“听她们聊”试听。", "Delivery changed. Click Listen to the chat to try it.")); });
+    $('[data-media="voice"]').addEventListener("change", e => { prefs.voices[config.english ? "en" : "zh"] = e.target.value; savePrefs(); stop(t("声线换好了，点“听她们聊”试听。", "Voice changed. Click Listen to the chat to try it.")); });
     $('[data-media="reduce"]').addEventListener("change", e => { prefs.reduce = e.target.checked; savePrefs(); stop(); root.classList.toggle("less-motion", reduced()); });
     root.classList.toggle("less-motion", reduced());
     const onMotion = () => { stop(); root.classList.toggle("less-motion", reduced()); $('[data-media="reduce"]').checked = reduced(); $('[data-media="reduce"]').disabled = motionQuery.matches; };
@@ -290,7 +331,7 @@
     mounted = {
       stop,
       updateText(text) { config.text = text; stop(); $(".spoken-caption").hidden = true; },
-      dispose() { stop(); live = false; if (supported()) window.speechSynthesis.removeEventListener("voiceschanged", refreshVoices); motionQuery.removeEventListener?.("change", onMotion); },
+      dispose() { stop(); live = false; conversation.remove(); bar.remove(); if (supported()) window.speechSynthesis.removeEventListener("voiceschanged", refreshVoices); motionQuery.removeEventListener?.("change", onMotion); },
     };
   }
   function dispose() { stopChime(); mounted?.dispose(); mounted = null; }

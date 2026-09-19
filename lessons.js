@@ -138,12 +138,8 @@
 
     function feedback(message, success) {
       lastFeedback = { message, success };
-      const node = root.querySelector(".lesson-feedback");
-      if (!node) return;
-      node.hidden = false;
-      node.className = `lesson-feedback ${success ? "success" : "try-again"}`;
-      node.textContent = `${success ? txt("发现了！", "You found it! ") : txt("一起再看看：", "Let's look again: ")}${t(message)}`;
-      window.TeachingMedia.updateText(narrationText());
+      progress().dialogueKey = "";
+      render();
     }
 
     function narrationText() {
@@ -163,7 +159,7 @@
 
     function renderExercise(data) {
       const p = progress();
-      let html = `<h2>${h(t(data.prompt))}</h2>`;
+      let html = `<h2 class="exercise-heading">${txt("轮到你动手啦", "Your turn to try")}</h2>`;
       if (data.type === "choice") {
         html += `<div class="lesson-choices">${data.options.map((o, i) => `<button type="button" data-choice="${i}" ${p.passed ? "disabled" : ""} class="${p.selected[0] === i ? "is-selected" : ""}">${h(t(o.label))}</button>`).join("")}</div>`;
       } else if (data.type === "basket") {
@@ -174,7 +170,7 @@
         html += `<div class="lesson-wallet"><span>${txt("开门前", "Starting cash")} 10 🪙</span><span>${txt("进货一份", "Cost each")} 2 🪙</span><span>${txt("卖出一份", "Price each")} 3 🪙</span></div><div class="lesson-choices quantity-choices">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-amount="${n}" aria-pressed="${p.amount === n}" ${p.passed ? "disabled" : ""}>${n} ${txt("份", "items")}</button>`).join("")}</div>`;
         if (p.result) {
           const r = p.result;
-          html += `<div class="stock-result" role="status"><h3>${txt("这次小店发生了什么？", "What happened this time?")}</h3><p>${txt("花了", "Spent")} ${r.quantity * 2} · ${txt("卖出", "Sold")} ${r.sold} · ${txt("货架剩", "Stock left")} ${r.left} · ${txt("没买到的顾客", "Unserved")} ${r.missed}</p><p>${txt("口袋里的钱", "Cash now")}: 10 − ${r.quantity * 2} + ${r.sold * 3} = <strong>${r.cash} 🪙</strong></p><p>${txt("卖出部分的利润", "Profit on items sold")}: ${r.sold * 3} − ${r.sold * 2} = ${r.sold} 🪙</p><small>${txt("剩下的货还在，不等于钱全亏掉。这个练习没有租金，也没有货物变质。", "Unsold stock still exists; it is not all lost money. This exercise excludes rent and spoilage.")}</small></div>`;
+          html += `<div class="stock-result" role="status"><h3>${txt("小店账本", "Shop notebook")}</h3><p>${txt("卖出", "Sold")} ${r.sold} · ${txt("剩货", "Stock left")} ${r.left} · ${txt("没买到", "Unserved")} ${r.missed}</p><p>${txt("口袋", "Purse")}: 10 − ${r.quantity * 2} + ${r.sold * 3} = <strong>${r.cash} 🪙</strong></p><details><summary>${txt("再看看利润", "Check the profit")}</summary><p>${txt("卖出部分的利润", "Profit on items sold")}: ${r.sold * 3} − ${r.sold * 2} = ${r.sold} 🪙</p><small>${txt("剩货不是全亏掉。练习暂不计租金和货物变质。", "Unsold stock is not all lost. This exercise excludes rent and spoilage.")}</small></details></div>`;
         }
       } else if (data.type === "jars") {
         html += `<div class="lesson-wallet"><span>${txt("一共有", "Total")} ${data.total} 🪙</span><span>${txt("明天至少要用", "Needed tomorrow")} ${data.reserve} 🪙</span></div><label class="jar-control">${txt("存到愿望口袋", "Put in the wish pocket")}<input type="range" min="0" max="${data.total}" value="${p.amount}" ${p.passed ? "disabled" : ""} id="saving-amount" /></label><div class="jar-grid"><article><span>🐷</span><strong>${p.amount} / ${data.target}</strong><p>${txt("我的愿望", "My wish")}</p><progress value="${Math.min(p.amount, data.target)}" max="${data.target}"></progress></article><article><span>👛</span><strong>${data.total - p.amount} 🪙</strong><p>${txt("留下可以用的钱", "Money kept available")}</p></article></div>`;
@@ -190,9 +186,13 @@
       if (!current) return;
       window.TeachingMedia.dispose();
       const p = progress();
+      p.feedback = lastFeedback;
+      const dialogueKey = `${p.step}:${p.demo}:${lastFeedback ? JSON.stringify(lastFeedback.message) : "intro"}`;
+      if (p.dialogueKey !== dialogueKey) { p.dialogueKey = dialogueKey; p.dialogue = 0; }
       const stages = [L("故事时间", "Story"), L("陪你看一遍", "Watch together"), L("一起试试", "Try together"), L("这次我来", "Your turn"), L("我的发现", "Discovery")];
-      root.innerHTML = `<header class="mission-title blue"><span aria-hidden="true">${current.icon}</span><div><p>${txt("第", "Lesson ")}${lessons.indexOf(current) + 1}${txt("课 · 一次学一件事", " · One idea at a time")}</p><h1 tabindex="-1" id="lesson-heading">${h(t(current.title))}</h1><p>${h(t(current.goal))}</p></div></header><ol class="lesson-steps">${stages.map((s, i) => `<li ${i === p.step ? 'aria-current="step"' : ""} class="${i < p.step ? "done" : ""}">${i < p.step ? "✓" : i + 1} ${h(t(s))}</li>`).join("")}</ol><div class="lesson-teacher"><img class="sunny-mascot" src="sunny-mascot.png" width="88" height="88" alt="${txt("小芽，财商学习伙伴", "Sunny, your money-learning companion")}" /><div><p>${txt("我是小芽，陪你一起学。不着急，试错不会扣你的钱。", "I'm Sunny. Let's learn together. Take your time—mistakes never cost your game money.")}</p><small class="learning-star-count">★ ${txt("学习星星", "Learning stars")} ${api.state.learningStars || 0}</small></div></div><div class="lesson-stage">${stageContent(p)}</div><div class="lesson-bottom">${p.step > 0 ? button(txt("← 再看前面的讲解", "← Review the explanation"), "back", "quiet-button") : ""}<span>${txt("每个练习有自己的星币 · 随时返回会保存本课步骤", "Each exercise has its own coins · Your lesson step saves when you leave")}</span></div>`;
+      root.innerHTML = `<header class="mission-title blue"><span aria-hidden="true">${current.icon}</span><div><p>${txt("第", "Lesson ")}${lessons.indexOf(current) + 1}${txt("课 · 一次发现一点点", " · One little discovery")}</p><h1 tabindex="-1" id="lesson-heading">${h(t(current.title))}</h1></div><small class="learning-star-count">★ ${api.state.learningStars || 0}</small></header><ol class="lesson-steps">${stages.map((s, i) => `<li ${i === p.step ? 'aria-current="step"' : ""} class="${i < p.step ? "done" : ""}">${i < p.step ? "✓" : i + 1} ${h(t(s))}</li>`).join("")}</ol><div class="lesson-stage"><div class="dialogue-slot"></div>${stageContent(p)}</div><div class="lesson-bottom">${p.step > 0 ? button(txt("← 再看一遍", "← Look again"), "back", "quiet-button") : ""}<span>${txt("自动保存 · 练习用的都是虚拟币", "Saved automatically · All coins are pretend")}</span></div>`;
       document.getElementById("mission-progress-label").textContent = `${p.step + 1} / 5`;
+      root.querySelector(".lesson-stage").classList.toggle("has-demonstration", p.step === 1);
       document.getElementById("mission-progress-fill").style.width = `${(p.step + 1) * 20}%`;
       root.querySelectorAll("[data-lesson-action]").forEach((b) => b.addEventListener("click", () => act(b.dataset.lessonAction)));
       root.querySelectorAll("[data-choice]").forEach((b) => b.addEventListener("click", () => check(Number(b.dataset.choice))));
@@ -203,24 +203,32 @@
       }));
       root.querySelectorAll("[data-amount]").forEach((b) => b.addEventListener("click", () => { p.amount = Number(b.dataset.amount); lastFeedback = null; api.save(); render(); root.querySelector(`[data-amount="${p.amount}"]`).focus(); }));
       root.querySelector("#saving-amount")?.addEventListener("input", (e) => {
-        p.amount = Number(e.target.value); lastFeedback = null;
+        p.amount = Number(e.target.value); lastFeedback = null; p.feedback = null;
         const jars = root.querySelectorAll(".jar-grid strong"); jars[0].textContent = `${p.amount} / ${exercise().target}`; jars[1].textContent = `${exercise().total - p.amount} 🪙`;
         root.querySelector("progress").value = Math.min(p.amount, exercise().target);
         root.querySelector(".lesson-feedback").hidden = true; api.save();
         window.TeachingMedia.updateText(narrationText());
       });
-      if (lastFeedback) feedback(lastFeedback.message, lastFeedback.success);
-      window.TeachingMedia.mount(root, { english: api.english(), lessonId: current.id, stage: p.step, demo: p.demo, text: narrationText() });
+      root.querySelector("#saving-amount")?.addEventListener("change", () => { render(); root.querySelector("#saving-amount")?.focus({ preventScroll: true }); });
+      window.TeachingMedia.mount(root, {
+        english: api.english(), lessonId: current.id, stage: p.step, demo: p.demo, text: narrationText(),
+        dialogue: window.MoneyDialogues.lesson({ current, p, feedback: lastFeedback, english: api.english() }), dialogueIndex: p.dialogue,
+        onDialogueChange(index, ended) {
+          p.dialogue = index;
+          root.querySelectorAll('[data-lesson-action="next"], [data-lesson-action="demo"], [data-lesson-action="finish"]').forEach(b => { b.disabled = !ended; });
+          api.save();
+        },
+      });
     }
 
     function stageContent(p) {
-      if (p.step === 0) return panel(txt("今天的小故事", "Today's little story"), t(current.story)) + button(txt("陪小芽看一遍 →", "Watch with Sunny →"), "next");
+      if (p.step === 0) return button(txt("一起看看 →", "Let's take a look →"), "next");
       if (p.step === 1) {
         const d = current.demo[p.demo];
-        return `<p class="lesson-hint">${txt("慢慢点，一次看一步", "One tap, one step")} · ${p.demo + 1} / ${current.demo.length}</p>${panel(t(d.title), t(d.text))}<div class="demo-money"><strong>${d.amount} ${txt("枚星币", "coins")}</strong>${coins(d.amount)}</div>${button(txt(p.demo < current.demo.length - 1 ? "接下来呢？ →" : "我来试一下 →", p.demo < current.demo.length - 1 ? "What happens next? →" : "Let me try →"), "demo")}`;
+        return `<h2 class="demo-heading">${h(t(d.title))} <small>${p.demo + 1} / ${current.demo.length}</small></h2><div class="demo-money"><strong>${d.amount} ${txt("枚星币", "coins")}</strong>${coins(d.amount)}</div>${button(txt(p.demo < current.demo.length - 1 ? "下一小步 →" : "我来试一下 →", p.demo < current.demo.length - 1 ? "Next little step →" : "Let me try →"), "demo")}`;
       }
       if (p.step < 4) return renderExercise(exercise());
-      return `${panel(txt("今天我发现……", "Today I discovered…"), t(current.takeaway))}<div class="home-activity"><h3>${txt("带回生活里 · 可以和家长一起试", "Try it in real life · With an adult")}</h3><p>${h(t(current.home))}</p></div><p>${txt("这一课到这里。可以休息一下，下次再学新的。", "That is enough for this lesson. Take a break; the next idea can wait.")}</p>${button(txt(review ? "复习完成，回到地图" : "记下我的发现，回到地图", review ? "Finish review and return" : "Save my discovery and return"), "finish")}`;
+      return button(txt("带着发现回地图 →", "Take my discovery to the map →"), "finish");
     }
 
     function check(index) {
@@ -256,16 +264,16 @@
       }
       p.passed = ok;
       if (ok) api.state.learningStars = (api.state.learningStars || 0) + 1;
-      api.save(); lastFeedback = { message, success: ok }; render();
+      lastFeedback = { message, success: ok }; p.dialogueKey = ""; render();
       if (ok) window.TeachingMedia.celebrate(root, api.state.learningStars, api.english());
-      if (ok) root.querySelector('[data-lesson-action="next"]')?.focus();
+      if (ok) root.querySelector('[data-dialogue="next"]')?.focus();
       else if (d.type === "choice") root.querySelector(`[data-choice="${index}"]`)?.focus();
       else root.querySelector('[data-lesson-action="check"]')?.focus();
     }
 
     function act(action) {
       const p = progress();
-      if (action === "hint") { feedback(L(`先回想：${current.goal.zh} 可以点下方“再看前面的讲解”，不会扣分。`, `Remember: ${current.goal.en} You can review the explanation below, without losing points.`), false); return; }
+      if (action === "hint") { feedback(current.goal, false); return; }
       if (action === "check") { check(); return; }
       if (action === "finish") { api.complete(current.id); return; }
       if (action === "demo" && p.demo < current.demo.length - 1) p.demo += 1;
@@ -284,6 +292,7 @@
         current = lessons.find((l) => l.id === id); if (!current) return;
         review = Boolean(api.state.completed[id]); lastFeedback = null;
         if (review) api.state.lessonProgress[id] = { step: 0, demo: 0, selected: [], amount: 0, passed: false, attempts: 0 };
+        else lastFeedback = progress().feedback || null;
         api.save(); render();
       },
       render,

@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "dist");
-const assets = ["styles.css", "teaching-media.js", "lessons.js", "app.js", "icon.svg", "sunny-mascot.png"];
+const assets = ["styles.css", "dialogue.css", "dialogues.js", "teaching-media.js", "lessons.js", "app.js", "icon.svg", "sunny-mascot.png", "sunny-expressions.png", "tuan-buddy.png"];
 mkdirSync(output, { recursive: true });
 
 // Hosting controls the audience. Test publications do not install an offline
