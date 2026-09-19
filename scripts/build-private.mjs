@@ -4,7 +4,7 @@ import { join } from "node:path";
 import assert from "node:assert/strict";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const output = join(root, "public");
+const output = join(root, "dist");
 const assets = ["styles.css", "app.js", "icon.svg"];
 mkdirSync(output, { recursive: true });
 
