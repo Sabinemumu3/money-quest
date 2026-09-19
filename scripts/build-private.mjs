@@ -5,11 +5,11 @@ import assert from "node:assert/strict";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "dist");
-const assets = ["styles.css", "app.js", "icon.svg"];
+const assets = ["styles.css", "lessons.js", "app.js", "icon.svg"];
 mkdirSync(output, { recursive: true });
 
-// Identity is checked by the hosting platform before it serves these assets.
-// Private previews don't install an offline worker or cache a signed-in page.
+// Hosting controls the audience. Test publications do not install an offline
+// worker, so an older cached lesson cannot hide a newly published teaching fix.
 const source = readFileSync(join(root, "index.html"), "utf8");
 assert(source.includes('<html lang="zh-CN">'), "Expected document language declaration");
 assert(source.includes('content="noindex, nofollow"'), "Preview must retain noindex metadata");
@@ -26,4 +26,4 @@ for (const [, url] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
   assert(expected.includes(url), `Unexpected asset reference: ${url}`);
 }
 assert(readFileSync(join(output, "app.js"), "utf8").includes('dataset.privatePreview !== "true"'));
-console.log("Private preview prepared: 4 game assets; offline installation disabled.");
+console.log("Test site prepared: 5 game assets; offline installation disabled.");

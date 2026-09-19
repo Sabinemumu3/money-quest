@@ -1,5 +1,5 @@
-const CACHE_NAME = "money-quest-v1-20260919";
-const CORE_FILES = ["./", "./index.html", "./styles.css", "./app.js", "./icon.svg", "./manifest.webmanifest"];
+const CACHE_NAME = "money-quest-guided-20260920";
+const CORE_FILES = ["./", "./index.html", "./styles.css", "./lessons.js", "./app.js", "./icon.svg", "./manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_FILES)));

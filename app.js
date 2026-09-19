@@ -2,7 +2,8 @@
   "use strict";
 
   const STORAGE_KEY = "future-life-skills-money-game-v1";
-  const TASKS = ["mission-1", "mission-2", "mission-3", "mission-4"];
+  const LESSONS = window.MoneyLessons.lessons;
+  const TASKS = [...LESSONS.map((lesson) => lesson.id), "mission-4"];
   const XP_PER_LEVEL = 60;
 
   const businessScenarios = {
@@ -134,6 +135,8 @@
     supplySelected: [],
     customerIndex: 0,
     customerAnswers: {},
+    lessonProgress: {},
+    learningSeconds: 0,
     market: {
       cash: 100,
       holdings: { water: 0, games: 0, green: 0 },
@@ -155,6 +158,7 @@
         ...cloneDefault(),
         ...saved,
         completed: { ...defaultState.completed, ...(saved.completed || {}) },
+        lessonProgress: saved.lessonProgress || {},
         market: {
           ...defaultState.market,
           ...(saved.market || {}),
@@ -169,12 +173,29 @@
 
   let state = loadState();
   let activeMission = "";
+  let paused = false;
+  let activeSeconds = 0;
+  let lastInteraction = Date.now();
+  let returnFocus = null;
 
   const $ = (selector, scope = document) => scope.querySelector(selector);
   const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
   const isEnglish = () => state.language === "en";
   const t = (zh, en) => (isEnglish() ? en : zh);
   const scenario = () => businessScenarios[state.scenario] || businessScenarios["bubble-tea"];
+  const guided = window.MoneyLessons.create({ state, english: isEnglish, save: saveState, complete: finishLesson });
+
+  function finishLesson(id) {
+    if (!state.completed[id]) {
+      state.completed[id] = true;
+      state.xp += 20;
+      saveState();
+    }
+    closeMission();
+    showView("home");
+    $("#learning-notice").textContent = t("这一课学完了。起来伸伸懒腰，下次回来接着学。", "Lesson complete. Stretch and take a break; come back when you are ready.");
+    $(`[data-open-mission="${id}"]`)?.focus();
+  }
 
   function saveState() {
     try {
@@ -203,15 +224,15 @@
   }
 
   function completedCount() {
-    return TASKS.filter((task) => state.completed[task]).length;
+    return LESSONS.filter((lesson) => state.completed[lesson.id]).length;
   }
 
   function isUnlocked(task) {
-    if (task === "mission-1") return true;
+    if (task === "lesson-1") return true;
     const index = TASKS.indexOf(task);
     if (index < 1) return false;
     if (!state.completed[TASKS[index - 1]]) return false;
-    return task !== "mission-4" || level() >= 2;
+    return true;
   }
 
   function setLanguage(language) {
@@ -222,6 +243,8 @@
     $$('[data-placeholder-zh]').forEach((input) => { input.placeholder = t(input.dataset.placeholderZh, input.dataset.placeholderEn); });
     refreshMessages();
     renderAll();
+    if (activeMission.startsWith("lesson-")) guided.render();
+    renderStudyClock();
     saveState();
   }
 
@@ -231,17 +254,17 @@
     $("#player-name").textContent = name;
     $("#player-avatar").textContent = data.emoji;
     $("#shop-name").textContent = isEnglish() ? data.shopEn : data.shopZh;
-    $("#shop-brief").textContent = isEnglish() ? data.briefEn : data.briefZh;
+    $("#shop-brief").textContent = t("小芽陪你从第一枚星币开始。先看一看，一起做一做，再试试自己的办法。今天学一小课就好。", "Sunny will help, one coin at a time. Watch, try together, then have your own turn. One small lesson is enough for today.");
     $("#store-sign").textContent = data.sign;
     $("#store-emoji").textContent = data.emoji;
   }
 
   function renderStats() {
-    $("#cash-stat").textContent = state.cash;
-    $("#reputation-stat").textContent = state.reputation;
-    $("#reputation-label").textContent = `${state.reputation} / 100`;
+    $("#cash-stat").textContent = `${completedCount()} / 6`;
+    $("#reputation-stat").textContent = Math.floor(activeSeconds / 60);
+    $("#reputation-label").textContent = t("一次学一件事", "One idea at a time");
     $("#level-stat").textContent = level();
-    $("#mission-count").textContent = `${completedCount()} / 4`;
+    $("#mission-count").textContent = `${completedCount()} / 6`;
     const levelProgress = state.xp >= XP_PER_LEVEL * 2 ? XP_PER_LEVEL : state.xp % XP_PER_LEVEL;
     $("#xp-label").textContent = `${levelProgress} / ${XP_PER_LEVEL} XP`;
     $("#xp-fill").style.width = `${Math.min(100, (levelProgress / XP_PER_LEVEL) * 100)}%`;
@@ -251,6 +274,8 @@
   }
 
   function renderTaskMap() {
+    $("#mission-road").innerHTML = LESSONS.map((lesson, index) => `<article class="mission-node" data-task-card="${lesson.id}"><div class="node-top"><span class="node-number">0${index + 1}</span><span class="node-status" data-task-status="${lesson.id}"></span></div><span class="node-icon" aria-hidden="true">${lesson.icon}</span><h3>${t(lesson.title.zh, lesson.title.en)}</h3><p>${t(lesson.goal.zh, lesson.goal.en)}</p><div class="node-reward">${t("故事 · 示范 · 陪练 · 自己试", "Story · Demo · Practice · Your turn")}</div><button type="button" data-open-mission="${lesson.id}"></button></article>`).join("") + `<article class="mission-node market-node" data-task-card="mission-4"><div class="node-top"><span class="node-number">${t("拓展", "EXTRA")}</span><span class="node-status" data-task-status="mission-4"></span></div><span class="node-icon">📈</span><h3>${t("市场实验室", "Market lab")}</h3><p>${t("六课之后，可与家长一起体验。不计入基础课完成度。", "Optional after six lessons, with an adult. Not required for the foundation course.")}</p><button type="button" data-open-mission="mission-4"></button></article>`;
+    $$('[data-open-mission]', $("#mission-road")).forEach((button) => button.addEventListener("click", () => openMission(button.dataset.openMission)));
     TASKS.forEach((task, index) => {
       const card = $(`[data-task-card="${task}"]`);
       const button = $(`[data-open-mission="${task}"]`);
@@ -265,10 +290,10 @@
         button.textContent = t("再次查看", "Review mission");
       } else if (unlocked) {
         status.textContent = t("可开始", "READY");
-        button.textContent = t("开始任务", "Start mission");
+        button.textContent = t(state.lessonProgress[task]?.step ? "接着上次学 →" : "陪小芽开始 →", state.lessonProgress[task]?.step ? "Continue learning →" : "Start with Sunny →");
       } else {
         status.textContent = "🔒";
-        button.textContent = index === 3 ? t("完成经营关卡", "Finish business missions") : t("完成上一关", "Finish previous");
+        button.textContent = task === "mission-4" ? t("先学完六节基础课", "Finish the six lessons first") : t("先学会前一课", "Learn the previous lesson first");
       }
     });
     const marketUnlocked = isUnlocked("mission-4");
@@ -277,10 +302,8 @@
   }
 
   function renderBadges() {
-    const mapping = { profit: "mission-1", buyer: "mission-2", owner: "mission-3", market: "mission-4" };
-    Object.entries(mapping).forEach(([badge, task]) => {
-      $(`[data-badge="${badge}"]`).classList.toggle("is-earned", state.completed[task]);
-    });
+    $(".badge-grid").innerHTML = LESSONS.map((lesson) => `<article class="${state.completed[lesson.id] ? "is-earned" : ""}"><span>${lesson.icon}</span><strong>${t(lesson.title.zh, lesson.title.en)}</strong><small>${state.completed[lesson.id] ? t("我已经练习过", "I have practised this") : t("一步一步来", "One step at a time")}</small></article>`).join("");
+    $("#parent-progress").textContent = t(`基础课完成 ${completedCount()} / 6；本机累计有效学习约 ${Math.floor(state.learningSeconds / 60)} 分钟。时长不用于解锁。`, `${completedCount()} / 6 foundation lessons completed; about ${Math.floor(state.learningSeconds / 60)} active minutes on this device. Time does not unlock lessons.`);
   }
 
   function renderShell() {
@@ -313,14 +336,30 @@
 
   function openMission(task) {
     if (!isUnlocked(task)) return;
+    returnFocus = document.activeElement;
+    paused = false;
+    $("#study-pause").hidden = true;
+    $(".mission-content").inert = false;
+    lastInteraction = Date.now();
     activeMission = task;
     $("#mission-layer").hidden = false;
     $$('[data-mission]').forEach((screen) => screen.classList.toggle("is-active", screen.dataset.mission === task));
-    const index = TASKS.indexOf(task);
-    $("#mission-progress-fill").style.width = `${(index + 1) * 25}%`;
-    $("#mission-progress-label").textContent = `${index + 1} / 4`;
+    if (task.startsWith("lesson-")) {
+      $("#guided-lesson").classList.add("is-active");
+      guided.open(task);
+      document.body.style.overflow = "hidden";
+      $("#game-app").inert = true;
+      $("#lesson-heading").focus({ preventScroll: true });
+      $("#mission-layer").scrollTop = 0;
+      return;
+    }
+    $("#guided-lesson").classList.remove("is-active");
+    $("#mission-progress-fill").style.width = "100%";
+    $("#mission-progress-label").textContent = t("课后拓展", "Optional extra");
     document.body.style.overflow = "hidden";
     $("#mission-layer").scrollTop = 0;
+    $("#game-app").inert = true;
+    $("#mission-back").focus();
     if (task === "mission-2") renderSupplies();
     if (task === "mission-3") renderCustomer();
     if (task === "mission-4") renderMarket();
@@ -328,16 +367,49 @@
 
   function closeMission() {
     activeMission = "";
+    paused = false;
+    $("#game-app").inert = false;
+    saveState();
     $("#mission-layer").hidden = true;
     document.body.style.overflow = "";
     renderAll();
+    if (returnFocus?.isConnected) returnFocus.focus();
+  }
+
+  function renderStudyClock() {
+    const mins = Math.floor(activeSeconds / 60), secs = activeSeconds % 60;
+    $("#study-time").textContent = t(`本次 ${mins}:${String(secs).padStart(2, "0")}`, `This visit ${mins}:${String(secs).padStart(2, "0")}`);
+    $("#pause-study").textContent = t("暂停休息", "Take a break");
+    $("#pause-title").textContent = t("休息一下，进度帮你留着", "Take a break. Your place is saved.");
+    $("#resume-study").textContent = t("我准备好了，继续", "I'm ready to continue");
+    $("#reputation-stat").textContent = mins;
+  }
+
+  function initialiseStudyClock() {
+    ["pointerdown", "keydown", "input", "scroll"].forEach((event) => document.addEventListener(event, () => { lastInteraction = Date.now(); }, { passive: true, capture: true }));
+    document.addEventListener("visibilitychange", () => { lastInteraction = Date.now(); saveState(); });
+    window.addEventListener("pagehide", saveState);
+    $("#pause-study").addEventListener("click", () => {
+      paused = true; saveState(); $("#study-pause").hidden = false;
+      $(".mission-content").inert = true; $("#resume-study").focus();
+    });
+    $("#resume-study").addEventListener("click", () => {
+      paused = false; lastInteraction = Date.now(); $("#study-pause").hidden = true;
+      $(".mission-content").inert = false; $("#pause-study").focus();
+    });
+    setInterval(() => {
+      if (!activeMission || paused || document.hidden || Date.now() - lastInteraction > 60000) return;
+      activeSeconds += 1; state.learningSeconds += 1; renderStudyClock();
+      if (activeSeconds % 10 === 0) saveState();
+      if (activeSeconds >= 900) $("#break-reminder").hidden = false;
+    }, 1000);
   }
 
   const rewardData = {
     "mission-1": { badge: "🧠", titleZh: "钱的流动看懂了！", titleEn: "Money flow understood!", copyZh: "+30 XP　+20经营星币", copyEn: "+30 XP and +20 business coins" },
     "mission-2": { badge: "📦", titleZh: "第一次采购完成！", titleEn: "First supply run complete!", copyZh: "+30 XP　解锁开门营业", copyEn: "+30 XP and Open for Business unlocked" },
     "mission-3": { badge: "🏪", titleZh: "你会经营现金了！", titleEn: "You managed business cash!", copyZh: "+40 XP　解锁市场实验室", copyEn: "+40 XP and Market Lab unlocked" },
-    "mission-4": { badge: "📈", titleZh: "风险观察员徽章！", titleEn: "Risk Observer badge!", copyZh: "+40 XP　完成基础财商经营岛", copyEn: "+40 XP and base Money Quest complete" },
+    "mission-4": { badge: "📈", titleZh: "完成一次风险观察", titleEn: "Risk observation complete", copyZh: "+40 XP　做过练习不等于掌握真实投资", copyEn: "+40 XP · Practice is not real investing expertise" },
   };
 
   function showReward(task) {
@@ -346,6 +418,7 @@
     $("#reward-badge").textContent = reward.badge;
     $("#reward-copy").textContent = t(reward.copyZh, reward.copyEn);
     $("#reward-popover").hidden = false;
+    $("#collect-reward").focus();
   }
 
   function completeTask(task, changes = {}) {
@@ -669,12 +742,15 @@
   }
 
   function initialise() {
+    // Old quiz screens are retained in source for the previous test, not in the beginner path.
+    ["mission-1", "mission-2", "mission-3"].forEach((id) => { document.getElementById(id).hidden = true; });
     initialiseSetup();
     initialiseNavigation();
     initialiseQuiz();
     initialiseSupplies();
     initialiseCustomers();
     initialiseMarket();
+    initialiseStudyClock();
     setLanguage(state.language);
     renderShell();
 

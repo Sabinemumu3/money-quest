@@ -410,3 +410,87 @@ html[lang="en"] .en { display: inline !important; }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; }
 }
+
+/* Guided learning extends the original island palette and card shapes. */
+.mission-road { grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; align-items:stretch; }
+.mission-node { display:flex; flex-direction:column; }
+.mission-node > button { margin-top:auto; min-height:48px; font-size:16px; }
+.mission-node p { font-size:16px; }
+.mission-node .node-reward { margin-bottom:14px; font-size:14px; }
+.node-status, .section-heading > p, .shop-status small, .xp-card small { font-size:14px; letter-spacing:0; }
+.learning-notice { padding:16px 20px; border-left:4px solid var(--coral); background:white; border-radius:0 14px 14px 0; font-size:16px; }
+.learning-notice:empty { display:none; }
+.mission-header { grid-template-columns:auto minmax(160px,1fr) auto; gap:20px; }
+.mission-header > button, .mission-header > div { font-size:14px; letter-spacing:0; }
+.study-clock { display:flex; flex-wrap:wrap; justify-content:end; align-items:center; gap:10px; font-size:14px; }
+.study-clock button, .quiet-button { padding:10px 16px; min-height:44px; border:1px solid var(--ink); border-radius:14px; color:var(--ink); background:white; }
+.lesson-steps { display:flex; flex-wrap:wrap; list-style:none; padding:0; gap:8px; margin:32px 0 18px; }
+.lesson-steps li { padding:9px 13px; border:1px solid var(--line); border-radius:99px; font-size:14px; background:white; }
+.lesson-steps [aria-current] { background:var(--ink); color:white; }
+.lesson-steps .done { background:var(--lime); }
+.lesson-teacher { display:flex; align-items:center; gap:14px; margin:18px 0; }
+.lesson-teacher > span { font-size:36px; }
+.lesson-teacher p { margin:0; font-size:16px; }
+.lesson-stage { padding:clamp(22px,4vw,40px); border:1px solid var(--line); border-radius:24px; background:white; box-shadow:0 10px 24px rgba(13,48,42,.05); }
+.lesson-stage h2 { margin:0 0 18px; font-size:clamp(22px,3vw,30px); line-height:1.5; }
+.lesson-stage p { font-size:18px; line-height:1.9; }
+.lesson-stage .primary-button { min-height:52px; margin-top:18px; font-size:17px; }
+.lesson-stage > .quiet-button { margin-left:12px; margin-top:18px; font-size:16px; }
+.teach-panel p { max-width:42em; }
+.demo-money { padding:20px; margin:22px 0; background:#fff7dc; border:1px solid #d3b050; border-radius:18px; }
+.demo-money > strong { font-size:24px; }
+.coin-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+.coin-row span { display:grid; place-items:center; width:34px; height:34px; border:2px solid #a87517; border-radius:50%; background:var(--yellow); color:#a87517; font-size:16px; }
+.lesson-choices { display:flex; flex-wrap:wrap; gap:14px; margin:22px 0; }
+.lesson-choices button { padding:17px 21px; min-height:56px; background:var(--paper); border:2px solid var(--line); border-radius:16px; color:var(--ink); font-size:18px; text-align:left; }
+.lesson-choices button:hover:not(:disabled) { border-color:var(--ink); }
+.lesson-choices button[aria-pressed="true"], .lesson-choices button.is-selected { background:var(--lime); border-color:var(--ink); }
+.basket-choices { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+.basket-choices button { display:flex; flex-direction:column; gap:10px; align-items:start; }
+.basket-choices button > span:first-child { font-size:32px; }
+.lesson-wallet { display:flex; flex-wrap:wrap; gap:12px 24px; padding:16px 20px; background:var(--deep); color:white; border-radius:14px; font-size:18px; }
+.lesson-stage .lesson-hint { font-size:16px; color:var(--muted); }
+.lesson-feedback { padding:18px 22px; border-left:5px solid var(--coral); background:#fff2e5; border-radius:0 14px 14px 0; }
+.lesson-feedback.success { background:#effbd5; border-color:#507c2d; }
+.stock-result { padding:20px; background:#e6f5f7; border:1px solid var(--line); border-radius:18px; }
+.stock-result h3 { margin-top:0; }
+.stock-result small { font-size:16px; }
+.jar-control { display:grid; gap:14px; margin:24px 0; font-size:18px; }
+.jar-control input { width:100%; min-height:44px; accent-color:var(--ink); }
+.jar-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.jar-grid article { display:flex; flex-direction:column; align-items:center; padding:20px; border:1px solid var(--line); border-radius:18px; background:#effbd5; }
+.jar-grid article:nth-child(2) { background:#daf3f7; }
+.jar-grid article > span { font-size:34px; }
+.jar-grid strong { font-size:26px; }
+.jar-grid p { margin:6px 0; text-align:center; }
+.jar-grid progress { width:100%; height:16px; accent-color:var(--ink); }
+.lesson-bottom { display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-top:22px; }
+.lesson-bottom > span { color:var(--muted); font-size:14px; }
+.home-activity { border-top:1px dashed var(--line); margin-top:20px; padding-top:16px; }
+.break-reminder { padding:14px 22px; margin:0; background:var(--lime); font-size:16px; }
+.study-pause { position:fixed; inset:72px 0 0; display:grid; place-items:center; z-index:10; padding:24px; background:rgba(13,48,42,.85); }
+.study-pause > div { max-width:540px; padding:36px; background:var(--paper); border-radius:24px; text-align:center; }
+.study-pause span { font-size:50px; }
+.parent-grid p, .badge-grid small { font-size:16px; }
+.game-nav button { font-size:16px; }
+#guided-lesson .mission-title div > p:first-child { font-size:14px; letter-spacing:0; }
+#guided-lesson .mission-title h1 { font-size:clamp(28px,4vw,44px); line-height:1.3; letter-spacing:0; }
+@media (max-width:1100px) { .mission-road { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:650px) {
+  .mission-road { grid-template-columns:minmax(0,1fr); }
+  .mission-header { grid-template-columns:1fr auto; gap:10px; }
+  .mission-header > div { grid-column:1 / -1; grid-row:2; }
+  .study-clock { gap:6px; }
+  .study-clock button { padding:8px; }
+  .lesson-steps { gap:6px; }
+  .lesson-steps li { padding:7px 10px; }
+  .basket-choices { grid-template-columns:minmax(0,1fr); }
+  .basket-choices button { flex-direction:row; align-items:center; justify-content:space-between; }
+  .lesson-choices:not(.quantity-choices) > button { width:100%; }
+  .lesson-stage { padding:20px; }
+  .lesson-stage > .quiet-button { margin-left:0; }
+  .jar-grid { gap:8px; }
+  .jar-grid article { padding:14px 8px; }
+  .lesson-stage > .primary-button { width:100%; }
+  .study-pause { inset:120px 0 0; }
+}

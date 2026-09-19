@@ -10,6 +10,7 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="lessons.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body>
@@ -31,7 +32,7 @@
         <div class="start-story">
           <p class="eyebrow"><span class="zh">8–12岁 · 游戏化财商与商业管理</span><span class="en">AGES 8–12 · MONEY & BUSINESS GAME</span></p>
           <h1><span class="zh">欢迎来到<br /><em>财商经营岛</em></span><span class="en">Welcome to<br /><em>Money Quest Island</em></span></h1>
-          <p class="start-lede"><span class="zh">选择一个模拟经营场景，在游戏中学习预算、成本、收入、利润和风险。每完成一个任务，就能赚取星币并解锁下一项财商能力。</span><span class="en">Choose a business simulation and learn budgeting, costs, revenue, profit and risk through play. Complete missions to earn coins and unlock new money skills.</span></p>
+          <p class="start-lede"><span class="zh">如果只有10枚星币，先买什么呢？和小芽一起数一数、选一选，从生活里的小问题开始，慢慢学会照顾自己的钱。</span><span class="en">If you had just 10 coins, what would you buy first? Count and choose with Sunny. Start with small everyday questions and learn to look after your money.</span></p>
           <div class="game-loop" aria-label="Game loop">
             <span>📚 <b><span class="zh">学习</span><span class="en">Learn</span></b></span>
             <i>→</i><span>🎮 <b><span class="zh">挑战</span><span class="en">Play</span></b></span>
@@ -43,7 +44,7 @@
             <div class="island-path"><i></i><i></i><i></i></div>
             <div class="preview-island island-two"><span>💅</span><small>LEVEL 1</small></div>
             <div class="island-path locked"><i></i><i></i><i></i></div>
-            <div class="preview-island island-three"><span>📈</span><small>LEVEL 2</small></div>
+            <div class="preview-island island-three"><span>🐷</span><small>MY WISH</small></div>
           </div>
         </div>
 
@@ -77,8 +78,8 @@
           <span><strong><span class="zh">财商经营岛</span><span class="en">MONEY QUEST ISLAND</span></strong><small>FUTURE LIFE SKILLS</small></span>
         </a>
         <div class="player-stats" aria-label="Player stats">
-          <span title="Business cash">🪙 <strong id="cash-stat">120</strong></span>
-          <span title="Reputation">💚 <strong id="reputation-stat">50</strong></span>
+          <span title="Lessons completed">👣 <strong id="cash-stat">0 / 6</strong></span>
+          <span title="Active minutes this visit">⏱ <strong id="reputation-stat">0</strong></span>
           <span title="Level">⭐ <strong>LV.<i id="level-stat">1</i></strong></span>
         </div>
         <div class="language-switch">
@@ -113,7 +114,7 @@
               <p class="eyebrow"><span class="zh">你的第一个模拟生意</span><span class="en">YOUR FIRST BUSINESS SIMULATION</span></p>
               <h1 id="shop-name">星光奶茶铺</h1>
               <p id="shop-brief"><span class="zh">今天的目标：学会算利润，做好采购，并服务三位顾客。</span><span class="en">Today's goal: learn profit, plan supplies and serve three customers.</span></p>
-              <div class="shop-status"><span><small><span class="zh">今日任务</span><span class="en">MISSIONS</span></small><strong id="mission-count">0 / 4</strong></span><span><small><span class="zh">店铺声誉</span><span class="en">REPUTATION</span></small><strong id="reputation-label">50 / 100</strong></span></div>
+              <div class="shop-status"><span><small><span class="zh">基础课发现</span><span class="en">DISCOVERIES</span></small><strong id="mission-count">0 / 6</strong></span><span><small><span class="zh">慢慢来</span><span class="en">TAKE YOUR TIME</span></small><strong id="reputation-label">一次学一件事</strong></span></div>
             </div>
             <div class="storefront" id="storefront" aria-label="Your shop">
               <div class="store-sign" id="store-sign">STAR TEA</div>
@@ -125,7 +126,8 @@
           </div>
 
           <section class="mission-map-section">
-            <header class="section-heading"><div><p class="eyebrow"><span class="zh">财商能力路线</span><span class="en">YOUR MONEY SKILLS JOURNEY</span></p><h2><span class="zh">完成任务，解锁新知识</span><span class="en">Complete missions. Unlock new skills.</span></h2></div><p><span class="zh">每个任务约5–8分钟</span><span class="en">5–8 minutes each</span></p></header>
+            <header class="section-heading"><div><p class="eyebrow"><span class="zh">小芽陪你一步一步学</span><span class="en">LEARN WITH SUNNY</span></p><h2><span class="zh">今天，你想发现什么？</span><span class="en">What will you discover?</span></h2></div><p><span class="zh">每次预留12–15分钟，可随时暂停</span><span class="en">Allow 12–15 minutes; pause anytime</span></p></header>
+            <p id="learning-notice" class="learning-notice" role="status"><span class="zh">不用赶着通关。每课都有讲解，没看懂可以再看一次。</span><span class="en">No rush. Every lesson has an explanation you can revisit.</span></p>
             <div class="mission-road" id="mission-road">
               <article class="mission-node" data-task-card="mission-1">
                 <div class="node-top"><span class="node-number">01</span><span class="node-status" data-task-status="mission-1"><span class="zh">可开始</span><span class="en">READY</span></span></div>
@@ -168,10 +170,11 @@
         <section class="game-view simple-view" id="parent-view" data-game-view="parent">
           <header class="page-heading"><p class="eyebrow"><span class="zh">家长中心</span><span class="en">PARENT CENTRE</span></p><h1><span class="zh">这个游戏在教什么？</span><span class="en">What does this game teach?</span></h1></header>
           <div class="parent-grid">
-            <article><span>01</span><h2><span class="zh">可检查的学习结果</span><span class="en">Checkable outcomes</span></h2><p><span class="zh">孩子能说出成本、收入和利润的关系；能在预算内采购；知道股价可能上涨或下跌。</span><span class="en">Children can explain cost, revenue and profit, purchase within a budget, and understand that share prices can rise or fall.</span></p></article>
+            <article><span>01</span><h2><span class="zh">从孩子的问题出发</span><span class="en">Start with a child's question</span></h2><p><span class="zh">六课依次学习钱的限额、需要与想要、钱的进出、按需采购、储蓄和应对变化。每课先看故事和逐步示范，再陪练，最后换情境独立尝试。股票仅作课后拓展。</span><span class="en">Six lessons cover limited money, needs and wants, money in and out, stock planning, saving and changes. Each has a story, step-by-step demonstration, supported practice and a new challenge. Shares are an optional extra.</span></p></article>
             <article><span>02</span><h2><span class="zh">安全边界</span><span class="en">Safety boundaries</span></h2><p><span class="zh">不使用真实股票、实时行情或真实资金；不收集学校、地址、出生日期或家庭收入。</span><span class="en">No real stocks, live prices or real money. No collection of school, address, birth date or family income.</span></p></article>
-            <article><span>03</span><h2><span class="zh">一起讨论</span><span class="en">Talk together</span></h2><p><span class="zh">完成后可以问孩子：“利润高就是最好的生意吗？”“分散投资为什么仍可能亏损？”</span><span class="en">Ask: “Is the highest profit always the best business?” and “Why can a diversified portfolio still lose value?”</span></p></article>
+            <article><span>03</span><h2><span class="zh">看看是否真的理解</span><span class="en">Check understanding together</span></h2><p><span class="zh">可以问：“你为什么先买这个？”“换个数字还会吗？”做过练习不等于完全掌握。每次12–15分钟是试测安排，不是统一的注意力上限；允许孩子更慢、暂停和复习。</span><span class="en">Ask 'Why did you choose this first?' and 'What if the numbers changed?' Completing practice does not prove mastery. 12–15 minutes is a trial session plan, not a universal attention limit. Allow extra time, breaks and review.</span></p></article>
           </div>
+          <p id="parent-progress" class="learning-notice"></p>
           <button class="danger-button" id="reset-game" type="button"><span class="zh">清除本机进度并重新开始</span><span class="en">Clear local progress and restart</span></button>
         </section>
       </main>
@@ -181,9 +184,13 @@
       <header class="mission-header">
         <button type="button" id="mission-back">← <span class="zh">返回经营地图</span><span class="en">Back to business map</span></button>
         <div><span><span class="zh">任务进度</span><span class="en">MISSION PROGRESS</span></span><div><i id="mission-progress-fill"></i></div><strong id="mission-progress-label">1 / 4</strong></div>
+        <aside class="study-clock"><span id="study-time">本次 0:00</span><button type="button" id="pause-study">暂停休息</button></aside>
       </header>
+      <p class="break-reminder" id="break-reminder" hidden role="status"><span class="zh">已经学了一会儿，可以保存进度，起来活动一下。不用今天学完。</span><span class="en">You have been learning for a while. Save your place and stretch; no need to finish today.</span></p>
+      <div id="study-pause" class="study-pause" hidden><div role="dialog" aria-modal="true" aria-labelledby="pause-title"><span>🌱</span><h2 id="pause-title">休息一下，进度帮你留着</h2><button class="primary-button" id="resume-study" type="button">我准备好了，继续</button></div></div>
 
       <main class="mission-content">
+        <section class="mission-screen" id="guided-lesson" data-mission="guided"></section>
         <section class="mission-screen" id="mission-1" data-mission="mission-1">
           <header class="mission-title coral"><span>🪙</span><div><p><span class="zh">任务01 · 钱的第一课</span><span class="en">MISSION 01 · MONEY FIRST STEPS</span></p><h1><span class="zh">钱会流入，也会流出</span><span class="en">Money comes in and goes out</span></h1><p><span class="zh">先看懂最简单的一笔生意，再认识“利润”这个新词。</span><span class="en">Follow one simple sale first, then meet the new word “profit”.</span></p></div></header>
           <div class="learning-formula"><article><span>🛍️</span><strong><span class="zh">流入：收入 Revenue</span><span class="en">Money in: Revenue</span></strong><p><span class="zh">顾客购买时，小店收到7星币</span><span class="en">A customer pays the shop 7 coins</span></p></article><b>−</b><article><span>📦</span><strong><span class="zh">流出：成本 Cost</span><span class="en">Money out: Cost</span></strong><p><span class="zh">制作产品已经花了4星币</span><span class="en">Making the product already cost 4 coins</span></p></article><b>=</b><article class="profit-card"><span>🪙</span><strong><span class="zh">剩余：利润 Profit</span><span class="en">Money left: Profit</span></strong><p><span class="zh">7 − 4 = 3星币</span><span class="en">7 − 4 = 3 coins</span></p></article></div>
