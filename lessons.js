@@ -8,7 +8,7 @@
     {
       id: "lesson-1", icon: "👛", title: L("我的钱有多少？", "How much do I have?"),
       goal: L("买东西前，先看看自己的钱够不够。", "Check your money before choosing what to buy."),
-      story: L("小芽准备去野餐。口袋里有 10 枚星币。面包、果汁、贴纸都想要，可是钱够吗？我们先陪她买一次。", "Sunny has 10 coins for a picnic. Bread, juice and stickers all look lovely. Can she buy them all? Let's help her."),
+      story: L("嗨，我是小芽，准备去野餐啦！你看，我的口袋里有 10 枚星币。面包香香的，果汁也想喝，还看到了喜欢的贴纸。哎，钱够不够呢？别着急，陪我一起数一数吧。", "Hi, I'm Sunny, and I'm going on a picnic! Look, I have 10 coins in my pocket. The bread smells lovely. I'd like some juice, and those stickers look fun too. Hmm, can I afford them all? Let's count together."),
       demo: [
         { amount: 10, title: L("先数一数", "Count first"), text: L("这 10 枚就是今天能用的钱。想买的东西再多，口袋里的钱也不会自己变多。", "These 10 coins are today's spending money. Wanting more things does not add more coins.") },
         { amount: 4, title: L("买了面包", "Buy the bread"), text: L("面包花了 6 枚。10 − 6 = 4，口袋里还剩 4 枚。", "Bread costs 6. 10 − 6 = 4: four coins remain.") },
@@ -25,7 +25,7 @@
     {
       id: "lesson-2", icon: "🧺", title: L("先买哪一样？", "What comes first?"),
       goal: L("先照顾眼前要做的事，再想喜欢的东西。", "Choose what your task needs before the extras."),
-      story: L("今天要为小店准备材料。小芽发现了漂亮的招牌，但少了做产品的材料，小店还能开门吗？", "Today we are getting the shop ready. Sunny loves a pretty sign. But can the shop open without its supplies?"),
+      story: L("今天，陪我给小店买材料吧！哇，这个招牌真漂亮，我好想带回去。等等，做产品的工具和材料还没买呢。要是少了它们，小店还能开门吗？你愿意帮我想一想，先买什么吗？", "Let's get our shop ready! Oh, that sign is lovely. I'd love to take it home. Wait a moment. We still need tools and materials. Could the shop open without them? What do you think we should buy first?"),
       demo: [
         { amount: 10, title: L("先问：我要做什么？", "What is the task?"), text: L("今天要给顾客做一份产品。先找做产品要用的工具和材料。", "Today we need to make something for a customer. First find the tools and materials.") },
         { amount: 3, title: L("先买能开店的东西", "Supplies first"), text: L("工具 3 枚，材料 4 枚，一共 7 枚。10 − 7 = 3。小店可以开始了。", "Tools cost 3 and materials cost 4: 7 in total. 10 − 7 = 3. Now the shop can start.") },
@@ -39,7 +39,7 @@
     {
       id: "lesson-3", icon: "🪙", title: L("卖到的钱都是赚的吗？", "Is every coin a gain?"),
       goal: L("把花掉的钱和收到的钱分开看。", "Separate money spent from money received."),
-      story: L("小芽收到顾客给的 5 枚星币，很开心：“我赚了 5 枚！”等等，刚才买材料花了多少？我们把两笔钱一起看看。", "A customer pays Sunny 5 coins. 'I made five!' she says. Wait—what did the materials cost? Let's look at both steps."),
+      story: L("耶，顾客付给我 5 枚星币啦！我是不是赚了 5 枚呢？嗯，好像还有一件事没想起来。刚才买材料，我也花了钱呀。来，我们把花出去的和收进来的，一起看看。", "Yay, a customer paid me 5 coins! Does that mean I earned all five? Hmm, I think I've forgotten something. I paid for the materials too! Let's look at the money going out and coming in."),
       demo: [
         { amount: 10, title: L("开店前的钱", "Before the sale"), text: L("小店原来有 10 枚。这是原有的钱，还不是今天赚到的。", "The shop starts with 10 coins. They were already here, not earned today.") },
         { amount: 8, title: L("钱出去：买材料", "Money out: materials"), text: L("只做一份产品，材料花 2 枚。口袋变成 10 − 2 = 8 枚。这笔花费叫成本。", "Materials for one item cost 2 coins. 10 − 2 = 8 remain. This spending is a cost.") },
@@ -62,7 +62,7 @@
     {
       id: "lesson-4", icon: "📦", title: L("今天准备几份？", "How many for today?"),
       goal: L("买之前想想用量，不是买得越多越好。", "Think about demand before buying more."),
-      story: L("今天有 3 位顾客预约，每人要 1 份。小芽想：“买多一点，会不会赚更多？”我们让她试试，再看货架和口袋。", "Three customers booked one item each. Sunny wonders if buying more will mean earning more. Let's check the shelf and the purse."),
+      story: L("叮咚，今天有 3 位顾客预约，每人要 1 份。我有个想法：多买一点货，会不会就赚得更多呢？你也好奇吗？咱们先试一试，再看看货架上留下了什么，口袋里还剩多少。", "Ding-dong! Three customers have booked one item each. I've had a thought: would buying extra stock help us earn more? Are you curious too? Let's try, then check what's on the shelf and what's in our purse."),
       demo: [
         { amount: 10, title: L("先看已知的消息", "Check what we know"), text: L("这次练习确定有 3 位顾客。每份进货 2 枚、卖出 3 枚。现实里的顾客数量不一定知道。", "For this exercise, exactly 3 customers will come. Each item costs 2 and sells for 3. Real demand is not always known.") },
         { amount: 0, title: L("如果买了 5 份", "What if we buy 5?"), text: L("5 × 2 = 10，进货后口袋暂时空了。货还在，所以这不是 10 枚全亏掉了。", "5 × 2 = 10. The purse is temporarily empty, but the stock still exists. This is not a loss of all 10 coins.") },
@@ -76,7 +76,7 @@
     {
       id: "lesson-5", icon: "🐷", title: L("给愿望留一点钱", "Save for a wish"),
       goal: L("把今天要用的钱和为以后留的钱分开。", "Separate today's needs from money saved for later."),
-      story: L("小芽想要 8 枚星币的新招牌。她现在有 12 枚，但明天买材料要 6 枚。愿望可以慢慢实现，小店也要能继续开门。", "Sunny wants an 8-coin sign. She has 12 coins, but tomorrow's supplies need 6. She can save gradually and keep the shop running."),
+      story: L("告诉你一个小愿望：我想给小店换一个新招牌，要 8 枚星币呢。我现在有 12 枚，不过，明天买材料还要用 6 枚。嗯，怎样才能照顾明天，也给愿望留一点？陪我分成两个小口袋吧！", "Can I tell you a little wish? I'd love a new sign for the shop. It costs 8 coins. I have 12, but tomorrow's supplies need 6. Hmm, how can I save for my wish and look after tomorrow too? Let's make two little pockets!"),
       demo: [
         { amount: 12, title: L("给钱分两个小口袋", "Make two pockets"), text: L("一个口袋写“明天要用”，另一个写“我的愿望”。分开存，不会让钱变多，但不容易弄混。", "Label one pocket 'tomorrow' and the other 'my wish'. Separating money does not create more; it helps us keep track.") },
         { amount: 6, title: L("先留明天的 6 枚", "Keep 6 for tomorrow"), text: L("12 − 6 = 6，最多还可以存 6 枚到愿望口袋。", "12 − 6 = 6. Up to 6 coins can go into the wish pocket.") },
@@ -90,7 +90,7 @@
     {
       id: "lesson-6", icon: "☂️", title: L("计划变了怎么办？", "What if plans change?"),
       goal: L("花钱时留一点余地，遇到变化可以重新安排。", "Leave some room in your plan and adjust when things change."),
-      story: L("小店杯子不小心破了，要 5 枚才能补齐。小芽有 8 枚，昨天差点花 6 枚买装饰。幸好她先等了一等！", "Some shop cups broke and replacements cost 5 coins. Sunny has 8. Yesterday she almost spent 6 on decorations. Waiting helped today!"),
+      story: L("哎呀，小店的杯子不小心破了，补齐要 5 枚。我现在有 8 枚。昨天看到 6 枚的装饰，我差一点就买啦。幸好先等了一等！你看，留下一点钱，是不是多了一个办法？", "Oh dear, some shop cups broke. Replacements cost 5 coins, and I have 8. Yesterday I nearly spent 6 on decorations. I'm glad I waited! Can you see how keeping some money gives us another option?"),
       demo: [
         { amount: 8, title: L("变化发生之前", "Before the surprise"), text: L("口袋有 8 枚，装饰要 6 枚。虽然买得起，但买完只剩 2 枚。", "There are 8 coins. Decorations cost 6. They are affordable, but would leave only 2.") },
         { amount: 2, title: L("只剩 2 枚会怎样？", "What if only 2 remain?"), text: L("补杯子要 5 枚，还差 3 枚。可能要晚一点开门，或和家长一起重新安排。", "Replacement cups cost 5: we would be 3 short. We might delay opening or plan again with an adult.") },
@@ -143,6 +143,22 @@
       node.hidden = false;
       node.className = `lesson-feedback ${success ? "success" : "try-again"}`;
       node.textContent = `${success ? txt("发现了！", "You found it! ") : txt("一起再看看：", "Let's look again: ")}${t(message)}`;
+      window.TeachingMedia.updateText(narrationText());
+    }
+
+    function narrationText() {
+      const p = progress();
+      if (lastFeedback) return txt(lastFeedback.success ? "你发现啦！" : "没关系，我们一起看看。", lastFeedback.success ? "You found it! " : "That's okay. Let's look together. ") + t(lastFeedback.message);
+      if (p.step === 0) return t(current.story);
+      if (p.step === 1) return t(current.demo[p.demo].text);
+      if (p.step === 4) return `${t(current.takeaway)} ${t(current.home)}`;
+      const data = exercise();
+      let copy = t(data.prompt);
+      if (data.type === "choice") copy += " " + data.options.map((o, i) => `${i + 1}. ${t(o.label)}`).join("。 ");
+      if (data.type === "basket") copy += txt(` 你有 ${data.budget} 枚。`, ` You have ${data.budget} coins. `) + data.items.map(i => `${t(i.name)} ${i.cost} ${txt("枚", "coins")}`).join("。 ");
+      if (data.type === "stock") copy += txt(" 开门前有10枚，进货一份2枚，卖出一份3枚。请选择准备几份。", " Start with 10 coins. Each item costs 2 and sells for 3. Choose how many to prepare.");
+      if (data.type === "jars") copy += txt(` 一共有 ${data.total} 枚，明天至少要留 ${data.reserve} 枚。现在愿望口袋 ${p.amount} 枚，留下 ${data.total - p.amount} 枚。`, ` There are ${data.total} coins. Tomorrow needs at least ${data.reserve}. Your wish pocket has ${p.amount}, leaving ${data.total - p.amount} available.`);
+      return copy;
     }
 
     function renderExercise(data) {
@@ -172,9 +188,10 @@
 
     function render() {
       if (!current) return;
+      window.TeachingMedia.dispose();
       const p = progress();
       const stages = [L("故事时间", "Story"), L("陪你看一遍", "Watch together"), L("一起试试", "Try together"), L("这次我来", "Your turn"), L("我的发现", "Discovery")];
-      root.innerHTML = `<header class="mission-title blue"><span aria-hidden="true">${current.icon}</span><div><p>${txt("第", "Lesson ")}${lessons.indexOf(current) + 1}${txt("课 · 一次学一件事", " · One idea at a time")}</p><h1 tabindex="-1" id="lesson-heading">${h(t(current.title))}</h1><p>${h(t(current.goal))}</p></div></header><ol class="lesson-steps">${stages.map((s, i) => `<li ${i === p.step ? 'aria-current="step"' : ""} class="${i < p.step ? "done" : ""}">${i < p.step ? "✓" : i + 1} ${h(t(s))}</li>`).join("")}</ol><div class="lesson-teacher"><span aria-hidden="true">🌱</span><p>${txt("我是小芽，陪你一起学。不着急，试错不会扣你的钱。", "I'm Sunny. Let's learn together. Take your time—mistakes never cost your game money.")}</p></div><div class="lesson-stage">${stageContent(p)}</div><div class="lesson-bottom">${p.step > 0 ? button(txt("← 再看前面的讲解", "← Review the explanation"), "back", "quiet-button") : ""}<span>${txt("每个练习有自己的星币 · 随时返回会保存本课步骤", "Each exercise has its own coins · Your lesson step saves when you leave")}</span></div>`;
+      root.innerHTML = `<header class="mission-title blue"><span aria-hidden="true">${current.icon}</span><div><p>${txt("第", "Lesson ")}${lessons.indexOf(current) + 1}${txt("课 · 一次学一件事", " · One idea at a time")}</p><h1 tabindex="-1" id="lesson-heading">${h(t(current.title))}</h1><p>${h(t(current.goal))}</p></div></header><ol class="lesson-steps">${stages.map((s, i) => `<li ${i === p.step ? 'aria-current="step"' : ""} class="${i < p.step ? "done" : ""}">${i < p.step ? "✓" : i + 1} ${h(t(s))}</li>`).join("")}</ol><div class="lesson-teacher"><img class="sunny-mascot" src="sunny-mascot.png" width="88" height="88" alt="${txt("小芽，财商学习伙伴", "Sunny, your money-learning companion")}" /><div><p>${txt("我是小芽，陪你一起学。不着急，试错不会扣你的钱。", "I'm Sunny. Let's learn together. Take your time—mistakes never cost your game money.")}</p><small class="learning-star-count">★ ${txt("学习星星", "Learning stars")} ${api.state.learningStars || 0}</small></div></div><div class="lesson-stage">${stageContent(p)}</div><div class="lesson-bottom">${p.step > 0 ? button(txt("← 再看前面的讲解", "← Review the explanation"), "back", "quiet-button") : ""}<span>${txt("每个练习有自己的星币 · 随时返回会保存本课步骤", "Each exercise has its own coins · Your lesson step saves when you leave")}</span></div>`;
       document.getElementById("mission-progress-label").textContent = `${p.step + 1} / 5`;
       document.getElementById("mission-progress-fill").style.width = `${(p.step + 1) * 20}%`;
       root.querySelectorAll("[data-lesson-action]").forEach((b) => b.addEventListener("click", () => act(b.dataset.lessonAction)));
@@ -190,8 +207,10 @@
         const jars = root.querySelectorAll(".jar-grid strong"); jars[0].textContent = `${p.amount} / ${exercise().target}`; jars[1].textContent = `${exercise().total - p.amount} 🪙`;
         root.querySelector("progress").value = Math.min(p.amount, exercise().target);
         root.querySelector(".lesson-feedback").hidden = true; api.save();
+        window.TeachingMedia.updateText(narrationText());
       });
       if (lastFeedback) feedback(lastFeedback.message, lastFeedback.success);
+      window.TeachingMedia.mount(root, { english: api.english(), lessonId: current.id, stage: p.step, demo: p.demo, text: narrationText() });
     }
 
     function stageContent(p) {
@@ -235,7 +254,10 @@
           : d.requireTarget && p.amount < d.target ? L(`已经存了 ${p.amount} 枚，再看看能不能留好车费，同时存够 ${d.target} 枚。`, `You saved ${p.amount}. Can you protect the bus fare and reach ${d.target}?`)
           : L(`你存了 ${p.amount} 枚，还留着 ${left} 枚可以用。两个口袋加起来仍是 ${d.total} 枚。`, `You saved ${p.amount} and kept ${left} available. The two pockets still total ${d.total}.`);
       }
-      p.passed = ok; api.save(); lastFeedback = { message, success: ok }; render();
+      p.passed = ok;
+      if (ok) api.state.learningStars = (api.state.learningStars || 0) + 1;
+      api.save(); lastFeedback = { message, success: ok }; render();
+      if (ok) window.TeachingMedia.celebrate(root, api.state.learningStars, api.english());
       if (ok) root.querySelector('[data-lesson-action="next"]')?.focus();
       else if (d.type === "choice") root.querySelector(`[data-choice="${index}"]`)?.focus();
       else root.querySelector('[data-lesson-action="check"]')?.focus();

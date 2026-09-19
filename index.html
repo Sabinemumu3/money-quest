@@ -10,6 +10,7 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="teaching-media.js" defer></script>
     <script src="lessons.js" defer></script>
     <script src="app.js" defer></script>
   </head>
@@ -33,6 +34,7 @@
           <p class="eyebrow"><span class="zh">8–12岁 · 游戏化财商与商业管理</span><span class="en">AGES 8–12 · MONEY & BUSINESS GAME</span></p>
           <h1><span class="zh">欢迎来到<br /><em>财商经营岛</em></span><span class="en">Welcome to<br /><em>Money Quest Island</em></span></h1>
           <p class="start-lede"><span class="zh">如果只有10枚星币，先买什么呢？和小芽一起数一数、选一选，从生活里的小问题开始，慢慢学会照顾自己的钱。</span><span class="en">If you had just 10 coins, what would you buy first? Count and choose with Sunny. Start with small everyday questions and learn to look after your money.</span></p>
+          <div class="mascot-welcome"><img src="sunny-mascot.png" width="96" height="96" alt="" /><p><span class="zh">我是小芽！我会讲给你听，<br />再陪你动手试一试。</span><span class="en">I'm Sunny! Listen to a story,<br />then let's try it together.</span></p></div>
           <div class="game-loop" aria-label="Game loop">
             <span>📚 <b><span class="zh">学习</span><span class="en">Learn</span></b></span>
             <i>→</i><span>🎮 <b><span class="zh">挑战</span><span class="en">Play</span></b></span>
@@ -187,7 +189,7 @@
         <aside class="study-clock"><span id="study-time">本次 0:00</span><button type="button" id="pause-study">暂停休息</button></aside>
       </header>
       <p class="break-reminder" id="break-reminder" hidden role="status"><span class="zh">已经学了一会儿，可以保存进度，起来活动一下。不用今天学完。</span><span class="en">You have been learning for a while. Save your place and stretch; no need to finish today.</span></p>
-      <div id="study-pause" class="study-pause" hidden><div role="dialog" aria-modal="true" aria-labelledby="pause-title"><span>🌱</span><h2 id="pause-title">休息一下，进度帮你留着</h2><button class="primary-button" id="resume-study" type="button">我准备好了，继续</button></div></div>
+      <div id="study-pause" class="study-pause" hidden><div role="dialog" aria-modal="true" aria-labelledby="pause-title"><img src="sunny-mascot.png" width="128" height="128" alt="" /><h2 id="pause-title">休息一下，进度帮你留着</h2><button class="primary-button" id="resume-study" type="button">我准备好了，继续</button></div></div>
 
       <main class="mission-content">
         <section class="mission-screen" id="guided-lesson" data-mission="guided"></section>

@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "dist");
-const assets = ["styles.css", "lessons.js", "app.js", "icon.svg"];
+const assets = ["styles.css", "teaching-media.js", "lessons.js", "app.js", "icon.svg", "sunny-mascot.png"];
 mkdirSync(output, { recursive: true });
 
 // Hosting controls the audience. Test publications do not install an offline
@@ -26,4 +26,4 @@ for (const [, url] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
   assert(expected.includes(url), `Unexpected asset reference: ${url}`);
 }
 assert(readFileSync(join(output, "app.js"), "utf8").includes('dataset.privatePreview !== "true"'));
-console.log("Test site prepared: 5 game assets; offline installation disabled.");
+console.log(`Test site prepared: ${expected.length} game assets; offline installation disabled.`);

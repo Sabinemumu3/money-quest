@@ -137,6 +137,7 @@
     customerAnswers: {},
     lessonProgress: {},
     learningSeconds: 0,
+    learningStars: 0,
     market: {
       cash: 100,
       holdings: { water: 0, games: 0, green: 0 },
@@ -159,6 +160,7 @@
         ...saved,
         completed: { ...defaultState.completed, ...(saved.completed || {}) },
         lessonProgress: saved.lessonProgress || {},
+        learningStars: Number.isSafeInteger(saved.learningStars) && saved.learningStars >= 0 ? saved.learningStars : 0,
         market: {
           ...defaultState.market,
           ...(saved.market || {}),
@@ -302,7 +304,7 @@
   }
 
   function renderBadges() {
-    $(".badge-grid").innerHTML = LESSONS.map((lesson) => `<article class="${state.completed[lesson.id] ? "is-earned" : ""}"><span>${lesson.icon}</span><strong>${t(lesson.title.zh, lesson.title.en)}</strong><small>${state.completed[lesson.id] ? t("我已经练习过", "I have practised this") : t("一步一步来", "One step at a time")}</small></article>`).join("");
+    $(".badge-grid").innerHTML = `<article class="is-earned learning-stars-badge"><span aria-hidden="true">★</span><strong>${state.learningStars} ${t("颗学习星星", "learning stars")}</strong><small>${t("每次完成一道练习获得一颗，复习也算。星星不是钱，也不代表投资能力。", "One for each successful exercise, including review. Stars are not money or a measure of investing ability.")}</small></article>` + LESSONS.map((lesson) => `<article class="${state.completed[lesson.id] ? "is-earned" : ""}"><span>${lesson.icon}</span><strong>${t(lesson.title.zh, lesson.title.en)}</strong><small>${state.completed[lesson.id] ? t("我已经练习过", "I have practised this") : t("一步一步来", "One step at a time")}</small></article>`).join("");
     $("#parent-progress").textContent = t(`基础课完成 ${completedCount()} / 6；本机累计有效学习约 ${Math.floor(state.learningSeconds / 60)} 分钟。时长不用于解锁。`, `${completedCount()} / 6 foundation lessons completed; about ${Math.floor(state.learningSeconds / 60)} active minutes on this device. Time does not unlock lessons.`);
   }
 
@@ -336,6 +338,7 @@
 
   function openMission(task) {
     if (!isUnlocked(task)) return;
+    window.TeachingMedia.dispose();
     returnFocus = document.activeElement;
     paused = false;
     $("#study-pause").hidden = true;
@@ -366,6 +369,7 @@
   }
 
   function closeMission() {
+    window.TeachingMedia.dispose();
     activeMission = "";
     paused = false;
     $("#game-app").inert = false;
@@ -390,6 +394,7 @@
     document.addEventListener("visibilitychange", () => { lastInteraction = Date.now(); saveState(); });
     window.addEventListener("pagehide", saveState);
     $("#pause-study").addEventListener("click", () => {
+      window.TeachingMedia.suspend();
       paused = true; saveState(); $("#study-pause").hidden = false;
       $(".mission-content").inert = true; $("#resume-study").focus();
     });
@@ -418,6 +423,7 @@
     $("#reward-badge").textContent = reward.badge;
     $("#reward-copy").textContent = t(reward.copyZh, reward.copyEn);
     $("#reward-popover").hidden = false;
+    window.TeachingMedia.playSuccessSound();
     $("#collect-reward").focus();
   }
 
