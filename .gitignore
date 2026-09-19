@@ -1,0 +1,6 @@
+public/
+dist/
+node_modules/
+*.tar.gz
+.DS_Store
+preview-*.png
