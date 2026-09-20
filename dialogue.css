@@ -1,4 +1,10 @@
 /* Character-led learning: one short bubble, then one small action. */
+.thinking-course-entry { display:flex; align-items:center; gap:14px; padding:18px 22px; margin:18px auto; width:min(1140px,calc(100% - 36px)); border:1px solid #a8c385; border-radius:20px; background:#e8f5cd; color:#173f37; text-decoration:none; }
+.thinking-course-entry > span:first-child { font-size:32px; }
+.thinking-course-entry > span:nth-child(2) { flex:1; }
+.thinking-course-entry strong { display:block; font-size:18px; line-height:1.5; }
+.thinking-course-entry small { display:block; margin-top:4px; font-size:14px; line-height:1.6; }
+.thinking-course-entry b { font-size:26px; }
 .sunny-sprite { display:inline-block; flex:none; width:128px; height:128px; background:url("sunny-expressions.png") 0 0 / 200% 200% no-repeat; }
 .sunny-sprite[data-mood="curious"] { background-position:100% 0; }
 .sunny-sprite[data-mood="happy"] { background-position:0 100%; }

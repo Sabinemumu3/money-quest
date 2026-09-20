@@ -4,3 +4,8 @@ node_modules/
 *.tar.gz
 .DS_Store
 preview-*.png
+.env
+.env.*
+!.env.example
+*.log
+.sites-runtime/

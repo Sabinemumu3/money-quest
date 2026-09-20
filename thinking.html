@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#173f37" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="和小芽、团团一起做野餐计划：先猜、再试、看结果、改主意。儿童思维教育互动样板课。" />
+  <title>小芽思考站 · 10枚星币的野餐计划</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="dialogue.css" />
+  <link rel="stylesheet" href="thinking.css" />
+  <script src="teaching-media.js" defer></script>
+  <script src="thinking-course.js" defer></script>
+</head>
+<body class="thinking-app">
+  <a class="skip-link" href="#thinking-main">跳到学习内容 / Skip to lesson</a>
+  <header class="thinking-header">
+    <a href="index.html" id="course-home" aria-label="返回课程地图">← <span>课程地图</span></a>
+    <strong id="app-name">小芽思考站</strong>
+    <div class="thinking-tools"><button id="course-language" type="button">EN</button><button id="course-pause" type="button">休息</button></div>
+  </header>
+  <main id="thinking-main" class="thinking-main"></main>
+  <footer class="thinking-footer"><span id="local-save" role="status">只保存到这台设备</span><a href="money-lab.html">下一站：存·花·捐与模拟银行 / Money town</a><span id="course-time">本次 0:00</span></footer>
+  <dialog id="pause-dialog" aria-labelledby="pause-heading"><span class="sunny-sprite" data-mood="gentle" aria-hidden="true"></span><h2 id="pause-heading">休息一下，进度留在这里。</h2><p id="pause-copy">没有倒计时。准备好了再回来。</p><button id="resume-course" class="primary-button" type="button">我准备好了</button></dialog>
+  <dialog id="restart-dialog" aria-labelledby="restart-heading"><h2 id="restart-heading">重新体验这节课？</h2><p id="restart-copy">只清除这节样板课的思考记录，原来的六课进度不会改变。</p><div class="dialog-actions"><button id="cancel-restart" type="button">先留着</button><button id="confirm-restart" type="button">重新开始</button></div></dialog>
+  <noscript>这节互动课需要启用 JavaScript。This interactive lesson needs JavaScript.</noscript>
+</body>
+</html>
