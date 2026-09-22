@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex" />
+<title>财商经营岛 · MVP 视觉风格板与页面线框</title>
+<style>
+  :root{
+    --ink:#173F37; --deep:#0D302A; --paper:#FBFAF4; --white:#fff; --cream:#F2EADB;
+    --lime:#D9FB8F; --coral:#FF8265; --blue:#9EDCE9; --purple:#CBBBF8; --yellow:#FFD96C;
+    --muted:#61746F; --line:rgba(23,63,55,.17);
+    --state-playable:#D9FB8F; --state-done:#173F37; --state-locked:#D5DFC9;
+    --reward:#FFD96C; --warn-soft:#FFB4A2; --focus:#CBBBF8;
+    --r-xl:30px; --r-lg:22px; --r-md:15px; --r-sm:10px;
+    --sh-lg:0 22px 55px rgba(13,48,42,.13); --sh-sm:0 6px 18px rgba(13,48,42,.08);
+    --font-kid: ui-rounded,"Avenir Next","Nunito Sans","PingFang SC","Microsoft YaHei",sans-serif;
+    --font-parent:"Avenir Next","Nunito Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-parent);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .page{max-width:1180px;margin:0 auto;padding:0 20px 90px}
+
+  header.doc{padding:44px 0 24px;border-bottom:3px solid var(--ink);margin-bottom:38px}
+  .kicker{display:inline-block;background:var(--lime);color:var(--deep);font-size:12px;font-weight:800;letter-spacing:.14em;padding:5px 12px;border-radius:99px;margin-bottom:16px}
+  h1{font-size:32px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:18px;font-size:13px;color:var(--muted)}
+  .meta b{color:var(--ink)}
+
+  h2{font-size:20px;margin:46px 0 4px;display:flex;align-items:center;gap:10px}
+  h2 .num{flex:none;width:26px;height:26px;border-radius:8px;background:var(--ink);color:var(--lime);font-size:13px;font-weight:800;display:grid;place-items:center}
+  .rule{height:2px;background:var(--line);margin:12px 0 22px;border-radius:2px}
+  h3{font-size:14px;margin:26px 0 12px;color:var(--deep);letter-spacing:.03em}
+  p.note{font-size:13.5px;color:var(--muted);margin:0 0 14px}
+  code{background:var(--cream);padding:1px 6px;border-radius:6px;font-size:12.5px;font-family:ui-monospace,Consolas,monospace}
+
+  /* ---------- swatches ---------- */
+  .sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .sw{border:1.5px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--white)}
+  .sw .chip{height:64px;border-bottom:1.5px solid var(--line)}
+  .sw .info{padding:10px 12px}
+  .sw .name{font-size:13px;font-weight:800;font-family:var(--font-kid)}
+  .sw .hex{font-size:12px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .sw .use{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+  .sw .ratio{display:inline-block;margin-top:6px;font-size:11px;background:var(--cream);border-radius:99px;padding:1px 8px;color:var(--deep);font-weight:700}
+
+  .ban{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:6px}
+  .ban .b{border:1.5px dashed rgba(23,63,55,.3);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;background:#fff}
+  .ban .b b{display:block;color:#9b2c22;font-size:12.5px;margin-bottom:4px}
+
+  /* ---------- type spec ---------- */
+  .ts{border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--white);padding:16px 20px;margin-bottom:12px}
+  .ts .lbl{font-size:11.5px;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:8px;font-family:ui-monospace,Consolas,monospace}
+  .ts .demo{font-family:var(--font-kid);color:var(--ink)}
+
+  /* ---------- shape / shadow ---------- */
+  .shape-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+  .shape{border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--white);padding:18px;text-align:center}
+  .shape .box{height:56px;background:var(--lime);border:2px solid var(--ink);margin:0 auto 12px}
+  .shape .cap{font-size:12px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .shape .cap b{display:block;color:var(--ink);font-size:13px;font-family:var(--font-kid);margin-bottom:2px}
+
+  /* ---------- components ---------- */
+  .cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .cmp{border:1.5px solid var(--line);border-radius:var(--r-lg);background:var(--white);padding:20px}
+  .cmp h4{margin:0 0 4px;font-size:13.5px}
+  .cmp .hint{font-size:12px;color:var(--muted);margin:0 0 16px}
+  .cmp .stack{display:flex;flex-direction:column;gap:10px}
+  .cmp .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  .btn{height:56px;min-width:56px;border-radius:var(--r-md);border:2px solid var(--ink);background:var(--lime);color:var(--ink);font-family:var(--font-kid);font-size:18px;font-weight:800;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+  .btn.sec{background:var(--white);border:1.5px solid var(--line);font-size:16px;font-weight:700}
+  .btn.ghost{background:transparent;border:none;font-size:16px;font-weight:700;color:var(--muted);height:auto;padding:8px}
+  .btn.dis{background:var(--state-locked);border-color:var(--state-locked);color:var(--muted)}
+
+  .card-demo{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-xl);padding:22px}
+  .card-demo.strong{border:2px solid var(--ink)}
+  .card-demo.cream{background:var(--cream);border-radius:var(--r-md);padding:18px}
+  .card-demo.shadow{box-shadow:var(--sh-lg);border-radius:var(--r-xl);padding:22px;background:var(--white);border:1.5px solid var(--line)}
+
+  .node{display:flex;align-items:center;justify-content:space-between;height:64px;border-radius:var(--r-md);padding:0 18px;font-family:var(--font-kid);font-size:16px;font-weight:800;border:1.5px solid var(--line)}
+  .node.play{background:var(--state-playable);border-color:var(--ink)}
+  .node.done{background:var(--white)}
+  .node.lock{background:var(--state-locked);color:var(--muted);border-color:transparent}
+
+  .coin{width:32px;height:32px;border-radius:50%;background:var(--reward);border:2.5px solid var(--ink);display:inline-grid;place-items:center;font-size:13px;font-weight:800;color:var(--ink)}
+  .coin.sm{width:24px;height:24px;font-size:11px;border-width:2px}
+
+  .talk{background:var(--cream);border-radius:var(--r-md);padding:16px;font-size:15px;line-height:1.65;position:relative}
+  .talk .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--lime);font-size:12px;font-weight:800;margin-right:8px;font-family:var(--font-kid)}
+  .talk .tag{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}
+
+  .badge{width:96px;height:96px;border-radius:50%;background:var(--reward);border:2.5px solid var(--ink);display:grid;place-items:center;font-size:34px}
+  .badge.locked{background:var(--state-locked);border-color:transparent;filter:grayscale(1);opacity:.55}
+  .badge-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+
+  .dots{font-size:18px;letter-spacing:3px}
+  .dots .on{color:var(--state-done)}
+  .dots .off{color:var(--state-locked)}
+
+  /* ---------- tone table ---------- */
+  .tone{width:100%;border-collapse:collapse;font-size:13.5px}
+  .tone th,.tone td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tone th{font-size:12px;color:var(--muted);letter-spacing:.05em}
+  .tone .no{color:#9b2c22;text-decoration:line-through;text-decoration-color:rgba(155,44,34,.35)}
+  .tone .yes{color:var(--ink);font-weight:700}
+  .tone tr:last-child td{border-bottom:none}
+
+  /* ---------- wireframes ---------- */
+  .wf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+  .wf-wrap{display:flex;flex-direction:column;gap:10px}
+  .wf-title{font-size:13px;font-weight:800;font-family:var(--font-kid);display:flex;align-items:center;gap:8px}
+  .wf-title .id{background:var(--ink);color:var(--lime);font-size:10.5px;padding:2px 7px;border-radius:6px;letter-spacing:.04em}
+  .wf{width:100%;max-width:260px;height:500px;border:2px solid var(--ink);border-radius:26px;background:var(--white);overflow:hidden;position:relative;font-family:var(--font-kid)}
+  .wf .in{position:absolute;inset:0;padding:12px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+  .wbar{height:30px;border-radius:8px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:10px;color:var(--muted);background:var(--paper);flex:none}
+  .wbox{border:1.5px solid var(--line);border-radius:12px;background:var(--paper);padding:9px 11px;font-size:10.5px;line-height:1.45;color:var(--muted);flex:none}
+  .wbox.fill{background:var(--lime);border-color:var(--ink);color:var(--ink);font-weight:800}
+  .wbox.cream{background:var(--cream);color:var(--ink)}
+  .wbox.lock{background:var(--state-locked);border-color:transparent}
+  .wbox.dark{background:var(--ink);border-color:var(--ink);color:var(--lime);font-weight:800}
+  .wbox .b{display:block;color:var(--ink);font-weight:800;font-size:11px;margin-bottom:3px}
+  .wbox.dark .b{color:var(--lime)}
+  .wbtn{height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--lime);display:grid;place-items:center;font-size:11.5px;font-weight:800;color:var(--ink);flex:none}
+  .wbtn.sec{background:var(--white);border-width:1.5px;border-color:var(--line);color:var(--muted)}
+  .wrow{display:flex;gap:8px;flex:none}
+  .wrow>*{flex:1}
+  .wchar{height:56px;border-radius:14px;border:1.5px dashed rgba(23,63,55,.35);display:grid;place-items:center;font-size:10px;color:var(--muted);flex:none;background:#f7f9f1}
+  .wbub{border:1.5px solid var(--line);border-radius:14px;background:var(--white);padding:10px 12px;font-size:11px;line-height:1.5;color:var(--ink);flex:none}
+  .wcoins{display:flex;gap:4px;flex-wrap:wrap;flex:none;padding:8px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper)}
+  .wcoin{width:18px;height:18px;border-radius:50%;background:var(--reward);border:2px solid var(--ink)}
+  .wspacer{flex:1 1 auto;min-height:4px}
+  .wfoot{font-size:9.5px;color:var(--muted);text-align:center;flex:none;padding-top:2px}
+  .wnote{font-size:12px;color:var(--muted);line-height:1.55}
+  .wnote b{color:var(--ink)}
+  .wnote ul{margin:6px 0 0;padding-left:16px}
+  .wnote li{margin-bottom:3px}
+
+  .callout{border-left:5px solid var(--coral);background:#fff6f3;border-radius:0 var(--r-md) var(--r-md) 0;padding:14px 18px;margin:16px 0;font-size:13.5px}
+  .callout b{color:#9b2c22}
+  .callout.ok{border-left-color:var(--lime);background:#f6fee9}
+  .callout.ok b{color:var(--deep)}
+
+  footer.doc{margin-top:60px;padding-top:22px;border-top:2px solid var(--line);font-size:12.5px;color:var(--muted)}
+  .ph{float:right}
+  @media print{ body{background:#fff;padding:0;font-size:10.5px} .wf{height:auto;min-height:420px} .ph{display:none} h2{break-before:auto} }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc">
+  <span class="kicker">风格板 + 页面线框 · V1.0</span>
+  <h1>财商经营岛 · MVP 视觉风格板与页面线框</h1>
+  <p class="sub">配套文档：<code>docs/MVP-REQUIREMENTS.md</code>（风格确定 / 页面设计 / 功能 / 验收清单）</p>
+  <div class="meta">
+    <span>日期：<b>2026-09-22</b></span>
+    <span>范围：<b>第一章「认识我的钱」+ 家长中心 + 锁层</b></span>
+    <span>目标用户：<b>8–12 岁儿童 + 家长</b></span>
+  </div>
+</header>
+
+<div class="callout ok">
+  <b>设计基调一句话：</b>像一个耐心的大哥哥在陪孩子玩，而不是一个老师在考孩子。<br>
+  <b>对孩子</b>＝温暖 · 轻快 · 我说了算｜<b>对家长</b>＝克制 · 清楚 · 可信
+</div>
+
+<!-- 1 -->
+<h2><span class="num">1</span>色板</h2>
+<div class="rule"></div>
+<p class="note">基础色沿用现有设计 token（<code>styles.css</code>），本版本新增 6 个语义色。百分比为建议画面占比。</p>
+
+<div class="sw-grid">
+  <div class="sw"><div class="chip" style="background:#173F37"></div><div class="info"><div class="name">--ink 深墨绿</div><div class="hex">#173F37</div><div class="use">主文字 · 描边 · 深色块 · 主题色</div><span class="ratio">15%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#0D302A"></div><div class="info"><div class="name">--deep 深林绿</div><div class="hex">#0D302A</div><div class="use">深色底 · 阴影基色</div><span class="ratio">5%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#FBFAF4"></div><div class="info"><div class="name">--paper 米白</div><div class="hex">#FBFAF4</div><div class="use">页面底色</div><span class="ratio">45%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#FFFFFF"></div><div class="info"><div class="name">--white 纯白</div><div class="hex">#FFFFFF</div><div class="use">卡片 · 面板</div><span class="ratio">15%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#F2EADB"></div><div class="info"><div class="name">--cream 奶油</div><div class="hex">#F2EADB</div><div class="use">次级底 · 未选中态 · 话术卡</div><span class="ratio">5%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#D9FB8F"></div><div class="info"><div class="name">--lime 嫩叶绿</div><div class="hex">#D9FB8F</div><div class="use"><b>主强调</b>：可玩 · 成功 · 小芽</div><span class="ratio">8%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#FF8265"></div><div class="info"><div class="name">--coral 珊瑚</div><div class="hex">#FF8265</div><div class="use"><b>次强调</b>：提示 · 注意 · 围裙</div><span class="ratio">3%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#9EDCE9"></div><div class="info"><div class="name">--blue 天青</div><div class="hex">#9EDCE9</div><div class="use">情境点缀（水 · 天空）</div><span class="ratio">2%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#CBBBF8"></div><div class="info"><div class="name">--purple 淡紫</div><div class="hex">#CBBBF8</div><div class="use">情境点缀 · 焦点环</div><span class="ratio">1%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#FFD96C"></div><div class="info"><div class="name">--yellow 金黄</div><div class="hex">#FFD96C</div><div class="use"><b>奖励</b>：星星 · 金币 · 徽章</div><span class="ratio">2%</span></div></div>
+  <div class="sw"><div class="chip" style="background:#61746F"></div><div class="info"><div class="name">--muted 灰绿</div><div class="hex">#61746F</div><div class="use">次要文字 · 辅助说明</div><span class="ratio">—</span></div></div>
+  <div class="sw"><div class="chip" style="background:rgba(23,63,55,.17)"></div><div class="info"><div class="name">--line 淡描边</div><div class="hex">rgba(23,63,55,.17)</div><div class="use">分隔线 · 卡片描边</div><span class="ratio">—</span></div></div>
+</div>
+
+<h3>本版本新增语义色</h3>
+<div class="sw-grid">
+  <div class="sw"><div class="chip" style="background:#D9FB8F"></div><div class="info"><div class="name">--state-playable</div><div class="hex">#D9FB8F</div><div class="use">地图上可进入的节</div></div></div>
+  <div class="sw"><div class="chip" style="background:#173F37"></div><div class="info"><div class="name">--state-done</div><div class="hex">#173F37</div><div class="use">已完成（配打勾图标）</div></div></div>
+  <div class="sw"><div class="chip" style="background:#D5DFC9"></div><div class="info"><div class="name">--state-locked</div><div class="hex">#D5DFC9</div><div class="use">锁定（配锁图标）</div></div></div>
+  <div class="sw"><div class="chip" style="background:#FFD96C"></div><div class="info"><div class="name">--reward</div><div class="hex">#FFD96C</div><div class="use">星星 · 徽章底 · 金币</div></div></div>
+  <div class="sw"><div class="chip" style="background:#FFB4A2"></div><div class="info"><div class="name">--warn-soft</div><div class="hex">#FFB4A2</div><div class="use">仅家长端"需要注意"</div></div></div>
+  <div class="sw"><div class="chip" style="background:#CBBBF8"></div><div class="info"><div class="name">--focus</div><div class="hex">#CBBBF8</div><div class="use">键盘焦点环</div></div></div>
+</div>
+
+<h3>配色禁忌（硬约束）</h3>
+<div class="ban">
+  <div class="b"><b>❌ 纯红 / 正红</b>儿童端禁止出现红色错误态，一律用 --coral 或 --muted</div>
+  <div class="b"><b>❌ 涨跌色彩语义</b>任何形式的红绿涨跌配色</div>
+  <div class="b"><b>❌ 荧光 / 渐变紫粉</b>不用霓虹色、不用渐变紫粉</div>
+  <div class="b"><b>❌ 仅靠颜色区分状态</b>必须同时有图标或形状差异</div>
+</div>
+
+<!-- 2 -->
+<h2><span class="num">2</span>字号阶梯</h2>
+<div class="rule"></div>
+
+<h3>儿童端（圆体优先 · 基准 390px）</h3>
+<div class="ts"><div class="lbl">--kid-display · 32 / 1.25 · 800</div><div class="demo" style="font-size:32px;line-height:1.25;font-weight:800">第一章 认识我的钱</div></div>
+<div class="ts"><div class="lbl">--kid-title · 26 / 1.30 · 800</div><div class="demo" style="font-size:26px;line-height:1.3;font-weight:800">卖到的钱都是赚的吗？</div></div>
+<div class="ts"><div class="lbl">--kid-lead · 22 / 1.45 · 700</div><div class="demo" style="font-size:22px;line-height:1.45;font-weight:700">你的口袋里有 10 枚星币。</div></div>
+<div class="ts"><div class="lbl">--kid-body · 18 / 1.60 · 400</div><div class="demo" style="font-size:18px;line-height:1.6">面包 6 枚，果汁 3 枚。你想买什么？</div></div>
+<div class="ts"><div class="lbl">--kid-label · 16 / 1.50 · 700</div><div class="demo" style="font-size:16px;line-height:1.5;font-weight:700">先不取名字，直接开始</div></div>
+
+<div class="callout">
+  <b>硬规则：</b>儿童端正文字号 <b>不得小于 16px</b>，教学内容正文不低于 18px。任何情况下<b>不缩字号来塞内容</b>，宁可换行或分屏。所有金额/数字必须加 <code>font-variant-numeric: tabular-nums</code>。
+</div>
+
+<h3>家长端（常规无衬线 · 信息密度优先）</h3>
+<div class="ts"><div class="lbl">--parent-lead · 21 / 1.50 · 700 ← 全页最大，最重要</div><div class="demo" style="font-family:var(--font-parent);font-size:21px;line-height:1.5;font-weight:700">他今天学会了「先看自己有多少钱，再决定买什么」</div></div>
+<div class="ts"><div class="lbl">--parent-h2 · 19 / 1.40 · 800</div><div class="demo" style="font-family:var(--font-parent);font-size:19px;line-height:1.4;font-weight:800">💬 今晚可以聊</div></div>
+<div class="ts"><div class="lbl">--parent-body · 15 / 1.65 · 400</div><div class="demo" style="font-family:var(--font-parent);font-size:15px;line-height:1.65">你先数了数口袋里有多少钱，这个办法真好。</div></div>
+<div class="ts"><div class="lbl">--parent-caption · 13 / 1.60 · 400</div><div class="demo" style="font-family:var(--font-parent);font-size:13px;line-height:1.6;color:var(--muted)">用了 1 次提示，自己换了方案</div></div>
+
+<!-- 3 -->
+<h2><span class="num">3</span>形状 · 描边 · 阴影</h2>
+<div class="rule"></div>
+<p class="note">本产品视觉靠「实线描边 + 圆角 + 平涂色块」建立手绘绘本感——<b>描边为主，阴影为辅</b>。不用重投影、不用玻璃拟态、不用多层渐变。</p>
+<div class="shape-grid">
+  <div class="shape"><div class="box" style="border-radius:30px"></div><div class="cap"><b>--radius-xl</b>30px · 大面板 / 章节卡</div></div>
+  <div class="shape"><div class="box" style="border-radius:22px"></div><div class="cap"><b>--radius-lg</b>22px · 常规卡片</div></div>
+  <div class="shape"><div class="box" style="border-radius:15px"></div><div class="cap"><b>--radius-md</b>15px · 按钮 / 选项</div></div>
+  <div class="shape"><div class="box" style="border-radius:10px"></div><div class="cap"><b>--radius-sm</b>10px · 标签</div></div>
+  <div class="shape"><div class="box" style="border-radius:999px"></div><div class="cap"><b>--radius-pill</b>999px · 胶囊</div></div>
+  <div class="shape"><div class="box" style="border:1.5px solid var(--line);background:#fff;box-shadow:var(--sh-sm)"></div><div class="cap"><b>--shadow-sm</b>轻浮起</div></div>
+  <div class="shape"><div class="box" style="border:1.5px solid var(--line);background:#fff;box-shadow:var(--sh-lg)"></div><div class="cap"><b>--shadow-lg</b>浮层 / 结论卡</div></div>
+  <div class="shape"><div class="box" style="border:2px solid var(--ink)"></div><div class="cap"><b>--border-strong</b>2px · 重点卡</div></div>
+</div>
+
+<!-- 4 -->
+<h2><span class="num">4</span>核心组件规格</h2>
+<div class="rule"></div>
+<div class="cmp-grid">
+
+  <div class="cmp">
+    <h4>按钮</h4>
+    <p class="hint">高度一律 ≥ 56px（儿童触控）</p>
+    <div class="stack">
+      <div class="btn">开始吧</div>
+      <div class="btn sec">▶ 听小芽讲</div>
+      <div class="btn ghost">先不取名字，直接开始</div>
+      <div class="btn dis">不可用</div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h4>地图节点 · 三态</h4>
+    <p class="hint">必须同时有<b>颜色 + 图标</b>差异，不能只靠颜色</p>
+    <div class="stack">
+      <div class="node play"><span>▶　1-3 卖到的钱都是赚的吗？</span><span>呼吸 1↔1.02 / 2.4s</span></div>
+      <div class="node done"><span>✅　1-2 先买哪一样？</span><span>⭐⭐⭐</span></div>
+      <div class="node lock"><span>🔒　第二章 · 经营我的钱</span><span>—</span></div>
+    </div>
+    <p class="hint" style="margin:12px 0 0">同一时刻<b>只有一个</b>节点为可玩并带呼吸动效</p>
+  </div>
+
+  <div class="cmp">
+    <h4>星币（教学道具）</h4>
+    <p class="hint">直径 32px；动画内 24px。数量必须与教学数字逐一对应</p>
+    <div class="row"><span class="coin">1</span><span class="coin">2</span><span class="coin">3</span><span class="coin sm"></span><span class="coin sm"></span></div>
+    <p class="hint" style="margin:14px 0 0">星币<b>只在练习区内可见</b>，出练习区即隐藏</p>
+  </div>
+
+  <div class="cmp">
+    <h4>卡片三级</h4>
+    <p class="hint">描边区分层级，不靠阴影堆叠</p>
+    <div class="stack">
+      <div class="card-demo strong" style="border-radius:30px;padding:16px 18px;font-size:13.5px"><b>重点卡</b> · 2px 描边 · 章节卡 / 结论卡</div>
+      <div class="card-demo" style="border-radius:22px;padding:14px 18px;font-size:13.5px">常规卡 · 1.5px 淡描边</div>
+      <div class="card-demo cream" style="font-size:13.5px">次级底 · 奶油色 · 话术卡</div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h4>家长话术卡（核心差异点）</h4>
+    <p class="hint">话术用引号包裹，表明可以照读</p>
+    <div class="stack">
+      <div class="talk"><span class="tag">① 先肯定</span><span class="n">1</span>「你先数了数口袋里有多少钱，这个办法真好。」</div>
+      <div class="talk"><span class="tag">② 再提问</span><span class="n">2</span>「如果你是老板，进货的钱算不算赚到的钱？」</div>
+      <div class="talk"><span class="tag">③ 生活延伸</span><span class="n">3</span>「周末去超市，让他自己算一次总价。」</div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h4>徽章</h4>
+    <p class="hint">未获得也显示能力说明，但<b>不显示收集百分比</b></p>
+    <div class="badge-row">
+      <div style="text-align:center;width:112px"><div class="badge">🪙</div><div style="font-size:13px;font-weight:800;margin-top:8px">会数钱</div><div style="font-size:11.5px;color:var(--muted);line-height:1.4">知道先看自己有多少钱，再决定买什么</div></div>
+      <div style="text-align:center;width:112px"><div class="badge locked">📈</div><div style="font-size:13px;font-weight:800;margin-top:8px;color:var(--muted)">看得懂利润</div><div style="font-size:11.5px;color:var(--muted);line-height:1.4">明白"收到的钱"和"赚到的钱"不一样</div></div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h4>能力地图（家长端）</h4>
+    <p class="hint">三档圆点。<b>无分数、无排名、无百分比</b></p>
+    <div class="stack" style="font-size:14px">
+      <div class="row" style="justify-content:space-between"><span>会数钱</span><span class="dots"><span class="on">●●●</span></span></div>
+      <div class="row" style="justify-content:space-between"><span>分得清</span><span class="dots"><span class="on">●</span><span class="off">○○</span></span></div>
+      <div class="row" style="justify-content:space-between"><span>看得懂利润</span><span class="dots"><span class="off">○○○</span></span></div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h4>动效时长</h4>
+    <p class="hint">全部时长上限 600ms（星币流动除外，需完整展示数量）</p>
+    <div class="stack" style="font-size:13.5px">
+      <div class="row" style="justify-content:space-between"><span>帧 / 页面切换</span><b>240ms</b></div>
+      <div class="row" style="justify-content:space-between"><span>按钮按下</span><b>120ms · scale .97</b></div>
+      <div class="row" style="justify-content:space-between"><span>星币流动</span><b>620ms · 逐枚 +35ms</b></div>
+      <div class="row" style="justify-content:space-between"><span>演示自动播放</span><b>每帧 3200ms</b></div>
+      <div class="row" style="justify-content:space-between"><span>角色待机</span><b>3000ms · 位移 ≤4px</b></div>
+    </div>
+    <p class="hint" style="margin:14px 0 0"><b>禁止：</b>闪烁 · 抖动 · 循环吸引注意 · 视差滚动</p>
+  </div>
+
+</div>
+
+<!-- 5 -->
+<h2><span class="num">5</span>页面线框</h2>
+<div class="rule"></div>
+<p class="note">示意布局与信息层级，非视觉定稿。所有儿童端页面都必须有可见的「回地图」出口。</p>
+
+<div class="wf-grid">
+
+  <!-- P-01 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-01</span>开场 · 小芽欢迎</div>
+    <div class="wf"><div class="in">
+      <div class="wspacer"></div>
+      <div class="wchar" style="height:72px">[ 小芽 · 欢迎表情 ]</div>
+      <div class="wbub" style="font-size:15px;font-weight:800;text-align:center">嗨，我是小芽！<br>你叫什么？</div>
+      <div class="wbox" style="height:40px;display:grid;place-items:center">在这里输入名字（可留空）</div>
+      <div class="wbtn">开始吧</div>
+      <div class="wfoot">先不取名字，直接开始</div>
+      <div class="wfoot" style="color:var(--muted)">🔒 名字只留在这台设备上</div>
+      <div class="wspacer"></div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>3 秒内进入状态，零填表负担</li><li>昵称可留空，无邮箱 / 年龄 / 头像</li><li>隐私提示必须可见，不可折叠</li></ul>
+    </div>
+  </div>
+
+  <!-- P-02 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-02</span>章节地图（首页）</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>财商经营岛</span><span>[设置] [🌐]</span></div>
+      <div class="wbox" style="padding:6px 10px;font-size:10px">⭐ 12　　Lv.2　　▓▓▓░░</div>
+      <div class="wbox" style="border-radius:18px;padding:11px">
+        <span class="b">第一章 · 认识我的钱</span>
+        学会数钱、分需要和想要<br>◕ 2/3 完成
+        <div class="wbox" style="margin-top:7px;padding:6px 9px;font-size:10px">✅ 1-1 我的钱有多少？　⭐⭐⭐</div>
+        <div class="wbox" style="margin-top:5px;padding:6px 9px;font-size:10px">✅ 1-2 先买哪一样？　⭐⭐⭐</div>
+        <div class="wbox fill" style="margin-top:5px;padding:6px 9px;font-size:10px">▶ 1-3 卖到的钱都是赚的吗？</div>
+      </div>
+      <div class="wbox lock" style="border-radius:18px;padding:10px">
+        <span class="b" style="color:var(--muted)">第二章 · 经营我的钱 🔒</span>
+        <span style="color:var(--muted);font-size:10px">完成第一章就能打开</span>
+      </div>
+      <div class="wrow"><div class="wbox" style="font-size:10px;text-align:center">🔭 小芽思考站</div><div class="wbox" style="font-size:10px;text-align:center">🏘 零花钱小镇</div></div>
+      <div class="wspacer"></div>
+      <div class="wfoot" style="text-align:left;padding-left:4px">家长中心 →　（长按 2 秒）</div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>同一时刻<b>只有一个</b>可玩节点带呼吸动效</li><li>完成度环 x/3，星星不可点击消费</li><li>家长中心入口长按 2 秒，轻点无效</li></ul>
+    </div>
+  </div>
+
+  <!-- P-03 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-03</span>章节封面</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>← 回地图</span><span></span></div>
+      <div class="wchar">[ 小芽 · 开心表情 ]</div>
+      <div class="wbub" style="text-align:center"><span style="font-size:10px;color:var(--muted)">第一章</span><br><b style="font-size:15px">认识我的钱</b></div>
+      <div class="wbox cream">
+        <span class="b">这一章你会学会：</span>
+        · 数清自己有多少钱<br>· 分清"需要的"和"想要的"<br>· 看懂赚到的钱有多少
+      </div>
+      <div class="wfoot">3 节 · 大约 12 分钟一节</div>
+      <div class="wspacer"></div>
+      <div class="wbtn">从第 1 节开始</div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>用孩子能懂的话写目标，不用教学术语</li><li>时长表述必须带"大约"限定词</li><li>已开始过的章节，按钮变「继续第 2 节」</li></ul>
+    </div>
+  </div>
+
+  <!-- P-04 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-04</span>单节课程（五步）</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>← 回地图</span><span>第 3 步 / 共 5 步</span></div>
+      <div class="wrow"><div class="wchar" style="height:44px">[ 小芽 ]</div><div class="wchar" style="height:44px;opacity:.45">[ 团团 ]</div></div>
+      <div class="wbub">你的口袋里有 10 枚星币。</div>
+      <div class="wcoins">
+        <span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span><span class="wcoin"></span>
+      </div>
+      <div class="wbox dark" style="text-align:center;font-size:14px">你有 10 枚</div>
+      <div class="wrow">
+        <div class="wbox" style="text-align:center;height:44px"><span class="b">🍞 面包</span>6 枚</div>
+        <div class="wbox" style="text-align:center;height:44px"><span class="b">🥤 果汁</span>3 枚</div>
+      </div>
+      <div class="wspacer"></div>
+      <div class="wrow"><div class="wbtn sec">▶ 听小芽讲</div><div class="wbtn sec">💡 陪我看</div></div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>实时余额在练习区内可见，出区即隐藏</li><li>答对＝具体解释 + 三音上行 + 一颗星，<b>无通用弹窗</b></li><li>答错＝放轻文案 + 重述数字，<b>无扣分、无红叉、无音效</b></li><li>超预算不扣款、不显示负余额，指出差额</li><li>语音不自动答题、不自动跳步</li></ul>
+    </div>
+  </div>
+
+  <!-- P-05 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-05</span>章节完成</div>
+    <div class="wf"><div class="in">
+      <div class="wspacer"></div>
+      <div class="wchar" style="height:64px">[ 小芽 · 开心表情 ]</div>
+      <div style="text-align:center"><div class="badge" style="width:78px;height:78px;font-size:28px;margin:0 auto">🏅</div></div>
+      <div class="wbub" style="text-align:center;font-size:15px;font-weight:800">第一章 通关！</div>
+      <div class="wbox cream">
+        <span class="b">你现在会：</span>
+        · 数清自己有多少钱<br>· 分清需要的和想要的<br>· 看懂赚到的钱有多少
+      </div>
+      <div class="wfoot">⭐ 本章获得 8 颗星</div>
+      <div class="wbox fill" style="text-align:center;padding:12px">
+        <b>去把今天发现的事<br>告诉爸爸妈妈吧！</b>
+      </div>
+      <div class="wspacer"></div>
+      <div class="wrow"><div class="wbtn sec">看看徽章墙</div><div class="wbtn">回地图</div></div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>徽章必须有名字 + 图形 + 颜色，是孩子会想炫耀的东西</li><li>"去告诉爸爸妈妈"是<b>必现</b>卡——本产品最重要的跨端接口</li><li>不出现"再来一局""挑战满分"</li><li>单节完成只用轻量内联反馈，<b>不</b>每节弹大页面</li></ul>
+    </div>
+  </div>
+
+  <!-- P-06 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-06</span>徽章墙</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>← 回地图</span><span>徽章墙</span></div>
+      <div class="wbox dark" style="text-align:center"><span class="b">第一章 · 章节徽章</span>🏅 认识我的钱</div>
+      <div class="wrow">
+        <div class="wbox" style="text-align:center;padding:10px"><div style="font-size:22px">🪙</div><b style="font-size:10.5px">会数钱</b><div style="font-size:9px;line-height:1.35">知道先看自己有多少钱，再决定买什么</div></div>
+        <div class="wbox" style="text-align:center;padding:10px"><div style="font-size:22px">🎯</div><b style="font-size:10.5px">分得清</b><div style="font-size:9px;line-height:1.35">能说出哪些是现在需要的</div></div>
+      </div>
+      <div class="wrow">
+        <div class="wbox" style="text-align:center;padding:10px"><div style="font-size:22px">📈</div><b style="font-size:10.5px">看得懂利润</b><div style="font-size:9px;line-height:1.35">明白"收到的钱"和"赚到的钱"不一样</div></div>
+        <div class="wbox" style="text-align:center;padding:10px;opacity:.55">
+          <div style="font-size:22px">🔒</div><b style="font-size:10.5px">备货高手</b><div style="font-size:9px;line-height:1.35">还没解锁 · 第二章</div>
+        </div>
+      </div>
+      <div class="wspacer"></div>
+      <div class="wfoot" style="color:var(--muted)">未获得的徽章同样显示能力说明</div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>已获得彩色 / 未获得灰色剪影</li><li><b>不显示</b>"3/12 已收集"，避免收集焦虑</li><li>能力说明要让家长也看得懂</li></ul>
+    </div>
+  </div>
+
+  <!-- P-07 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-07</span>未解锁拦截（儿童端）</div>
+    <div class="wf"><div class="in">
+      <div class="wspacer"></div>
+      <div class="wchar" style="height:72px">[ 小芽 · 好奇表情 ]</div>
+      <div class="wbub" style="text-align:center;font-size:14px;font-weight:700">这一段我还没<br>学会呢。<br>要不要去问问<br>爸爸妈妈？</div>
+      <div class="wspacer"></div>
+      <div class="wbtn">回地图</div>
+      <div class="wspacer"></div>
+    </div></div>
+    <div class="callout" style="margin:0">
+      <b>合规红线：</b>不出现价格 · 订阅按钮 · 促销话术 · 倒计时 · "会员/付费/开通"字样 · 支付链接。全站唯一拦截界面。
+    </div>
+  </div>
+
+  <!-- P-08 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-08</span>家长中心</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>家长中心</span><span>[ 关闭 ]</span></div>
+      <div class="wbox" style="border-radius:16px;border-width:1.5px;border-color:var(--ink);padding:11px">
+        <b style="font-size:11px">✅ 他今天学会了</b>
+        <div style="font-size:12px;color:var(--ink);margin-top:4px;font-weight:700">「先看自己有多少钱，再决定买什么」</div>
+        <div style="font-size:9px;margin-top:4px">1-3 卖到的钱都是赚的吗？· 今天</div>
+      </div>
+      <div class="wbox cream" style="padding:9px 11px">
+        <b style="font-size:10.5px">💬 今晚可以聊</b>
+        <div style="font-size:9.5px;margin-top:5px;line-height:1.6">
+          ① 先肯定：「你先数了数口袋里有多少钱，这个办法真好。」<br>
+          ② 再提问：「如果你是老板，进货的钱算不算赚到的钱？」<br>
+          ③ 生活延伸：「周末去超市，让他自己算一次总价。」
+        </div>
+      </div>
+      <div class="wbox" style="font-size:9.5px">📊 他真实做了什么　[展开 ▾]</div>
+      <div class="wbox" style="font-size:9.5px">🗺 能力地图　会数钱 ●●●　分得清 ●○○　利润 ○○○</div>
+      <div class="wbox" style="font-size:9.5px">➡️ 下一步：明天试试 1-2「先买哪一样？」</div>
+      <div class="wbox" style="font-size:9.5px">🛡 关于安全　[展开 ▾]</div>
+      <div class="wspacer"></div>
+      <div class="wfoot" style="text-align:left;padding-left:3px">最大宽度 680px · 正文 15/1.65</div>
+    </div></div>
+    <div class="wnote"><b>三条铁律</b>
+      <ul><li><b>不给分数</b>：无"财商分""超过 70% 同龄人"</li><li><b>不评价人格</b>：无"很聪明""不够耐心"</li><li><b>不制造焦虑</b>：无"已经落后"</li></ul>
+    </div>
+  </div>
+
+  <!-- P-09 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-09</span>家长中心 · 空状态</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>家长中心</span><span></span></div>
+      <div class="wbub" style="font-size:13px;font-weight:800">🌱 怎么开始？</div>
+      <div class="wbox">让孩子玩第一节就好，只要 12 分钟。</div>
+      <div class="wbox cream">
+        <span class="b">小提示：</span>陪在旁边不用教，先看他怎么做。
+      </div>
+      <div class="wbox">
+        <span class="b">玩完第一节后，这里会有：</span>
+        · 他今天学会了什么<br>· 今晚可以聊的 3 句话<br>· 他真实做了什么选择
+      </div>
+      <div class="wspacer"></div>
+      <div class="wbox" style="font-size:9.5px">🛡 关于安全　[展开 ▾]</div>
+    </div></div>
+    <div class="callout" style="margin:0">
+      <b>不出现"暂无数据"。</b>空状态必须<b>给方法</b>（陪在旁边不用教）+ <b>给预期</b>（玩完第一节会有什么）。
+    </div>
+  </div>
+
+  <!-- P-10 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-10</span>意愿意向登记（家长端）</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>← 返回家长中心</span><span></span></div>
+      <div class="wbub" style="font-size:13px;font-weight:800">第二章 · 经营我的钱<br><span style="font-size:10px;font-weight:400;color:var(--muted)">已经做好了，快上线了。</span></div>
+      <div class="wbox">
+        <span class="b">接下来孩子会学到：</span>
+        · 2-1 今天准备几份？<br>· 2-2 给愿望留一点钱<br>· 2-3 计划变了怎么办？
+      </div>
+      <div class="wbox cream">
+        <span class="b">💛 上线时第一时间告诉你</span>
+        <div class="wbox" style="margin-top:6px;margin-bottom:6px;padding:6px 9px;font-size:9.5px">手机号 / 邮箱</div>
+        <div class="wbtn" style="height:28px;font-size:10.5px">我想订阅</div>
+      </div>
+      <div class="wbox" style="font-size:9.5px">
+        <span class="b">你希望的价格是？</span>
+        ○ 每月 10 元以内　○ 每月 10–20 元<br>○ 每年 100 元以内　○ 先看看再说
+      </div>
+      <div class="wfoot">首批订阅会享受优惠 · 不会给你发广告</div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>只在家长端，儿童端永不可达</li><li>本页<b>不涉及任何支付</b></li><li>无自动续费默认勾选</li></ul>
+    </div>
+  </div>
+
+  <!-- P-11 -->
+  <div class="wf-wrap">
+    <div class="wf-title"><span class="id">P-11</span>设置与帮助</div>
+    <div class="wf"><div class="in">
+      <div class="wbar"><span>← 回地图</span><span>设置</span></div>
+      <div class="wbox"><span class="b">声音</span>语音开关 · 语速 0.8/0.95/1.0× · 音效 · 试听</div>
+      <div class="wbox"><span class="b">界面</span>语言 中文/English · 减少动效 · 字号</div>
+      <div class="wbox"><span class="b">学习</span>学习记录（本机）· 重置进度（二次确认）</div>
+      <div class="wbox"><span class="b">帮助</span>家长使用指南 · 关于安全 · 服务条款 · 隐私政策</div>
+      <div class="wspacer"></div>
+      <div class="wfoot">版本号 · 反馈入口</div>
+    </div></div>
+    <div class="wnote"><b>要点</b>
+      <ul><li>静音总开关同时关闭语音与音效</li><li>重置进度必须二次确认，并告知"清空后无法恢复"</li><li>重置入口<b>仅家长端</b>可见</li></ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- 6 -->
+<h2><span class="num">6</span>文案语气对照表</h2>
+<div class="rule"></div>
+<p class="note">开发时逐条对照。左侧一律不得出现在产品里。</p>
+<table class="tone">
+  <thead><tr><th style="width:130px">场景</th><th style="width:42%">❌ 不要这样写</th><th>✅ 要这样写</th></tr></thead>
+  <tbody>
+    <tr><td>开场</td><td class="no">欢迎使用本产品，请创建您的账号</td><td class="yes">嗨，我是小芽！你叫什么？</td></tr>
+    <tr><td>跳过选项</td><td class="no">跳过此步骤</td><td class="yes">先不取名字，直接开始</td></tr>
+    <tr><td>提问</td><td class="no">请选择正确答案</td><td class="yes">你想买什么？</td></tr>
+    <tr><td>答对</td><td class="no">回答正确！+10 分</td><td class="yes">你先看了自己有多少钱，这个办法真好。</td></tr>
+    <tr><td>答错</td><td class="no">回答错误，请重新选择</td><td class="yes">没关系，我们一起看看。再数一次，好吗？</td></tr>
+    <tr><td>超预算</td><td class="no">余额不足，交易失败</td><td class="yes">咦，还差 1 枚。要换一个吗？</td></tr>
+    <tr><td>提示</td><td class="no">点击查看提示（消耗提示次数）</td><td class="yes">需要我陪你一起看看吗？</td></tr>
+    <tr><td>未解锁</td><td class="no">该内容需开通会员后查看</td><td class="yes">这一段我还没学会呢。要不要去问问爸爸妈妈？</td></tr>
+    <tr><td>节结束</td><td class="no">本节已完成，点击继续</td><td class="yes">今天发现了不少呢。去跟爸爸妈妈说说看？</td></tr>
+    <tr><td>家长空状态</td><td class="no">暂无数据</td><td class="yes">怎么开始？先让孩子玩第一节，只要 12 分钟</td></tr>
+    <tr><td>家长结论</td><td class="no">孩子的财商得分 82，超过 70% 同龄人</td><td class="yes">他今天学会了先看自己有多少钱，再决定买什么</td></tr>
+  </tbody>
+</table>
+
+<div class="callout" style="margin-top:22px">
+  <b>五条语气原则：</b>①第二人称 ②单句 ≤ 20 字 ③不评判人格 ④不制造焦虑 ⑤不用专业术语（说"赚到的钱"不说"毛利"，说"还剩多少"不说"余额"）
+</div>
+
+<footer class="doc">
+  <span class="ph">可直接 Ctrl+P 打印为 PDF</span>
+  财商经营岛 · MVP 视觉风格板与页面线框 V1.0 ｜ 2026-09-22 ｜ 配套 <b>docs/MVP-REQUIREMENTS.md</b><br>
+  本页色值、字号、时长均为<b>已锁定规格</b>；页面线框为布局示意，非视觉定稿。
+</footer>
+
+</div>
+</body>
+</html>

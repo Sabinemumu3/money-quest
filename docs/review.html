@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex" />
+<title>儿童财商教育 MVP · 评审一页纸</title>
+<style>
+  :root {
+    --ink: #173f37;
+    --deep: #0d302a;
+    --paper: #fbfaf4;
+    --cream: #f2eadb;
+    --white: #ffffff;
+    --lime: #d9fb8f;
+    --coral: #ff8265;
+    --blue: #9edce9;
+    --purple: #cbbcf8;
+    --yellow: #ffd96c;
+    --muted: #61746f;
+    --line: rgba(23, 63, 55, .17);
+    --danger: #d9534f;
+    --radius-xl: 30px;
+    --radius-lg: 22px;
+    --radius-md: 15px;
+    --shadow: 0 22px 55px rgba(13, 48, 42, .13);
+    --sans: "Avenir Next", "Nunito Sans", "Microsoft YaHei", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0 20px 80px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 1080px; margin: 0 auto; }
+
+  /* ---------- header ---------- */
+  header.doc {
+    padding: 44px 0 26px;
+    border-bottom: 3px solid var(--ink);
+    margin-bottom: 34px;
+  }
+  .kicker {
+    display: inline-block;
+    background: var(--lime);
+    color: var(--deep);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 34px;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    letter-spacing: -.01em;
+  }
+  .sub { color: var(--muted); font-size: 14px; margin: 0; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 10px 22px;
+    margin-top: 20px; font-size: 13px; color: var(--muted);
+  }
+  .meta b { color: var(--ink); font-weight: 700; }
+
+  /* ---------- sections ---------- */
+  section { margin-bottom: 40px; }
+  h2 {
+    font-size: 21px;
+    margin: 0 0 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2 .num {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--ink); color: var(--lime);
+    font-size: 13px; font-weight: 800;
+    display: grid; place-items: center;
+  }
+  h3 { font-size: 15px; margin: 24px 0 10px; color: var(--deep); }
+  .rule { height: 2px; background: var(--line); margin: 12px 0 20px; border-radius: 2px; }
+  p { margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+
+  /* ---------- cards ---------- */
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 820px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--white);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+  }
+  .card.tint-lime  { background: #f4fee3; border-color: rgba(23,63,55,.14); }
+  .card.tint-blue  { background: #eef9fc; border-color: rgba(23,63,55,.14); }
+  .card.tint-coral { background: #fff2ee; border-color: rgba(23,63,55,.14); }
+  .card.tint-yellow{ background: #fffaea; border-color: rgba(23,63,55,.14); }
+
+  .card h4 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .chip {
+    display: inline-block;
+    font-size: 11px; font-weight: 800; letter-spacing: .06em;
+    padding: 3px 9px; border-radius: 99px;
+    background: var(--cream); color: var(--deep);
+  }
+  .chip.free { background: var(--lime); }
+  .chip.paid { background: var(--ink); color: var(--lime); }
+  .chip.risk { background: #ffe0dc; color: #9b2c22; }
+
+  /* ---------- the "headline" ---------- */
+  .headline {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-xl);
+    padding: 30px 32px;
+    box-shadow: var(--shadow);
+  }
+  .headline h3 { color: var(--lime); margin-top: 0; font-size: 13px; letter-spacing: .12em; }
+  .headline .big { font-size: 22px; line-height: 1.5; margin: 0 0 18px; font-weight: 700; }
+  .headline .split { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 820px) { .headline .split { grid-template-columns: 1fr; } }
+  .headline .split div {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(217,251,143,.28);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+  }
+  .headline .split b { display: block; color: var(--lime); margin-bottom: 6px; font-size: 14px; }
+  .headline .split span { font-size: 14px; color: #dfe9e2; line-height: 1.6; }
+
+  /* ---------- flow ---------- */
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+  .flow .step {
+    flex: 1 1 130px;
+    background: var(--white);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 13px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .flow .step b { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; letter-spacing: .04em; }
+  .flow .arrow { align-self: center; color: var(--muted); font-size: 16px; }
+  .flow .step.hot { background: #f4fee3; border-color: var(--ink); }
+
+  /* ---------- table ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; letter-spacing: .06em; color: var(--muted); text-transform: none; }
+  tr:last-child td { border-bottom: none; }
+  td.q { font-weight: 700; color: var(--deep); }
+  .pill { display:inline-block; padding:2px 8px; border-radius:99px; font-size:11.5px; font-weight:800; }
+  .pill.p0 { background:#ffe0dc; color:#9b2c22; }
+  .pill.p1 { background:#fff3d6; color:#8a5b00; }
+  .pill.ok { background: #e6f7e9; color: #1f6b3a; }
+  .pill.no { background: #f0eeee; color: #6b6b6b; }
+
+  /* ---------- conflict ---------- */
+  .conflict {
+    border-left: 5px solid var(--coral);
+    background: #fff6f3;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+  .conflict b { color: #9b2c22; }
+
+  /* ---------- footer ---------- */
+  footer.doc {
+    margin-top: 50px; padding-top: 22px;
+    border-top: 2px solid var(--line);
+    font-size: 12.5px; color: var(--muted);
+  }
+  .print-hint { float: right; }
+  @media print {
+    body { background: #fff; padding: 0; font-size: 11px; }
+    .headline { box-shadow: none; }
+    section { break-inside: avoid; }
+    .print-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc">
+  <span class="kicker">MVP 评审稿 · V1.1</span>
+  <h1>儿童财商教育产品 · 需求与设计评审一页纸</h1>
+  <p class="sub">依据《儿童财商教育 MVP 方案研讨》会议纪要 + <code>money-quest</code> 初版代码基线</p>
+  <div class="meta">
+    <span>日期：<b>2026-09-22</b></span>
+    <span>参会：<b>龚子谦 · Chrissy橘子</b></span>
+    <span>目标用户：<b>8–12 岁儿童 + 家长</b></span>
+    <span>完整文档：<b>docs/SPEC.md · docs/PRODUCT_DESIGN.md</b></span>
+  </div>
+</header>
+
+<!-- 0 -->
+<section>
+  <h2><span class="num">0</span>一句话结论</h2>
+  <div class="rule"></div>
+  <div class="headline">
+    <h3>产品定位</h3>
+    <p class="big">一个「孩子玩、家长懂」的家庭财商练习场。<br>孩子做真实的金钱决策，犯错只花虚拟币；家长拿到今晚可以照着说的 3 句话。</p>
+    <div class="split">
+      <div>
+        <b>给孩子</b>
+        <span>这是我的店，我说了算。赚了是我的，花光了也是我的。有人讲给我听，不用读很多字。</span>
+      </div>
+      <div>
+        <b>给家长</b>
+        <span>不用你会教。今天他做了什么选择、是懂了还是蒙的、今晚该聊什么，都给你了。</span>
+      </div>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card tint-lime">
+      <h4>🎯 抓什么痛</h4>
+      <p style="margin:0">家长<b>不知道怎么教</b>、<b>不知道教得对不对</b>、<b>孩子不听自己的</b>。产品第一服务对象是家长，游戏化是手段不是目的。</p>
+    </div>
+    <div class="card tint-blue">
+      <h4>🧩 靠什么赢</h4>
+      <p style="margin:0">市面两端空白：内容课<b>没有决策后果</b>，成人交易工具<b>合规红线</b>。中间地带是「自己选、自己承担虚拟后果、家长看得见」。</p>
+    </div>
+    <div class="card tint-yellow">
+      <h4>📐 拿什么验收</h4>
+      <p style="margin:0">北极星＝<b>7 日内完成 ≥3 节的家庭比例</b>。明确<b>否定</b>把「使用时长」当指标——它会直接把设计带向成瘾机制。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 1 -->
+<section>
+  <h2><span class="num">1</span>信息架构</h2>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card tint-lime">
+      <h4>👦 孩子端 · 一条主线</h4>
+      <ul style="margin-bottom:0">
+        <li><b>章节地图</b>（默认首页，全屏纵向路径）</li>
+        <li>├ <b>第一章 · 认识我的钱</b> <span class="chip free">免费</span>
+          <br>&nbsp;&nbsp;&nbsp;1-1 我的钱有多少？ · 1-2 先买哪一样？ · 1-3 卖到的钱都是赚的吗？</li>
+        <li>└ <b>第二章 · 经营我的钱</b> <span class="chip paid">订阅</span>
+          <br>&nbsp;&nbsp;&nbsp;2-1 今天准备几份？ · 2-2 给愿望留一点钱 · 2-3 计划变了怎么办？</li>
+        <li><b>单节五步</b>：故事 → 小芽示范 → 一起练 → 自己试 → 我的发现</li>
+        <li><b>徽章墙</b> + 拓展模块（思考站 / 零花钱小镇）</li>
+        <li style="color:var(--muted)">任何页面都有「回地图」出口</li>
+      </ul>
+    </div>
+    <div class="card tint-blue">
+      <h4>👨‍👩‍👧 家长端 · 独立视图</h4>
+      <ul style="margin-bottom:0">
+        <li><b>① 一句结论</b>：他今天学会了什么</li>
+        <li><b>② 今晚可以聊 ×3</b>：先肯定 → 再提问 → 生活延伸
+          <br><span style="color:var(--muted)">← 这是让家长每周回来的理由，<b>核心差异点</b></span></li>
+        <li><b>③ 他真实做了什么</b>：选择 / 预测 vs 实际 / 用了几次提示</li>
+        <li><b>④ 能力地图</b>：已练 ●●● / 未练 ○○○</li>
+        <li><b>⑤ 下一步建议</b>：降低决策成本</li>
+        <li><b>⑥ 关于安全</b>：不碰真钱、不要隐私、AI 标注、条款</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h4>🚪 入口规则（合规相关）</h4>
+    <p style="margin:0">家长中心入口放在地图<b>左下角低视觉权重</b>位置，需一次「家长意图」确认动作防止孩子误入。儿童端<b>永不</b>出现价格、订阅按钮、促销、倒计时。</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <h2><span class="num">2</span>核心闭环：这个产品为什么能成立</h2>
+  <div class="rule"></div>
+  <div class="flow">
+    <div class="step hot"><b>STEP 1 · 孩子</b>进入一节，12 分钟，做一个真实的金钱决策</div>
+    <div class="arrow">→</div>
+    <div class="step hot"><b>STEP 2</b>系统给具体反馈：钱变了多少、差了几枚</div>
+    <div class="arrow">→</div>
+    <div class="step hot"><b>STEP 3</b>拿星星 / 徽章，小芽说「去告诉爸爸妈妈」</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>STEP 4 · 家长</b>点开家长中心，3 分钟读完</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>STEP 5</b>照着「今晚可以聊」和孩子真的聊了一次</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>STEP 6 · 转化</b>家长感到价值 → 愿意续订 / 付费</div>
+  </div>
+  <p style="margin-top:16px;color:var(--muted)">
+    <b style="color:var(--ink)">关键洞察：</b>回路的真正引擎是 STEP 3 → 4 ——孩子必须主动去找家长说。所以「每节结束把孩子推向家长」不是彩蛋，是本产品最重要的跨端接口；露出的徽章必须是孩子会想炫耀的。
+  </p>
+</section>
+
+<!-- 3 -->
+<section>
+  <h2><span class="num">3</span>MVP 范围：第一个章节</h2>
+  <div class="rule"></div>
+  <div class="card tint-lime">
+    <h4>💡 最高性价比的范围决策</h4>
+    <p style="margin:0">现有代码里已经有 <b>6 节完整课程</b>，只是缺「章节」这一层。建议重组为 <b>2 章 × 3 节</b>，MVP 只做第一章。<b>内容零新增，开发量极小</b>，能最快产出可演示 Demo。</p>
+  </div>
+  <table style="margin-top:18px">
+    <thead><tr><th style="width:110px">层</th><th>内容</th><th style="width:190px">来源</th></tr></thead>
+    <tbody>
+      <tr><td class="q">In Scope</td><td>第一章 3 节 · <b>节前趣味视频（每节 1 段 60–120 秒）</b> · 角色对话 + 设备语音 · 分步动画 · 虚拟奖励体系 · 家长中心 · 本机存档 · 移动端响应式 · PWA</td><td><span class="pill ok">视频口子已落地</span></td></tr>
+      <tr><td class="q">新增开发</td><td>章节层（封面 / 进度 / 完成徽章）· 家长观察记录条目化 · 今晚可以聊 · 能力地图 · 解锁拦截层 · <b>节前趣味视频</b></td><td><span class="pill p0">M1–M3</span></td></tr>
+      <tr><td class="q">本期不做</td><td>后端 · 账号 · 真实支付 · App 上架 · 社交 · 运营后台 · AI 视频自动生成流水线（成片线下制作 + 手工登记）</td><td><span class="pill no">明确排除</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2><span class="num">4</span>商业模式分层</h2>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card tint-lime">
+      <h4>免费层 <span class="chip free">¥0</span></h4>
+      <p style="margin:0">第一章 3 节<b>完整可玩</b> + 全部机制 + 拓展模块基础 + 家长中心。<br><span style="color:var(--muted)">必须是完整体验，不能是「试吃版」——家长要走通一轮才可能付费。</span></p>
+    </div>
+    <div class="card tint-blue">
+      <h4>订阅层 <span class="chip paid">定价待定</span></h4>
+      <p style="margin:0">第二章及以后全部节次 + <b>后续更新内容免费</b> + 家长中心完整能力地图与建议。<br><span style="color:var(--muted)">免费层的结束点应落在情绪高点：刚拿到章节徽章、正想继续时。</span></p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h4>🔓 未解锁拦截 · 儿童端唯一的拦截界面</h4>
+    <p style="margin:0">小芽歪头想了想：「这一段我还没学会呢。要不要去问问爸爸妈妈？」+ [ 回地图 ]</p>
+    <p style="margin:8px 0 0;color:var(--muted)">这是转化率最高的位置，也是<b>唯一合规</b>的沟通方式。价格、订阅按钮一律不出现在儿童可访问的任何界面。</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <h2><span class="num">5</span>⚠️ 必须拍板的三个决策</h2>
+  <div class="rule"></div>
+  <p style="margin:-6px 0 14px;color:var(--muted);font-size:13px">决策 1 已拍板（视频进 MVP，技术口子已落地）；现在真正待定的是它的<b>片源方式</b>（Q-01a）。</p>
+
+  <div class="conflict" style="border-left-color:#6f9c3a">
+    <p style="margin:0 0 6px"><b>决策 1（Q-01）· 视频已定：MVP 做，形态是「趣味视频 + 小游戏」</b></p>
+    <p style="margin:0"><b>已拍板：</b>每节开头放 1 段 <b>60–120 秒趣味视频</b>做钩子，其后接现有互动练习（= 小游戏）。分工是——<b>视频负责「想看下去」，小游戏负责「真的会做」</b>。只有视频会看完就忘，只有游戏则进门门槛太高，所以视频必须在<b>开头</b>，每节最多 1 段。</p>
+    <p style="margin:8px 0 0"><b>技术口子已落地（不再是瓶颈）：</b>新增 <code>video-lessons.js</code> / <code>video.css</code> / <code>media/video/</code>。放片＝拷文件 + 改一行清单，不用改代码；<b>没配片时页面与现在完全一致</b>，可以逐节灰度上线。契约见 <code>docs/VIDEO-MODULE.md</code>。</p>
+    <p style="margin:8px 0 0"><b style="color:#9b2c22">现在卡排期的是内容侧（新 Q-01a）：片源用 AI 生成、动画外包，还是现有素材剪辑？</b>三者画风、单节成本、交期差一个数量级。<b>建议只定一件事：先做第 1 节的样片</b>，确认画风与成本后再批量。</p>
+  </div>
+
+  <div class="conflict">
+    <p style="margin:0 0 6px"><b>决策 2（Q-02）·「纯前端」与「会员订阅」在技术上互斥</b></p>
+    <p style="margin:0">会议同时决定了两件无法共存的事：①「纯前端实现，暂不涉及后端开发」②「基础免费 + 会员订阅」。</p>
+    <p style="margin:0">订阅必须依赖 <b>支付通道 + 订单校验 + 权益下发</b>，这三件事在纯前端无法可信完成（可被任意绕过）。</p>
+    <p style="margin:8px 0 0"><b>建议：</b>MVP 期不接真实支付——第二章显示为「即将开放」，用<b>兑换码 / 白名单 / 家长意向登记</b>验证真实付费意愿；Phase 2 再接后端 + 支付。<br><b style="color:#9b2c22">若坚持 MVP 就要真实付费，则「暂不涉及后端」这一决策必须被推翻。</b></p>
+  </div>
+
+  <div class="conflict">
+    <p style="margin:0 0 6px"><b>决策 3（Q-03）·「第一个章节」的确切范围</b></p>
+    <p style="margin:0">现有代码只有「课」没有「章」。建议采纳：<b>第一章 = 现有前 3 课</b>（数钱 / 需要与想要 / 收支利润），第二章 = 后 3 课。</p>
+    <p style="margin:8px 0 0">这样 MVP 内容<b>零新增</b>，只需补章节层。若老板另有划分，请直接指定。</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <h2><span class="num">6</span>里程碑与依赖</h2>
+  <div class="rule"></div>
+  <table>
+    <thead><tr><th style="width:70px">里程碑</th><th>交付物</th><th style="width:130px">状态</th></tr></thead>
+    <tbody>
+      <tr><td class="q">M0</td><td>基线盘点 · Spec · 产品设计</td><td><span class="pill ok">本次交付</span></td></tr>
+      <tr><td class="q">M1</td><td>章节层上线（第一章 3 节 + 封面 / 进度 / 完成徽章）</td><td><span class="pill p1">待开发</span></td></tr>
+      <tr><td class="q">M2</td><td>家长中心 v2（观察记录 + 3 条话术 + 下一步建议）</td><td><span class="pill p1">待开发</span></td></tr>
+      <tr><td class="q">M3</td><td>解锁定层（免费 / 订阅 + 儿童端友好拦截 + 家长意向登记）</td><td><span class="pill p0">依赖决策 2</span></td></tr>
+      <tr><td class="q">M4</td><td>可演示 Demo 打包，交付首批 5–8 个测试家庭</td><td><span class="pill p1">待开发</span></td></tr>
+      <tr><td class="q">M5</td><td>海外适配（英文全流程 + 海外合规声明）</td><td><span class="pill p0">依赖目标地区</span></td></tr>
+      <tr><td class="q">M6</td><td>Phase 2：后端 + 真实支付 + App 封装（iOS / Android）</td><td><span class="pill no">后续</span></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:12px;color:var(--muted)">会议确立节奏：<b style="color:var(--ink)">每天早上 9:00–9:30 线上同步项目进度</b>。建议每个晨会用「决策 1/2/3」是否关闭作为议程第一条。</p>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2><span class="num">7</span>待确认问题清单（12 条待决策 · 1 条已关闭）</h2>
+  <div class="rule"></div>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th>问题</th><th style="width:150px">影响</th><th style="width:90px">决策人</th></tr></thead>
+    <tbody>
+      <tr style="background:#f3f9e8"><td class="q">~~Q-01~~</td><td><b>已关闭：</b>视频进 MVP，形态「趣味视频 + 小游戏」，每节 1 段 60–120 秒钩子；技术口子已落地</td><td><span class="pill ok">已决策</span></td><td>—</td></tr>
+      <tr><td class="q">Q-01a</td><td><b>片源方式：AI 生成 / 动画外包 / 素材剪辑？</b>（三种成本与交期差一个数量级）</td><td><b style="color:#9b2c22">当前唯一卡 M1 排期</b></td><td>老板</td></tr>
+      <tr><td class="q">Q-01b</td><td>每节 1 段还是每章 1 段？（口子支持逐节灰度，可先只做第 1 节）</td><td>内容成本 ×3 还是 ×1</td><td>老板</td></tr>
+      <tr><td class="q">Q-01c</td><td>AI 生成内容的审核责任人与留痕方式</td><td>合规</td><td>老板</td></tr>
+      <tr><td class="q">Q-02</td><td>MVP 期是否需要真实支付？（若是，需推翻「无后端」）</td><td>是否投入后端</td><td>老板</td></tr>
+      <tr><td class="q">Q-03</td><td>「第一个章节」范围是否采纳「现有前 3 课」？</td><td>MVP 内容边界</td><td>老板 + Chrissy橘子</td></tr>
+      <tr><td class="q">Q-04</td><td>目标出海地区是哪里？（北美 / 东南亚 / 其他）</td><td>语言、支付、合规口径</td><td>老板</td></tr>
+      <tr><td class="q">Q-05</td><td>是否允许匿名最小埋点以量化留存？还是坚持零数据上传？</td><td>北极星指标能否度量</td><td>老板 + 合规</td></tr>
+      <tr><td class="q">Q-06</td><td>会员定价与权益边界？（免费几节 / 月费 / 年费 / 含拓展模块吗）</td><td>M3 设计</td><td>老板</td></tr>
+      <tr><td class="q">Q-07</td><td>产品名是否沿用「财商经营岛」？还是需要一个面向家长、更适合传播的名字？</td><td>品牌与家长端文案</td><td>老板</td></tr>
+      <tr><td class="q">Q-08</td><td>首批 5–8 个测试家庭从哪个渠道获取？名单是否已有？</td><td>M4 能否按期</td><td>老板</td></tr>
+      <tr><td class="q">Q-09</td><td>家长中心是否需要「家长身份验证」（如简单口令）？现状任何人均可打开</td><td>家长数据隔离与合规</td><td>老板</td></tr>
+      <tr><td class="q">Q-10</td><td>现有虚拟市场实验室在 MVP 中保留 / 改造 / 下线？</td><td>合规复核工作量</td><td>老板</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2><span class="num">8</span>代码资产 vs 缺口</h2>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card tint-lime">
+      <h4>✅ 已有，可直接用</h4>
+      <ul style="margin-bottom:0">
+        <li>主应用壳（地图 / 成就 / 家长中心）</li>
+        <li>6 节课程内容与课件引擎</li>
+        <li>角色对话数据 + 语音 / 字幕 / 星币动画组件</li>
+        <li>思考站样板课 · 零花钱小镇</li>
+        <li>PWA 基础 · 测试包构建脚本 · 本地预览服务</li>
+        <li>品牌视觉体系（设计 token 已定义）</li>
+      </ul>
+    </div>
+    <div class="card tint-coral">
+      <h4>❌ 不存在，需新建</h4>
+      <ul style="margin-bottom:0">
+        <li><b>章节层</b>（封面 / 进度 / 章节徽章）</li>
+        <li><b>家长观察记录</b>条目化 + 共育话术</li>
+        <li><b>解锁 / 会员层</b></li>
+        <li><b>节前视频成片</b>（口子已落地，缺 3 段片；见 Q-01a）</li>
+        <li>英文课程内容（样板课 / 小镇未覆盖）</li>
+        <li>合规声明（中国区未成年人保护 + 海外儿童隐私）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h4>🔧 需顺手修复的工程债</h4>
+    <ul style="margin-bottom:0">
+      <li>设计 token 未贯穿三页（<code>thinking.css</code> / <code>money-lab.css</code> 硬编码色值）</li>
+      <li>断点不一致（650 / 760px 混用）</li>
+      <li>PWA 离线清单未覆盖思考站与小镇页面</li>
+      <li>缓存版本靠人工改日期戳，易导致测试家庭看到旧内容</li>
+      <li><code>money-lab.html</code> 无直达地图的返回入口</li>
+      <li>旧 quiz 静态屏已 <code>hidden</code>，属死代码，建议清理</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2><span class="num">9</span>合规红线（不可谈判）</h2>
+  <div class="rule"></div>
+  <div class="grid g3">
+    <div class="card"><h4>🚫 已否决</h4><p style="margin:0">在线真实股票市场功能 —— <b>存在诱导未成年人投资的违规风险，决定不予采纳</b>（会议决议）。现有虚拟市场实验室须复核确认为纯虚构。</p></div>
+    <div class="card"><h4>🔒 儿童数据</h4><p style="margin:0">不收集、不上传、不共享。不要求真实姓名 / 学校 / 地址 / 生日 / 家庭收入。数据仅存本机。AI 生成内容须在家长端标注。</p></div>
+    <div class="card"><h4>🎮 奖励机制</h4><p style="margin:0">禁用抽奖、开箱、随机掉宝、连胜惩罚、倒计时、排行榜。多邻国可借鉴的是路径感，<b>不是焦虑驱动</b>。</p></div>
+  </div>
+  <div class="card tint-yellow" style="margin-top:16px">
+    <h4>📌 上线门禁（公开收费前必须完成）</h4>
+    <p style="margin:0">儿童可用性测试并修复理解障碍 · 家长服务条款 / 隐私政策 / 退款说明 · 未成年人个人信息保护合规声明 · 受保护的访问控制 · 支付与订阅权益校验</p>
+  </div>
+</section>
+
+<footer class="doc">
+  <span class="print-hint">可直接 Ctrl+P 打印为 PDF</span>
+  儿童财商教育 MVP · 评审一页纸 V1.1 ｜ 2026-09-22 ｜ 视频模块契约见 <b>docs/VIDEO-MODULE.md</b>；完整版见 <b>docs/SPEC.md</b> 与 <b>docs/PRODUCT_DESIGN.md</b><br>
+  本页所列目标值、定价与排期均为<b>待确认建议</b>，需经负责人拍板后方可作为承诺。
+</footer>
+
+</div>
+</body>
+</html>

@@ -21,7 +21,7 @@
     [L("先买装饰，口袋会怎样？", "What happens if we buy decorations first?"), L("只剩 2 枚，能补杯子吗？", "With only 2 left, can we replace the cups?"), L("换个顺序，会不会更好？", "Would changing the order help?")],
   ];
   const tries = [
-    [ [T("我有 4 枚，贴纸却要 5 枚……", "I have 4 coins, but the stickers cost 5…"), S("你觉得怎么办？点一个主意吧。", "What could we do? Pick an idea.", "curious")], [T("明天画画，要用铅笔和橡皮！", "We need a pencil and eraser for drawing tomorrow!"), S("你有 9 枚。帮团团装好购物篮吧。", "You have 9 coins. Help Tuan fill the basket.")] ],
+    [ [T("口袋里有 10 枚星币。", "There are 10 coins in the pocket."), S("一枚一枚数到柜台上吧。", "Move them to the counter one by one.")], [T("明天画画，要用铅笔和橡皮！", "We need a pencil and eraser for drawing tomorrow!"), S("你有 9 枚。帮团团装好购物篮吧。", "You have 9 coins. Help Tuan fill the basket.")] ],
     [ [T("小店要开门啦，先买什么？", "The shop is opening! What should we buy first?"), S("一共 10 枚。工具和材料要备齐哦。", "We have 10 coins. We need both tools and materials.")], [T("下雨了，出门得带雨伞。", "It's raining. We need an umbrella to go out."), S("你有 8 枚。不用把钱都花光。", "You have 8 coins. You don't have to spend it all.", "gentle")] ],
     [ [T("原来 10 枚，花 2 枚，又收到 5 枚。", "We started with 10, spent 2, then received 5."), S("现在有 13 枚。这一笔真正赚了多少？", "We now have 13. How much did this sale actually earn?", "curious")], [T("卡片材料花 3 枚，卖出收到 7 枚。", "A card costs 3 to make and sells for 7."), S("没有其他花费。这一笔赚了多少？", "There are no other costs. What is the profit?", "curious")] ],
     [ [T("3 位顾客，每人要 1 份。", "Three customers want one item each."), S("进货每份 2 枚，卖出 3 枚。你准备几份？", "Each costs 2 and sells for 3. How many will you prepare?", "curious")], [T("新一天！确定有 2 位顾客。", "A new day! Exactly two customers are coming."), S("让每人买到 1 份，也别留下多余的货。", "Prepare one each, without leftover stock.")] ],
@@ -36,6 +36,15 @@
       ? sentence.split(english ? /(?<=[;:])\s*/u : /(?<=[，；：])\s*/u).filter(Boolean) : [sentence]);
   }
   const localize = (turns, english) => turns.flatMap(turn => chunks(english ? turn.text.en : turn.text.zh, english).map(text => ({ ...turn, text })));
+  // 第 1 课「亲手数、亲手付」场景的分段对白：孩子做到哪一段，小芽就聊哪一段。
+  const paySceneChats = {
+    count: [T("野餐垫铺好啦，就差吃的了！", "The picnic mat is ready — we just need food!"), S("先把口袋里的星币，一枚一枚数到柜台上。", "First, move the coins from your pocket to the counter, one by one."), T("我数，你帮我看着点！", "I'll count — you check for me!")],
+    pay: [T("面包好香呀！要 6 枚。", "The bread smells so good! It costs 6 coins."), S("从柜台拿 6 枚放进托盘，然后点「付钱」。", "Move 6 coins into the tray, then tap Pay.")],
+    shelf: [T("果汁 3 枚，贴纸 5 枚，都想要！", "Juice is 3, stickers are 5. I want both!"), S("数一数柜台上还剩几枚？自己点点看。", "Count how many coins are left on the counter. Try it yourself.", "curious")],
+    short: [T("贴纸要 5 枚，托盘却装不满……", "Stickers cost 5, but the tray will not fill up…"), S("你亲手数过了：现在就是不够。怎么办呢？", "You counted with your own hands: it is not enough. What could we do?", "gentle")],
+  };
+  // 复习变体（郊游）的对白：不然第二次学念的还是铅笔和橡皮。
+  const variantChat = [T("明天去郊游啦，好开心！", "We're going on an outing tomorrow. Yay!"), S("水和面包一定要带。你有 8 枚。", "Water and bread are must-haves. You have 8 coins."), T("小礼物也想买！会超吗？", "I'd love a little gift too. Would that be too much?")];
   function lesson(config) {
     const { current, p, feedback, english } = config, n = Number(current.id.slice(-1)) - 1;
     if (feedback) return localize([
@@ -44,7 +53,14 @@
       S(feedback.success ? "想明白啦！要不要换个地方试试？" : "没关系，你可以改一改，再试一次。", feedback.success ? "We worked it out! Ready to try another situation?" : "That's okay. Change your choice and try again.", feedback.success ? "happy" : "gentle"),
     ], english);
     if (p.step === 0) return localize(stories[n], english);
-    if (p.step === 2 || p.step === 3) return localize(tries[n][p.step - 2], english);
+    if (p.step === 2 || p.step === 3) {
+      if (p.step === 2 && current.id === "lesson-1" && p.pay) {
+        const pay = p.pay;
+        return localize(pay.phase === "count" ? paySceneChats.count : pay.phase === "pay" ? paySceneChats.pay : pay.tried ? paySceneChats.short : paySceneChats.shelf, english);
+      }
+      if (p.step === 3 && current.id === "lesson-1" && p.variant) return localize(variantChat, english);
+      return localize(tries[n][p.step - 2], english);
+    }
     if (p.step === 4) return localize([T("今天的小发现是什么呀？", "What did we discover today?"), { who: "sunny", mood: "happy", text: current.takeaway }, T("生活里也能试试吗？", "Can we try it in real life too?"), { who: "sunny", mood: "welcome", text: current.home }, S("今天到这里啦！休息一下，下次再见。", "That's enough for today! Take a break. See you next time.", "gentle")], english);
     return [];
   }

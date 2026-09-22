@@ -10,10 +10,14 @@
   } catch { /* Device preferences are optional. */ }
   let mounted = null;
   let audioContext = null, tones = [], soundRun = 0;
+  let coinTones = [], coinRun = 0;
   function stopChime() {
     soundRun += 1;
+    coinRun += 1;
     tones.forEach(({ oscillator, gain }) => { try { oscillator.stop(); } catch { /* Already ended. */ } oscillator.disconnect(); gain.disconnect(); });
     tones = [];
+    coinTones.forEach(({ oscillator, gain }) => { try { oscillator.stop(); } catch { /* Already ended. */ } oscillator.disconnect(); gain.disconnect(); });
+    coinTones = [];
   }
   function playChime(onUnavailable) {
     stopChime();
@@ -44,8 +48,41 @@
     } catch { onUnavailable(); }
   }
 
-  function celebrate(root, total, english) {
-    root.querySelector(".answer-reward")?.remove();
+  /* 硬币「叮」：数钱 / 付款时每枚一枚的短促高频双击，比答对 chime 轻一档。
+     与 playChime 同一个 AudioContext，但用独立的 tones 池 —— 硬币连响
+     不该把正在收尾的答对音掐掉。音高每次随机微移，连发才不像机械节拍器。
+     静音偏好与 playChime 共用一把闸；AudioContext 未解锁时安静放弃，
+     下一枚硬币自然重试，不弹任何提示。 */
+  function playCoin() {
+    if (prefs.muted) return;
+    const Audio = window.AudioContext || window.webkitAudioContext;
+    if (!Audio) return;
+    try {
+      audioContext ||= new Audio();
+      const run = ++coinRun;
+      const schedule = () => {
+        if (run !== coinRun || prefs.muted || document.hidden) return;
+        if (audioContext.state !== "running") return;
+        const base = 1850 + Math.random() * 550;
+        [base, base * 1.34].forEach((frequency, i) => {
+          const oscillator = audioContext.createOscillator(), gain = audioContext.createGain();
+          const at = audioContext.currentTime + 0.005 + i * 0.048;
+          oscillator.type = "triangle"; oscillator.frequency.value = frequency;
+          gain.gain.setValueAtTime(0, at);
+          gain.gain.linearRampToValueAtTime(0.055, at + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.001, at + 0.13);
+          oscillator.connect(gain); gain.connect(audioContext.destination);
+          const tone = { oscillator, gain }; coinTones.push(tone);
+          oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); coinTones = coinTones.filter(t => t !== tone); };
+          oscillator.start(at); oscillator.stop(at + 0.15);
+        });
+      };
+      if (audioContext.state === "running") schedule();
+      else audioContext.resume().then(schedule).catch(() => { /* 解锁失败就无声 */ });
+    } catch { /* 无声可玩 */ }
+  }
+
+  function celebrate(root, total, english) {    root.querySelector(".answer-reward")?.remove();
     const card = document.createElement("aside");
     card.className = "answer-reward";
     card.setAttribute("role", "status");
@@ -143,7 +180,7 @@
     const bar = document.createElement("section");
     bar.className = "narration-bar";
     bar.setAttribute("aria-label", t("讲解播放设置", "Explanation playback controls"));
-    bar.innerHTML = `<div class="narration-controls"><button type="button" data-media="listen" class="listen-button">▶ ${t("听小芽讲", "Listen to Sunny")}</button><button type="button" data-media="stop" disabled>${t("停止朗读", "Stop voice")}</button><label>${t("语速", "Speed")}<select data-media="rate"><option value="0.7">${t("更慢", "Slower")}</option><option value="0.85">${t("慢慢讲", "Gentle")}</option><option value="0.95">${t("轻松聊", "Easy pace")}</option><option value="1">${t("正常", "Normal")}</option></select></label><label><input type="checkbox" data-media="muted" />${t("静音", "Mute")}</label><label><input type="checkbox" data-media="reduce" />${t("减少动画", "Less motion")}</label></div><details class="voice-options"><summary>${t("换个声音试试", "Try another voice")}</summary><div class="narration-controls"><label>${t("讲述方式", "Delivery")}<select data-media="style"><option value="warm">${t("小芽讲故事", "Sunny's story pace")}</option><option value="plain">${t("平稳朗读", "Steady reading")}</option></select></label><label class="voice-picker">${t("设备声线", "Device voice")}<select data-media="voice"></select></label></div><p>${t("讲故事会留出思考停顿，轻轻变化语调。音色取决于设备，这还不是专门录制的情感配音；部分声音由浏览器联网提供。", "Story mode leaves thinking pauses and gently varies pitch. Voices depend on your device; this is not a specially recorded character voice. Some browser voices use the network.")}</p></details><p class="voice-status" role="status"></p><p class="spoken-caption" hidden></p>`;
+    bar.innerHTML = `<div class="narration-controls"><button type="button" data-media="listen" class="listen-button">${window.mqIcon("play")} ${t("听小芽讲", "Listen to Sunny")}</button><button type="button" data-media="stop" disabled>${t("停止朗读", "Stop voice")}</button><label>${t("语速", "Speed")}<select data-media="rate"><option value="0.7">${t("更慢", "Slower")}</option><option value="0.85">${t("慢慢讲", "Gentle")}</option><option value="0.95">${t("轻松聊", "Easy pace")}</option><option value="1">${t("正常", "Normal")}</option></select></label><label><input type="checkbox" data-media="muted" />${t("静音", "Mute")}</label><label><input type="checkbox" data-media="reduce" />${t("减少动画", "Less motion")}</label></div><details class="voice-options"><summary>${t("换个声音试试", "Try another voice")}</summary><div class="narration-controls"><label>${t("讲述方式", "Delivery")}<select data-media="style"><option value="warm">${t("小芽讲故事", "Sunny's story pace")}</option><option value="plain">${t("平稳朗读", "Steady reading")}</option></select></label><label class="voice-picker">${t("设备声线", "Device voice")}<select data-media="voice"></select></label></div><p>${t("讲故事会留出思考停顿，轻轻变化语调。音色取决于设备，这还不是专门录制的情感配音；部分声音由浏览器联网提供。", "Story mode leaves thinking pauses and gently varies pitch. Voices depend on your device; this is not a specially recorded character voice. Some browser voices use the network.")}</p></details><p class="voice-status" role="status"></p><p class="spoken-caption" hidden></p>`;
     conversation.after(bar);
     // Leave two clear playback buttons; less-used settings stay tucked away.
     const settings = bar.querySelector(".voice-options .narration-controls");
@@ -192,8 +229,10 @@
       return candidates.find(v => voiceKey(v) === prefs.voices[config.english ? "en" : "zh"]) || candidates.sort((a, b) => voiceScore(b) - voiceScore(a))[0] || null;
     }
     function status(text) {
+      // 状态只写进折叠区内的状态行（读屏的 role=status 照常播报），
+      // 不再自动展开「声音与动画设置」—— 之前设备缺中文声音时每次进课都被撑开，
+      // 把题目往下顶一大截。要不要展开，交给孩子自己点。
       $(".voice-status").textContent = text;
-      if (/没有|未能|不支持|等待|没有成功|did not|not support|unavailable|No English|Waiting for/i.test(text)) $(".voice-options").open = true;
     }
     function refreshVoices() {
       if (!live || speaking) return;
@@ -244,7 +283,7 @@
       if (supported()) window.speechSynthesis.cancel();
       utterance = null; root.classList.remove("is-narrating");
       $('[data-media="stop"]').disabled = true;
-      $('[data-media="listen"]').textContent = `▶ ${t("听她们聊", "Listen to the chat")}`;
+      $('[data-media="listen"]').innerHTML = `${window.mqIcon("play")} ${t("听她们聊", "Listen to the chat")}`;
     }
     function stop(message) {
       clearTimeout(timer); timer = null; playing = false; cancelSpeech(); stopChime(); finishMotion(); updateAnimationButtons();
@@ -315,7 +354,7 @@
     conversation.querySelector('[data-dialogue="back"]').addEventListener("click", () => { stop(); showTurn(turnIndex - 1); });
     conversation.querySelector('[data-dialogue="next"]').addEventListener("click", () => { stop(); showTurn(turnIndex + 1); });
     showTurn(turnIndex, false);
-    $('[data-media="listen"]').textContent = `▶ ${t("听她们聊", "Listen to the chat")}`;
+    $('[data-media="listen"]').innerHTML = `${window.mqIcon("play")} ${t("听她们聊", "Listen to the chat")}`;
     $('[data-media="listen"]').addEventListener("click", speakSequence);
     $('[data-media="stop"]').addEventListener("click", () => stop(t("已停止。再点“听她们聊”可以接着听。", "Stopped. Click Listen to the chat to continue.")));
     $('[data-media="muted"]').addEventListener("change", e => { prefs.muted = e.target.checked; savePrefs(); stop(); refreshVoices(); });
@@ -338,5 +377,5 @@
   function suspend() { stopChime(); mounted?.stop(document.documentElement.lang === "en" ? "Playback stopped. Click Listen or Play again when you return." : "播放已停止。回来后可再点朗读或演示。"); }
   document.addEventListener("visibilitychange", () => { if (document.hidden) suspend(); });
   window.addEventListener("pagehide", suspend);
-  window.TeachingMedia = { mount, dispose, suspend, celebrate, playSuccessSound: () => playChime(() => {}), updateText: text => mounted?.updateText(text) };
+  window.TeachingMedia = { mount, dispose, suspend, celebrate, playSuccessSound: () => playChime(() => {}), playCoin, updateText: text => mounted?.updateText(text) };
 })();

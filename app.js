@@ -8,22 +8,22 @@
 
   const businessScenarios = {
     "bubble-tea": {
-      emoji: "🧋",
+      icon: window.mqIcon("tea"),
       shopZh: "星光奶茶铺",
       shopEn: "Star Bubble Tea",
       sign: "STAR TEA",
       briefZh: "从一杯奶茶开始，学习钱的流动、采购、定价和现金管理。",
       briefEn: "Start with one drink and learn money flow, supplies, pricing and cash management.",
       supplies: [
-        { key: "tea", emoji: "🍵", zh: "茶底", en: "Tea base", cost: 8, essential: true },
-        { key: "cups", emoji: "🥤", zh: "杯子和吸管", en: "Cups and straws", cost: 6, essential: true },
-        { key: "milk", emoji: "🥛", zh: "牛奶", en: "Milk", cost: 9, essential: true },
-        { key: "fruit", emoji: "🍓", zh: "水果口味", en: "Fruit flavour", cost: 12, essential: false },
-        { key: "sign", emoji: "✨", zh: "手绘招牌", en: "Handmade sign", cost: 7, essential: false },
+        { key: "tea", icon: window.mqIcon("tea-cup"), zh: "茶底", en: "Tea base", cost: 8, essential: true },
+        { key: "cups", icon: window.mqIcon("cup"), zh: "杯子和吸管", en: "Cups and straws", cost: 6, essential: true },
+        { key: "milk", icon: window.mqIcon("milk"), zh: "牛奶", en: "Milk", cost: 9, essential: true },
+        { key: "fruit", icon: window.mqIcon("cherry"), zh: "水果口味", en: "Fruit flavour", cost: 12, essential: false },
+        { key: "sign", icon: window.mqIcon("sparkles"), zh: "手绘招牌", en: "Handmade sign", cost: 7, essential: false },
       ],
       customers: [
         {
-          avatar: "🧒",
+          avatar: window.mqIcon("customer-1"),
           titleZh: "第一位顾客想买一杯原味奶茶",
           titleEn: "The first customer wants a classic milk tea",
           storyZh: "制作成本是4星币。怎样定价既能覆盖成本，又不会离谱？",
@@ -35,7 +35,7 @@
           ],
         },
         {
-          avatar: "👧",
+          avatar: window.mqIcon("customer-2"),
           titleZh: "顾客想要的草莓口味卖完了",
           titleEn: "The strawberry flavour has sold out",
           storyZh: "你希望保住收入，也希望顾客下次还愿意来。",
@@ -47,7 +47,7 @@
           ],
         },
         {
-          avatar: "🧑",
+          avatar: window.mqIcon("customer-3"),
           titleZh: "小店只剩20星币现金",
           titleEn: "The shop has only 20 coins of cash left",
           storyZh: "明天必须买牛奶才能营业，但新装饰正在打折。先买什么？",
@@ -61,22 +61,22 @@
       ],
     },
     "nail-artist": {
-      emoji: "💅",
+      icon: window.mqIcon("nails"),
       shopZh: "彩虹美甲屋",
       shopEn: "Rainbow Nail Studio",
       sign: "NAIL STUDIO",
       briefZh: "经营一家小小工作室，学习材料预算、服务定价和现金管理。",
       briefEn: "Run a small studio and learn materials budgets, service pricing and cash management.",
       supplies: [
-        { key: "polish", emoji: "🎨", zh: "基础甲油", en: "Basic polish", cost: 8, essential: true },
-        { key: "tools", emoji: "🧰", zh: "护理工具", en: "Care tools", cost: 6, essential: true },
-        { key: "clean", emoji: "🫧", zh: "清洁用品", en: "Cleaning supplies", cost: 9, essential: true },
-        { key: "glitter", emoji: "✨", zh: "闪粉套装", en: "Glitter set", cost: 12, essential: false },
-        { key: "sign", emoji: "🪧", zh: "手绘招牌", en: "Handmade sign", cost: 7, essential: false },
+        { key: "polish", icon: window.mqIcon("palette"), zh: "基础甲油", en: "Basic polish", cost: 8, essential: true },
+        { key: "tools", icon: window.mqIcon("tools"), zh: "护理工具", en: "Care tools", cost: 6, essential: true },
+        { key: "clean", icon: window.mqIcon("bubble"), zh: "清洁用品", en: "Cleaning supplies", cost: 9, essential: true },
+        { key: "glitter", icon: window.mqIcon("sparkles"), zh: "闪粉套装", en: "Glitter set", cost: 12, essential: false },
+        { key: "sign", icon: window.mqIcon("sign"), zh: "手绘招牌", en: "Handmade sign", cost: 7, essential: false },
       ],
       customers: [
         {
-          avatar: "👧",
+          avatar: window.mqIcon("customer-2"),
           titleZh: "第一位顾客想做简单款式",
           titleEn: "The first customer wants a simple design",
           storyZh: "材料成本是4星币。怎样定价既能覆盖成本，又不会离谱？",
@@ -88,7 +88,7 @@
           ],
         },
         {
-          avatar: "🧒",
+          avatar: window.mqIcon("customer-1"),
           titleZh: "顾客想要的蓝色甲油用完了",
           titleEn: "The blue polish has run out",
           storyZh: "你希望保住这次收入，也希望顾客信任你。",
@@ -100,7 +100,7 @@
           ],
         },
         {
-          avatar: "🧑",
+          avatar: window.mqIcon("customer-3"),
           titleZh: "工作室只剩20星币现金",
           titleEn: "The studio has only 20 coins of cash left",
           storyZh: "明天必须买清洁用品才能营业，但新装饰正在打折。先买什么？",
@@ -116,9 +116,9 @@
   };
 
   const companies = [
-    { key: "water", emoji: "💧", zh: "安心水务", en: "Harbour Water", riskZh: "较低波动", riskEn: "Lower volatility", price: 10, nextPrice: 12 },
-    { key: "games", emoji: "🤖", zh: "星火游戏", en: "Spark Play", riskZh: "较高波动", riskEn: "Higher volatility", price: 20, nextPrice: 14 },
-    { key: "green", emoji: "🚌", zh: "绿行交通", en: "Green Wheels", riskZh: "中等波动", riskEn: "Medium volatility", price: 15, nextPrice: 18 },
+    { key: "water", icon: window.mqIcon("water"), zh: "安心水务", en: "Harbour Water", riskZh: "较低波动", riskEn: "Lower volatility", price: 10, nextPrice: 12 },
+    { key: "games", icon: window.mqIcon("robot"), zh: "星火游戏", en: "Spark Play", riskZh: "较高波动", riskEn: "Higher volatility", price: 20, nextPrice: 14 },
+    { key: "green", icon: window.mqIcon("bus"), zh: "绿行交通", en: "Green Wheels", riskZh: "中等波动", riskEn: "Medium volatility", price: 15, nextPrice: 18 },
   ];
 
   const defaultState = {
@@ -126,7 +126,7 @@
     language: "zh-CN",
     started: false,
     nickname: "",
-    scenario: "",
+    scenario: "bubble-tea",
     cash: 120,
     reputation: 50,
     xp: 0,
@@ -161,6 +161,11 @@
         completed: { ...defaultState.completed, ...(saved.completed || {}) },
         lessonProgress: saved.lessonProgress || {},
         learningStars: Number.isSafeInteger(saved.learningStars) && saved.learningStars >= 0 ? saved.learningStars : 0,
+        // 场景归一化：MVP 只有奶茶店。旧存档里可能是 ""（从没选过），一律落到奶茶店，
+        // 否则家长中心的场景选择器会一个都不高亮，看着像「没选」。已明确选过的美甲店
+        // （"nail-artist"）保留原样 —— 这里只纠「没选」，不覆盖用户的选择。
+        // 不动 version：这是纠偏，不是改 schema，不该触发存档重置。
+        scenario: businessScenarios[saved.scenario] ? saved.scenario : "bubble-tea",
         market: {
           ...defaultState.market,
           ...(saved.market || {}),
@@ -175,6 +180,9 @@
 
   let state = loadState();
   let activeMission = "";
+  // 「清除本机进度」按下后必须彻底停止写入：reload / 关闭页面都会触发 pagehide，
+  // 而 pagehide 的监听正是 saveState()，会把刚删掉的存档原样写回去。
+  let storageDisabled = false;
   let paused = false;
   let activeSeconds = 0;
   let lastInteraction = Date.now();
@@ -184,14 +192,37 @@
   const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
   const isEnglish = () => state.language === "en";
   const t = (zh, en) => (isEnglish() ? en : zh);
+
+  // 全站唯一的「主动播报」出口（对应 index.html 的 #a11y-announcer）。
+  // 只播没有自带 role="status" 的事件。先清空再写，是为了让连续两次相同的文案
+  // 也能被再播一次 —— 直接改 textContent 时，值没变则 DOM 不变、播报不会触发。
+  // 用 optional chaining 调用：lessons.js 比本文件先加载，运行时才拿得到这个函数。
+  window.mqAnnounce = (message) => {
+    const box = document.getElementById("a11y-announcer");
+    if (!box || !message) return;
+    box.textContent = "";
+    window.setTimeout(() => { box.textContent = message; }, 60);
+  };
+
+  // 视图名与侧栏导航一致：切换后播报的就是「刚刚点的那一项」，
+  // 避免孩子点了「我的成就」却听到另一串词。
+  const VIEW_NAMES = {
+    home: ["经营地图", "Business map"],
+    badges: ["我的成就", "My badges"],
+    parent: ["家长中心", "Parent centre"],
+  };
   const scenario = () => businessScenarios[state.scenario] || businessScenarios["bubble-tea"];
   const guided = window.MoneyLessons.create({ state, english: isEnglish, save: saveState, complete: finishLesson });
 
+  // 结课：首次完成走「发现入手」仪式（峰终定律里的那个「终」——
+  // 不能让孩子离开时只带走一行提示文字），复习完成则安静返回地图。
   function finishLesson(id) {
     if (!state.completed[id]) {
       state.completed[id] = true;
       state.xp += 20;
       saveState();
+      showCeremony(id);
+      return;
     }
     closeMission();
     showView("home");
@@ -199,7 +230,25 @@
     $(`[data-open-mission="${id}"]`)?.focus();
   }
 
+  function showCeremony(id) {
+    const lesson = LESSONS.find((item) => item.id === id);
+    const index = LESSONS.indexOf(lesson) + 1;
+    $("#ceremony-kicker").textContent = t(`第 ${index} 课 · 小小发现入手`, `Lesson ${index} · A little discovery collected`);
+    $("#ceremony-icon").innerHTML = lesson.icon;
+    $("#ceremony-title").textContent = isEnglish() ? lesson.title.en : lesson.title.zh;
+    $("#ceremony-copy").textContent = t("你的每一次发现，都留在了地图上。", "Every discovery you make stays on your map.");
+    $("#ceremony-xp").textContent = t("+20 经验值", "+20 XP");
+    $("#ceremony-stars").textContent = `★ ${state.learningStars || 0}`;
+    $("#ceremony-go").dataset.lesson = id;
+    $("#lesson-ceremony").hidden = false;
+    $("#ceremony-go").focus();
+    // 礼花只在这里放：庆祝的是「孩子的成就」，不是「他打开了网页」。
+    window.mqConfetti?.cannons();
+    window.TeachingMedia.playSuccessSound();
+  }
+
   function saveState() {
+    if (storageDisabled) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (error) {
@@ -254,11 +303,54 @@
     const data = scenario();
     const name = state.nickname || t("小小店长", "Money Explorer");
     $("#player-name").textContent = name;
-    $("#player-avatar").textContent = data.emoji;
+    $("#player-avatar").innerHTML = data.icon;
     $("#shop-name").textContent = isEnglish() ? data.shopEn : data.shopZh;
     $("#shop-brief").textContent = t("小芽：今天发现一点点就好！团团：一起聊聊，再试试吧。", "Sunny: One little discovery is plenty today! Tuan: Let's chat, then try it.");
     $("#store-sign").textContent = data.sign;
-    $("#store-emoji").textContent = data.emoji;
+    $("#store-emoji").innerHTML = data.icon;
+    // 家长中心的场景选择器与昵称框：进入视图时回填当前存档，避免显示成「未选」。
+    $$('[data-career]').forEach((choice) => {
+      const selected = choice.dataset.career === state.scenario;
+      choice.classList.toggle("is-selected", selected);
+      choice.setAttribute("aria-checked", String(selected));
+    });
+    const nickname = $("#nickname");
+    if (nickname && document.activeElement !== nickname) nickname.value = state.nickname || "";
+  }
+
+  // 首页最上面的「继续学习」条。回访用户的第一眼应当是「下一步学什么」——
+  // 8–12 岁的用户不会去读顶栏的进度数字，只会找那个能按的按钮。
+  // 读存档算出第一个未完成的节点；全学完时改成去成就页，不再假装还有下一步。
+  function nextLesson() {
+    return LESSONS.find((lesson) => !state.completed[lesson.id]) || null;
+  }
+
+  function renderContinue() {
+    const bar = $("#continue-bar");
+    const go = $("#continue-go");
+    if (!bar || !go) return;
+    const kicker = $("#continue-kicker");
+    const title = $("#continue-title");
+    const meta = $("#continue-meta");
+    const lesson = nextLesson();
+    if (!lesson) {
+      kicker.textContent = t("基础课已全部完成", "Foundation course complete");
+      title.textContent = t("六节课都学完了", "All six lessons done");
+      meta.textContent = t("可以去市场实验室，或者看看已经收集到的徽章。", "Try the market lab, or look at the badges you collected.");
+      go.textContent = t("看看我的成就 →", "See my badges →");
+      go.dataset.continueTarget = "badges";
+      return;
+    }
+    const index = LESSONS.indexOf(lesson) + 1;
+    const inProgress = (state.lessonProgress[lesson.id]?.step || 0) > 0;
+    // 文案自带「接着上次 / 下一步」：孩子先认出这两个字，再读课名。
+    kicker.textContent = inProgress
+      ? t(`接着上次 · 第 ${index} / ${LESSONS.length} 课`, `Pick up · lesson ${index} of ${LESSONS.length}`)
+      : t(`下一步 · 第 ${index} / ${LESSONS.length} 课`, `Next up · lesson ${index} of ${LESSONS.length}`);
+    title.textContent = isEnglish() ? lesson.title.en : lesson.title.zh;
+    meta.textContent = isEnglish() ? lesson.goal.en : lesson.goal.zh;
+    go.textContent = inProgress ? t("继续学习 →", "Continue →") : t("开始这一课 →", "Start this lesson →");
+    go.dataset.continueTarget = lesson.id;
   }
 
   function renderStats() {
@@ -276,7 +368,7 @@
   }
 
   function renderTaskMap() {
-    $("#mission-road").innerHTML = LESSONS.map((lesson, index) => `<article class="mission-node" data-task-card="${lesson.id}"><div class="node-top"><span class="node-number">0${index + 1}</span><span class="node-status" data-task-status="${lesson.id}"></span></div><span class="node-icon" aria-hidden="true">${lesson.icon}</span><h3>${t(lesson.title.zh, lesson.title.en)}</h3><p>${t(lesson.goal.zh, lesson.goal.en)}</p><div class="node-reward">${t("故事 · 示范 · 陪练 · 自己试", "Story · Demo · Practice · Your turn")}</div><button type="button" data-open-mission="${lesson.id}"></button></article>`).join("") + `<article class="mission-node market-node" data-task-card="mission-4"><div class="node-top"><span class="node-number">${t("拓展", "EXTRA")}</span><span class="node-status" data-task-status="mission-4"></span></div><span class="node-icon">📈</span><h3>${t("市场实验室", "Market lab")}</h3><p>${t("六课之后，可与家长一起体验。不计入基础课完成度。", "Optional after six lessons, with an adult. Not required for the foundation course.")}</p><button type="button" data-open-mission="mission-4"></button></article>`;
+    $("#mission-road").innerHTML = LESSONS.map((lesson, index) => `<article class="mission-node" data-task-card="${lesson.id}"><div class="node-top"><span class="node-number">0${index + 1}</span><span class="node-status" data-task-status="${lesson.id}"></span></div><span class="node-icon" aria-hidden="true">${lesson.icon}</span><h3>${t(lesson.title.zh, lesson.title.en)}</h3><p>${t(lesson.goal.zh, lesson.goal.en)}</p><div class="node-reward">${t("故事 · 示范 · 陪练 · 自己试", "Story · Demo · Practice · Your turn")}</div><button type="button" data-open-mission="${lesson.id}"></button></article>`).join("") + `<article class="mission-node market-node" data-task-card="mission-4"><div class="node-top"><span class="node-number">${t("拓展", "EXTRA")}</span><span class="node-status" data-task-status="mission-4"></span></div><span class="node-icon">${window.mqIcon("chart-up")}</span><h3>${t("市场实验室", "Market lab")}</h3><p>${t("六课之后，可与家长一起体验。不计入基础课完成度。", "Optional after six lessons, with an adult. Not required for the foundation course.")}</p><button type="button" data-open-mission="mission-4"></button></article>`;
     $$('[data-open-mission]', $("#mission-road")).forEach((button) => button.addEventListener("click", () => openMission(button.dataset.openMission)));
     TASKS.forEach((task, index) => {
       const card = $(`[data-task-card="${task}"]`);
@@ -294,13 +386,38 @@
         status.textContent = t("可开始", "READY");
         button.textContent = t(state.lessonProgress[task]?.step ? "接着上次学 →" : "陪小芽开始 →", state.lessonProgress[task]?.step ? "Continue learning →" : "Start with Sunny →");
       } else {
-        status.textContent = "🔒";
-        button.textContent = task === "mission-4" ? t("先学完六节基础课", "Finish the six lessons first") : t("先学会前一课", "Learn the previous lesson first");
+        // 锁图标由图标系统统一 aria-hidden，读屏完全读不到 —— 补一段只给读屏的
+        // 状态文字，否则「这一课还锁着」在无障碍树里根本不存在。
+        status.innerHTML = window.mqIcon("lock") + `<span class="sr-only">${t("未解锁", "Locked")}</span>`;
+        // 解锁文案统一（提案 §5.2）：① 说清前置条件的具体名字，不用「完成上一关」这种
+        // 要靠记忆推断的说法；② 阶段门用「还差 X」而不是「达到 Y」——前者是进度，后者是门槛。
+        // 前提：TASKS = 6 节课 + mission-4，而 isUnlocked() 是纯顺序解锁，
+        // 所以市场实验室的真实门槛是「学完第 6 课」，与等级、徽章都无关。
+        if (task === "mission-4") {
+          const remaining = LESSONS.filter((lesson) => !state.completed[lesson.id]).length;
+          button.textContent = t(`还差 ${remaining} 节基础课`, `${remaining} foundation lessons to go`);
+        } else {
+          const at = LESSONS.findIndex((lesson) => lesson.id === task);
+          const previous = at > 0 ? LESSONS[at - 1] : null;
+          const previousName = previous ? (isEnglish() ? previous.title.en : previous.title.zh) : "";
+          button.textContent = t(`先完成「${previousName}」`, `Finish "${previousName}" first`);
+        }
       }
+      // 按钮名要自带节点名：按「按钮」跳读时不会带上卡片里的 h3，
+      // 否则六个锁着的节点读出来全是一模一样的「先学会前一课」。
+      const nodeName = card.querySelector("h3")?.textContent.trim() || "";
+      button.setAttribute("aria-label", `${nodeName}${t("：", ": ")}${button.textContent.trim()}`);
     });
     const marketUnlocked = isUnlocked("mission-4");
     $("#market-nav").disabled = !marketUnlocked;
-    $("#market-nav i").textContent = marketUnlocked ? "→" : "🔒";
+    $("#market-nav i").innerHTML = marketUnlocked ? "→" : window.mqIcon("lock");
+    // 顶栏这个入口锁着时也要说明原因，否则读屏只报「市场实验室，不可用」。
+    // 跟着 renderTaskMap 走，切语言时会一起刷新，不会留下另一种语言的旧字符串。
+    if (marketUnlocked) $("#market-nav").removeAttribute("aria-label");
+    else {
+      const remainingLessons = LESSONS.filter((lesson) => !state.completed[lesson.id]).length;
+      $("#market-nav").setAttribute("aria-label", t(`市场实验室：还差 ${remainingLessons} 节基础课`, `Market lab: ${remainingLessons} foundation lessons to go`));
+    }
   }
 
   function renderBadges() {
@@ -314,9 +431,19 @@
     if (state.started) renderAll();
   }
 
+  // 启动页永远是第一屏：存档不再能跳过它。回访用户省下的那一次点击，代价是孩子
+  // 再也看不到「开始学习」这个入口 —— MVP 的验收口径反过来，先看见它。
+  // 存档在这里只剩一个职责：进地图后「继续学习」条指向哪一课。
+  // 礼花已从启动页挪到结课仪式（showCeremony）：分量应该花在成就上。
+  function showStartScreen() {
+    $("#start-screen").hidden = false;
+    $("#game-app").hidden = true;
+  }
+
   function renderAll() {
     if (!state.started) return;
     renderPlayer();
+    renderContinue();
     renderStats();
     renderTaskMap();
     renderBadges();
@@ -334,17 +461,23 @@
     $$('[data-view]').forEach((button) => button.classList.toggle("is-active", button.dataset.view === view));
     $("#game-sidebar").classList.remove("is-open");
     window.scrollTo({ top: 0, behavior: "smooth" });
+    const viewName = VIEW_NAMES[view];
+    if (viewName) window.mqAnnounce(t(viewName[0], viewName[1]));
   }
 
   function openMission(task) {
     if (!isUnlocked(task)) return;
     window.TeachingMedia.dispose();
+    window.MoneyVideo?.dispose();
     returnFocus = document.activeElement;
     paused = false;
     $("#study-pause").hidden = true;
     $(".mission-content").inert = false;
     lastInteraction = Date.now();
     activeMission = task;
+    // 课程页与关卡页共用一条 sticky 顶栏。课程页只需要「在哪一步 / 想休息」，
+    // 让 CSS 能用 body.is-lesson 收掉关卡才需要的文案。
+    document.body.classList.toggle("is-lesson", task.startsWith("lesson-"));
     $("#mission-layer").hidden = false;
     $$('[data-mission]').forEach((screen) => screen.classList.toggle("is-active", screen.dataset.mission === task));
     if (task.startsWith("lesson-")) {
@@ -363,6 +496,8 @@
     $("#mission-layer").scrollTop = 0;
     $("#game-app").inert = true;
     $("#mission-back").focus();
+    const missionTitle = document.querySelector('[data-mission="' + task + '"] .mission-title h2');
+    window.mqAnnounce(missionTitle ? missionTitle.textContent.trim() : "");
     if (task === "mission-2") renderSupplies();
     if (task === "mission-3") renderCustomer();
     if (task === "mission-4") renderMarket();
@@ -370,7 +505,9 @@
 
   function closeMission() {
     window.TeachingMedia.dispose();
+    window.MoneyVideo?.dispose();
     activeMission = "";
+    document.body.classList.remove("is-lesson");
     paused = false;
     $("#game-app").inert = false;
     saveState();
@@ -395,6 +532,7 @@
     window.addEventListener("pagehide", saveState);
     $("#pause-study").addEventListener("click", () => {
       window.TeachingMedia.suspend();
+      window.MoneyVideo?.pause();
       paused = true; saveState(); $("#study-pause").hidden = false;
       $(".mission-content").inert = true; $("#resume-study").focus();
     });
@@ -411,18 +549,20 @@
   }
 
   const rewardData = {
-    "mission-1": { badge: "🧠", titleZh: "钱的流动看懂了！", titleEn: "Money flow understood!", copyZh: "+30 XP　+20经营星币", copyEn: "+30 XP and +20 business coins" },
-    "mission-2": { badge: "📦", titleZh: "第一次采购完成！", titleEn: "First supply run complete!", copyZh: "+30 XP　解锁开门营业", copyEn: "+30 XP and Open for Business unlocked" },
-    "mission-3": { badge: "🏪", titleZh: "你会经营现金了！", titleEn: "You managed business cash!", copyZh: "+40 XP　解锁市场实验室", copyEn: "+40 XP and Market Lab unlocked" },
-    "mission-4": { badge: "📈", titleZh: "完成一次风险观察", titleEn: "Risk observation complete", copyZh: "+40 XP　做过练习不等于掌握真实投资", copyEn: "+40 XP · Practice is not real investing expertise" },
+    "mission-1": { badge: window.mqIcon("brain"), titleZh: "钱的流动看懂了！", titleEn: "Money flow understood!", copyZh: "+30 XP　+20经营星币", copyEn: "+30 XP and +20 business coins" },
+    "mission-2": { badge: window.mqIcon("package"), titleZh: "第一次采购完成！", titleEn: "First supply run complete!", copyZh: "+30 XP　解锁开门营业", copyEn: "+30 XP and Open for Business unlocked" },
+    "mission-3": { badge: window.mqIcon("store"), titleZh: "你会经营现金了！", titleEn: "You managed business cash!", copyZh: "+40 XP　解锁市场实验室", copyEn: "+40 XP and Market Lab unlocked" },
+    "mission-4": { badge: window.mqIcon("chart-up"), titleZh: "完成一次风险观察", titleEn: "Risk observation complete", copyZh: "+40 XP　做过练习不等于掌握真实投资", copyEn: "+40 XP · Practice is not real investing expertise" },
   };
 
   function showReward(task) {
     const reward = rewardData[task];
     $("#reward-title").textContent = t(reward.titleZh, reward.titleEn);
-    $("#reward-badge").textContent = reward.badge;
+    $("#reward-badge").innerHTML = reward.badge;
     $("#reward-copy").textContent = t(reward.copyZh, reward.copyEn);
     $("#reward-popover").hidden = false;
+    // 星币到账：播放器与动画数据在这一刻才按需加载，首屏不含它们
+    window.MoneyRewardCoin?.play($("#reward-coin"));
     window.TeachingMedia.playSuccessSound();
     $("#collect-reward").focus();
   }
@@ -494,7 +634,7 @@
       button.dataset.essential = String(item.essential);
       button.classList.toggle("is-selected", state.supplySelected.includes(item.key));
       button.disabled = state.completed["mission-2"];
-      button.innerHTML = `<span>${item.emoji}</span><span><strong>${isEnglish() ? item.en : item.zh}</strong><small>${item.essential ? t("开店必需", "Essential") : t("特色升级", "Optional upgrade")}</small></span><strong>${item.cost} 🪙</strong><i>${item.essential ? t("需要", "NEED") : t("升级", "UPGRADE")}</i>`;
+      button.innerHTML = `<span>${item.icon}</span><span><strong>${isEnglish() ? item.en : item.zh}</strong><small>${item.essential ? t("开店必需", "Essential") : t("特色升级", "Optional upgrade")}</small></span><strong>${item.cost} ${window.mqIcon("coin")}</strong><i>${item.essential ? t("需要", "NEED") : t("升级", "UPGRADE")}</i>`;
       button.addEventListener("click", () => {
         state.supplySelected = state.supplySelected.includes(item.key)
           ? state.supplySelected.filter((key) => key !== item.key)
@@ -545,7 +685,7 @@
   function renderCustomer() {
     const customer = currentCustomer();
     const selectedKey = state.customerAnswers[state.customerIndex];
-    $("#customer-avatar").textContent = customer.avatar;
+    $("#customer-avatar").innerHTML = customer.avatar;
     $("#customer-count").textContent = t(`顾客 ${state.customerIndex + 1} / 3`, `CUSTOMER ${state.customerIndex + 1} / 3`);
     $("#customer-title").textContent = isEnglish() ? customer.titleEn : customer.titleZh;
     $("#customer-story").textContent = isEnglish() ? customer.storyEn : customer.storyZh;
@@ -623,8 +763,8 @@
   }
 
   function renderMarket() {
-    $("#market-cash").textContent = `${state.market.cash} 🪙`;
-    $("#portfolio-value").textContent = `${portfolioValue()} 🪙`;
+    $("#market-cash").innerHTML = `${state.market.cash} ${window.mqIcon("coin")}`;
+    $("#portfolio-value").innerHTML = `${portfolioValue()} ${window.mqIcon("coin")}`;
     $("#company-count").textContent = `${companyCount()} / 3`;
     const grid = $("#company-grid");
     grid.replaceChildren();
@@ -634,7 +774,7 @@
       const article = document.createElement("article");
       article.className = "company-card";
       const directionClass = state.market.ran ? (price > company.price ? "is-up" : "is-down") : "";
-      article.innerHTML = `<header><span>${company.emoji}</span><h2>${isEnglish() ? company.en : company.zh}</h2><p>${isEnglish() ? company.riskEn : company.riskZh}</p></header><section><div class="company-meta"><span>${t("每股价格", "PRICE PER SHARE")}<strong class="${directionClass}">${price} 🪙</strong></span><span>${t("持有", "OWNED")}<strong>${held} ${t("股", "shares")}</strong></span></div><div class="company-actions"><button type="button" data-buy>${t("买1股", "Buy 1")}</button><button type="button" data-sell>${t("卖1股", "Sell 1")}</button></div></section>`;
+      article.innerHTML = `<header><span>${company.icon}</span><h2>${isEnglish() ? company.en : company.zh}</h2><p>${isEnglish() ? company.riskEn : company.riskZh}</p></header><section><div class="company-meta"><span>${t("每股价格", "PRICE PER SHARE")}<strong class="${directionClass}">${price} ${window.mqIcon("coin")}</strong></span><span>${t("持有", "OWNED")}<strong>${held} ${t("股", "shares")}</strong></span></div><div class="company-actions"><button type="button" data-buy>${t("买1股", "Buy 1")}</button><button type="button" data-sell>${t("卖1股", "Sell 1")}</button></div></section>`;
       const buy = $("[data-buy]", article);
       const sell = $("[data-sell]", article);
       buy.disabled = state.market.ran || state.completed["mission-4"] || state.market.cash < price;
@@ -714,32 +854,39 @@
   }
 
   function initialiseSetup() {
+    // 场景选择器现在住在家长中心。切换场景只影响叙事外壳，不重置课程进度。
     $$('[data-career]').forEach((button) => {
       button.addEventListener("click", () => {
         state.scenario = button.dataset.career;
-        $$('[data-career]').forEach((choice) => {
-          const selected = choice === button;
-          choice.classList.toggle("is-selected", selected);
-          choice.setAttribute("aria-checked", String(selected));
-        });
+        saveState();
+        renderAll();
       });
     });
 
-    $("#player-setup").addEventListener("submit", (event) => {
-      event.preventDefault();
-      if (!state.scenario) {
-        setMessage($("#setup-feedback"), "请先选择一个模拟经营场景。", "Choose a business simulation first.");
-        return;
-      }
-      if (!$("#parent-confirm").checked) {
-        setMessage($("#setup-feedback"), "请由家长或监护人确认教育与隐私说明。", "A parent or guardian must confirm the education and privacy notice.");
-        return;
-      }
-      state.nickname = $("#nickname").value.trim().slice(0, 16);
+    // 首次进入页已经精简为一个「开始学习」按钮，原来的角色创建表单
+    // （场景选择 + 昵称 + 家长勾选 + 提交）整体下线：场景与昵称迁到家长中心，
+    // 家长须知压成按钮下方一行小字。这里不再保留任何表单分支。
+    const nickname = $("#nickname");
+    nickname?.addEventListener("input", () => {
+      state.nickname = nickname.value.trim().slice(0, 16);
+      saveState();
+      $("#player-name").textContent = state.nickname || t("小小店长", "Money Explorer");
+    });
+  }
+
+  // 唯一入口：不问场景、不问昵称，点一下落到课程地图。
+  // 刻意不再直接 openMission("lesson-1") —— 先给地图，让孩子自己挑：第 1 课本来就是
+  // 解锁态、地图上第一张卡就是它，多一步却多一个「我在哪、还剩多少」的锚点。
+  // 家长须知（本机保存 / 虚拟货币 / 非投资建议）压成按钮下的一行小字，不挡孩子。
+  // 场景不在这里兜底：loadState() 已把「没选过」归一化成奶茶店（MVP 唯一场景）。
+  function initialiseStart() {
+    $("#start-learning")?.addEventListener("click", () => {
       state.started = true;
       saveState();
       renderShell();
       window.scrollTo(0, 0);
+      // 落在「经营地图」而不是某个任务：showView 同时负责侧栏高亮、回顶和播报。
+      showView("home");
     });
   }
 
@@ -748,9 +895,28 @@
     $$('[data-go-home]').forEach((button) => button.addEventListener("click", (event) => { event.preventDefault(); showView("home"); }));
     $$('[data-view]').forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
     $$('[data-open-mission]').forEach((button) => button.addEventListener("click", () => openMission(button.dataset.openMission)));
+    // 「继续学习」条的目标由 renderContinue() 每次渲染时写进 data-continue-target，
+    // 所以点击那一刻再读，绑定时不缓存 —— 否则学完一课后就指向了旧的节点。
+    $("#continue-go")?.addEventListener("click", (event) => {
+      const target = event.currentTarget.dataset.continueTarget;
+      if (!target) return;
+      if (target === "badges") showView("badges");
+      else openMission(target);
+    });
     $("#mission-back").addEventListener("click", closeMission);
+    // 结课仪式的唯一出口：关掉仪式、回到地图。焦点还给地图上这一课的节点，
+    // 让键盘/读屏孩子从「刚刚完成的地方」继续。
+    $("#ceremony-go").addEventListener("click", () => {
+      const id = $("#ceremony-go").dataset.lesson;
+      $("#lesson-ceremony").hidden = true;
+      closeMission();
+      showView("home");
+      $("#learning-notice").textContent = t("这一课学完了。起来伸伸懒腰，下次回来接着学。", "Lesson complete. Stretch and take a break; come back when you are ready.");
+      $(`[data-open-mission="${id}"]`)?.focus();
+    });
     $("#collect-reward").addEventListener("click", () => {
       $("#reward-popover").hidden = true;
+      window.MoneyRewardCoin?.stop();
       closeMission();
       showView("home");
     });
@@ -758,7 +924,12 @@
     $("#sidebar-close").addEventListener("click", () => $("#game-sidebar").classList.remove("is-open"));
     $("#reset-game").addEventListener("click", () => {
       if (!window.confirm(t("确定清除这台设备上的游戏进度吗？", "Clear game progress on this device?"))) return;
+      // 先关闸，再删。少了这一步，下面那个 reload() 触发的 pagehide → saveState()
+      // 会把存档原样写回来 —— 实测这个按钮在加闸门之前从来没有真正清除过进度。
+      storageDisabled = true;
       try { localStorage.removeItem(STORAGE_KEY); } catch (error) { /* no-op */ }
+      // 视频偏好里含「坏片黑名单」。不清掉的话，片子修好了也永远不会再试。
+      try { if (window.MoneyVideo) localStorage.removeItem(window.MoneyVideo.PREF_KEY); } catch (error) { /* no-op */ }
       window.location.reload();
     });
   }
@@ -767,6 +938,7 @@
     // Old quiz screens are retained in source for the previous test, not in the beginner path.
     ["mission-1", "mission-2", "mission-3"].forEach((id) => { document.getElementById(id).hidden = true; });
     initialiseSetup();
+    initialiseStart();
     initialiseNavigation();
     initialiseQuiz();
     initialiseSupplies();
@@ -774,7 +946,13 @@
     initialiseMarket();
     initialiseStudyClock();
     setLanguage(state.language);
-    renderShell();
+    // 这里刻意不调 renderShell() —— 它按 state.started 分流，会把有存档的回访用户
+    // 直接送进游戏态、跳过启动页。启动页固定由 showStartScreen() 呈现。
+    showStartScreen();
+
+    // 视频清单提前拉取：挂载点是同步判定「这一步有没有片」的，
+    // 清单晚到会让配了片的课节漏掉播放卡。契约见 docs/VIDEO-MODULE.md。
+    window.MoneyVideo?.preload();
 
     if (document.documentElement.dataset.privatePreview !== "true" && "serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
       navigator.serviceWorker.register("sw.js").catch(() => {});

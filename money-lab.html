@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="dialogue.css" />
   <link rel="stylesheet" href="thinking.css" />
   <link rel="stylesheet" href="money-lab.css" />
+  <script src="icons.js" defer></script>
   <script src="teaching-media.js" defer></script>
   <script src="money-lab.js" defer></script>
 </head>
@@ -20,7 +21,9 @@
   <header class="thinking-header"><a href="thinking.html">← 野餐思考课</a><strong>零花钱小镇</strong><button id="lab-pause" class="secondary-action" type="button">休息</button></header>
   <main class="thinking-main" id="lab-main"></main>
   <footer class="thinking-footer"><span id="lab-storage" role="status">自动保存到本机</span><span>仅教学模拟 · 没有真实支付或捐款</span></footer>
-  <dialog id="lab-modal" aria-labelledby="lab-modal-title"></dialog>
+  <!-- 标题 h2 由 money-lab.js 在打开前拼入，所以 aria-labelledby 也由它在拼完后设置：
+         写死在标签上会让页面刚加载时指向一个还不存在的节点。 -->
+    <dialog id="lab-modal"></dialog>
   <noscript>互动小镇需要启用 JavaScript。</noscript>
 </body>
 </html>

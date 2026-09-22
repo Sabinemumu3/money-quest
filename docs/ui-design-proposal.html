@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>财商经营岛 · 界面设计方案 v2（基于现有页面的优化提案）</title>
+<style>
+/* ==========================================================================
+   本页是设计交付物，不是产品页面。
+   取值刻意与产品 token 一致（styles.css :root），便于逐条对照落地。
+   排版遵循产品自身的规范：阅读中轴 / 8 档字号 / 5 档间距 / 硬边纸玩。
+   ========================================================================== */
+:root{
+  --font-ui:"Nunito","PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  --ink:#173f37; --deep:#0d302a; --paper:#fbfaf4; --cream:#f2eadb; --white:#fff;
+  --lime:#d9fb8f; --coral:#ff8265; --blue:#9edce9; --purple:#cbbcf8; --yellow:#ffd96c;
+  --muted:#4f6d67;            /* ← 本方案修正值（原 #61746f） */
+  --on-dark-soft:#b9c9c4;     /* ← 本方案新增 */
+  --line:rgba(23,63,55,.17);
+  --up:#bd432f; --down:#3a7d43;
+  --fs-xs:12px; --fs-sm:14px; --fs-ui:16px; --fs-body:18px;
+  --fs-h3:22px; --fs-h2:clamp(22px,2.6vw,28px); --fs-h1:clamp(26px,3.4vw,34px);
+  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:24px; --sp-5:32px;
+  --radius-xs:6px; --radius-sm:10px; --radius-md:16px; --radius-lg:22px; --radius-xl:28px; --radius-pill:999px;
+  --bw:2px; --bw-strong:3px; --bw-accent:4px;
+  --e1:4px 4px 0 var(--ink); --e2:6px 6px 0 var(--ink); --e3:9px 9px 0 var(--ink); --e4:12px 12px 0 var(--ink);
+  --btn-drop:4px; --btn-drop-sm:3px; --btn-drop-lg:7px; --press:90ms ease;
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--font-ui);
+  font-size:var(--fs-ui);line-height:1.65;font-variant-numeric:tabular-nums}
+.wrap{width:min(1000px,calc(100% - 32px));margin:0 auto;padding:var(--sp-5) 0 96px}
+a{color:var(--ink)}
+
+/* 顶栏 */
+.doc-head{position:sticky;top:0;z-index:9;background:var(--paper);border-bottom:var(--bw) solid var(--ink);padding:10px 0}
+.doc-head .wrap{padding:0 0;display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap;width:min(1000px,calc(100% - 32px))}
+.doc-head b{font-size:var(--fs-sm);letter-spacing:.06em;text-transform:uppercase}
+.doc-head nav{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-left:auto}
+.doc-head nav a{font-size:var(--fs-xs);text-decoration:none;border:var(--bw) solid var(--ink);border-radius:var(--radius-pill);
+  padding:3px 10px;background:var(--white)}
+.doc-head nav a:hover{background:var(--lime)}
+
+/* 章节 */
+section{margin-top:56px;scroll-margin-top:64px}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.12;letter-spacing:-.02em;margin:0 0 var(--sp-3)}
+h2{font-size:var(--fs-h2);line-height:1.2;margin:0 0 var(--sp-3);padding-top:var(--sp-3);border-top:var(--bw-strong) solid var(--ink);display:flex;gap:10px;align-items:baseline}
+h2 i{font-style:normal;font-size:var(--fs-sm);background:var(--ink);color:var(--paper);border-radius:var(--radius-xs);padding:2px 8px;flex:none}
+h3{font-size:var(--fs-h3);margin:var(--sp-4) 0 var(--sp-2)}
+h4{font-size:var(--fs-ui);margin:var(--sp-3) 0 var(--sp-1)}
+p{margin:0 0 var(--sp-3);max-width:74ch}
+small{font-size:var(--fs-sm);color:var(--muted)}
+.eyebrow{font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 var(--sp-1);font-weight:800}
+strong{font-weight:800}
+
+/* 卡片与表格 */
+.card{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);padding:var(--sp-4);box-shadow:var(--e2)}
+.card + .card{margin-top:var(--sp-3)}
+.grid{display:grid;gap:var(--sp-3)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-sm);margin:var(--sp-2) 0 var(--sp-3)}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:var(--fs-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:var(--bw) solid var(--ink)}
+tbody tr:hover{background:#f6f7f0}
+td code,p code,li code{font-family:ui-monospace,"Consolas",monospace;font-size:13px;background:var(--cream);border-radius:4px;padding:1px 5px}
+.tbl-scroll{overflow-x:auto}
+
+/* 标签 */
+.tag{display:inline-block;font-size:var(--fs-xs);font-weight:800;letter-spacing:.04em;border:var(--bw) solid var(--ink);
+  border-radius:var(--radius-pill);padding:1px 9px;background:var(--white)}
+.tag.p0{background:var(--coral)} .tag.p1{background:var(--yellow)} .tag.p2{background:var(--blue)}
+.tag.ok{background:var(--lime)} .tag.new{background:var(--purple)}
+.tag.fix{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* 对比度小标 */
+.ratio{font-weight:800}
+.ratio.pass{color:#2f6b34} .ratio.fail{color:var(--up)}
+
+/* 组件演示台 */
+.stage{background:var(--paper);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--e2);
+  padding:var(--sp-4);display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center}
+.stage.col{flex-direction:column;align-items:stretch}
+.spec{border-left:var(--bw-accent) solid var(--purple);background:#f7f5ff;padding:var(--sp-2) var(--sp-3);font-size:var(--fs-sm);margin-top:var(--sp-2);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.spec b{font-weight:800}
+.lab{font-size:var(--fs-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:6px;display:block}
+
+/* ── 组件：按钮 3 档 ───────────────────────────────────────────── */
+.d-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:var(--fs-ui);font-weight:800;
+  min-height:52px;padding:0 20px;cursor:pointer;border-radius:var(--radius-md);border:var(--bw) solid var(--ink);
+  transition:transform var(--press),box-shadow var(--press),background-color var(--press)}
+.d-btn--primary{background:var(--lime);box-shadow:0 var(--btn-drop) 0 var(--deep);color:var(--ink)}
+.d-btn--primary:hover{transform:translateY(1px);box-shadow:0 calc(var(--btn-drop) - 1px) 0 var(--deep)}
+.d-btn--primary:active{transform:translateY(var(--btn-drop));box-shadow:0 0 0 var(--deep)}
+.d-btn--secondary{background:var(--white);box-shadow:0 var(--btn-drop) 0 var(--ink)}
+.d-btn--secondary:hover{background:var(--cream);transform:translateY(1px);box-shadow:0 calc(var(--btn-drop) - 1px) 0 var(--ink)}
+.d-btn--secondary:active{transform:translateY(var(--btn-drop));box-shadow:0 0 0 var(--ink)}
+.d-btn--quiet{background:transparent;border-color:transparent;box-shadow:none;min-height:44px;padding:0 12px;text-decoration:underline;text-underline-offset:3px}
+.d-btn--quiet:hover{background:var(--cream)}
+.d-btn--lg{min-height:76px;font-size:20px;box-shadow:0 var(--btn-drop-lg) 0 var(--deep);padding:0 34px;border-radius:var(--radius-lg)}
+.d-btn--lg:active{transform:translateY(var(--btn-drop-lg));box-shadow:0 0 0 var(--deep)}
+.d-btn[disabled]{opacity:.55;cursor:not-allowed;background:var(--cream);box-shadow:0 0 0 var(--ink);transform:none}
+.d-btn:focus-visible,button:focus-visible,a:focus-visible{outline:var(--bw-strong) solid var(--ink);outline-offset:2px}
+.on-dark .d-btn:focus-visible{outline-color:var(--white)}
+
+/* ── 组件：节点卡 4 态 ─────────────────────────────────────────── */
+.d-node{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--e2);padding:var(--sp-3);display:grid;gap:var(--sp-1);min-width:210px;flex:1}
+.d-node .num{font-size:var(--fs-xs);font-weight:800;letter-spacing:.1em;color:var(--muted)}
+.d-node h5{margin:0;font-size:var(--fs-ui);font-weight:800}
+.d-node p{margin:0;font-size:var(--fs-sm);color:var(--muted);max-width:none}
+.d-node .ico{width:34px;height:34px;display:grid;place-items:center;border:var(--bw) solid var(--ink);border-radius:var(--radius-sm);background:var(--yellow);font-size:18px}
+.d-node .meta{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);font-weight:800;margin-top:4px}
+.d-node button{margin-top:var(--sp-1);min-height:46px;width:100%;font:inherit;font-weight:800;font-size:var(--fs-ui);cursor:pointer;
+  border:var(--bw) solid var(--ink);border-radius:var(--radius-md);background:var(--lime);color:var(--ink);box-shadow:0 var(--btn-drop) 0 var(--deep);
+  transition:transform var(--press),box-shadow var(--press)}
+.d-node button:active{transform:translateY(var(--btn-drop));box-shadow:0 0 0 var(--deep)}
+.d-node.is-done{background:#f0fbdc}
+.d-node.is-done button{background:var(--white);box-shadow:0 var(--btn-drop) 0 var(--ink)}
+.d-node.is-locked{background:var(--cream);box-shadow:none;opacity:.85}
+.d-node.is-locked button{background:transparent;border-style:dashed;box-shadow:none;color:var(--muted);cursor:not-allowed}
+.d-node .why{font-size:var(--fs-xs);color:var(--muted);margin-top:2px}
+
+/* ── 组件：反馈条 ─────────────────────────────────────────────── */
+.d-feedback{display:flex;gap:var(--sp-2);align-items:flex-start;border:var(--bw) solid var(--ink);border-left:var(--bw-accent) solid var(--down);
+  background:#effbd5;border-radius:0 var(--radius-md) var(--radius-md) 0;padding:var(--sp-3)}
+.d-feedback.retry{border-left-color:#c98a22;background:#fff7dc}
+.d-feedback .mark{flex:none;width:30px;height:30px;display:grid;place-items:center;border:var(--bw) solid var(--ink);border-radius:50%;background:var(--white);font-weight:800}
+.d-feedback strong{display:block;margin-bottom:2px}
+.d-feedback p{margin:0;font-size:var(--fs-sm)}
+
+/* ── 组件：步骤条 ─────────────────────────────────────────────── */
+.d-steps{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:var(--fs-xs);font-weight:800;list-style:none;margin:0;padding:0}
+.d-steps li{border:var(--bw) solid var(--ink);border-radius:var(--radius-pill);padding:2px 10px;background:var(--white);color:var(--muted)}
+.d-steps li.done{background:#effbd5}
+.d-steps li[aria-current]{background:var(--lime);color:var(--ink);font-weight:900}
+.d-steps.narrow li{display:none}
+.d-steps.narrow li[aria-current]{display:inline-block}
+.d-steps.narrow::after{content:"/ 5";font-weight:800;color:var(--muted)}
+
+/* ── 组件：语言分段控件（带门槛） ─────────────────────────────── */
+.d-seg{display:inline-flex;border:var(--bw) solid var(--ink);border-radius:var(--radius-pill);overflow:hidden;background:var(--white)}
+.d-seg button{font:inherit;font-size:var(--fs-sm);font-weight:800;padding:7px 14px;border:0;background:transparent;cursor:pointer}
+.d-seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.d-seg.locked::after{content:"🔒";font-size:12px;padding:0 8px;display:grid;place-items:center;border-left:1px solid var(--line)}
+
+/* ── 组件：家长话术卡 ─────────────────────────────────────────── */
+.d-talk{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--e1);padding:var(--sp-3);display:grid;gap:6px}
+.d-talk .q{font-weight:800;font-size:var(--fs-body)}
+.d-talk .why{font-size:var(--fs-sm);color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
+
+/* ── 组件：空态 ───────────────────────────────────────────────── */
+.d-empty{border:var(--bw) dashed var(--ink);border-radius:var(--radius-lg);padding:var(--sp-4);text-align:center;background:#fdfcf7}
+.d-empty .big{font-size:30px}
+.d-empty strong{display:block;margin:6px 0 4px}
+
+/* ── 页面骨架图 ───────────────────────────────────────────────── */
+.skeleton{border:var(--bw) solid var(--ink);border-radius:var(--radius-md);background:var(--white);padding:10px;display:grid;gap:8px;font-size:var(--fs-xs);font-weight:800}
+.skeleton .bar{border:var(--bw) solid var(--ink);border-radius:var(--radius-sm);padding:8px 10px;background:var(--paper);display:flex;justify-content:space-between;gap:8px}
+.skeleton .bar.hot{background:var(--lime)}
+.skeleton .bar.cool{background:var(--cream);border-style:dashed;color:var(--muted)}
+.skeleton .col2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ── 清单 ─────────────────────────────────────────────────────── */
+ul.check{list-style:none;padding:0;margin:0}
+ul.check li{position:relative;padding-left:28px;margin-bottom:6px;font-size:var(--fs-sm)}
+ul.check li::before{content:"☐";position:absolute;left:0;font-size:16px}
+ul.plain{margin:0 0 var(--sp-3);padding-left:20px}
+ul.plain li{margin-bottom:4px;font-size:var(--fs-sm)}
+
+.on-dark{background:var(--deep);color:var(--paper);border-radius:var(--radius-lg);padding:var(--sp-4);box-shadow:var(--e2)}
+.on-dark h4{margin-top:0} .on-dark small{color:var(--on-dark-soft)}
+
+footer{margin-top:72px;border-top:var(--bw-strong) solid var(--ink);padding-top:var(--sp-3);font-size:var(--fs-sm);color:var(--muted)}
+@media (max-width:640px){
+  .doc-head nav{display:none}
+  h2{flex-wrap:wrap}
+  .d-btn--lg{min-height:68px;font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="doc-head">
+  <div class="wrap">
+    <b>财商经营岛 · 界面设计方案 v2</b>
+    <nav>
+      <a href="#s0">摘要</a><a href="#s1">用户习惯</a><a href="#s2">诊断</a><a href="#s3">原则</a>
+      <a href="#s4">设计系统</a><a href="#s5">组件</a><a href="#s6">页面</a><a href="#s7">验收</a><a href="#s8">落地</a><a href="#s9">待确认</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <h1>界面设计方案 v2</h1>
+  <p class="eyebrow">基于现有页面的优化提案 · 2026-09-22 · 交付对象：前端实现</p>
+  <p>本方案不推翻现有界面。它建立在一件已确认的事实上：<strong>视觉语言（硬边纸玩）已经收敛完毕，缺的不是颜色，是秩序</strong>。所以下面 90% 的内容是「把已经做对的东西补齐守卫规则」，10% 是「把顺序和门槛改掉」。</p>
+
+  <div class="grid g3" style="margin-top:var(--sp-4)">
+    <div class="card"><span class="tag p0">P0</span><h4>3 条硬缺陷</h4><p style="margin:0"><small>焦点环四套颜色且全部低于 WCAG 2.2 的 3:1；弱化文字在 23 个表面里 15 个不达标；顶栏把「停留分钟」当指标 —— 与产品立场直接冲突。</small></p></div>
+    <div class="card"><span class="tag p1">P1</span><h4>5 条习惯冲突</h4><p style="margin:0"><small>首屏不是主行动；不可点的卡片长得像可点；两套解锁口径；8 个 h1；三个页面三套底色。</small></p></div>
+    <div class="card"><span class="tag new">增量</span><h4>设计系统 5 个补丁</h4><p style="margin:0"><small><code>--on-*</code> 配对、<code>--muted</code> 修正、统一焦点环、<code>--btn-drop-lg</code>、断点收敛到 3 档。全部给到可直接粘贴的值。</small></p></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s0">
+    <h2><i>§0</i>一页读懂</h2>
+    <div class="card">
+      <table>
+        <thead><tr><th style="width:26%">结论</th><th>依据（可复现）</th></tr></thead>
+        <tbody>
+          <tr><td><strong>颜色不用改，规则要补</strong></td><td>主色 <code>--ink #173f37</code> 在<strong>全部 21 个浅色表面上都 ≥4.5:1</strong>（最差 4.79 在 coral 上）。缺的是「哪个底色配哪个文字色」的配对令牌，现在靠 44 个手调硬编码色在打补丁。</td></tr>
+          <tr><td><strong>焦点环是当前最明确的达标缺陷</strong></td><td>四套焦点色实测：<code>--coral</code> 2.33:1 / <code>#92b74e</code> 2.21:1 / <code>#237d9a</code> 4.49（纸）/3.93（奶油）/ video 的 <code>#cbbbf8</code>。WCAG 2.2 SC 1.4.11 要求 ≥3:1 → 全部不达标。</td></tr>
+          <tr><td><strong>「时长」是立场问题，不只是文案问题</strong></td><td>顶栏 <code>#reputation-stat</code> 显示 <code>activeSeconds/60</code>，学习页悬浮钟显示「本次 0:00」，而家长端自己写着「时长不用于解锁」——已察觉冲突但没解决。</td></tr>
+          <tr><td><strong>首页的问题不是丑，是顺序</strong></td><td>DOM 顺序：两块外链样板课卡 → 店铺 hero → 任务地图。孩子要滚过两块装饰才看到「今天学什么」。</td></tr>
+          <tr><td><strong>不能再加组件了，先给组件加状态</strong></td><td>35 个 button、13 个 section，但只有 7 个 <code>aria-label</code>、1 个 <code>aria-live</code>；成就页 4 张徽章卡是写死在 HTML 里的死代码。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s1">
+    <h2><i>§1</i>他们「习惯」什么</h2>
+    <p>「符合用户习惯」对这个产品有两层含义，两层的动作经常互相矛盾 —— 儿童要<strong>少</strong>，家长要<strong>多且可核查</strong>。所以先把两边的习惯拆成可验收的判据，再谈界面。</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="eyebrow">用户 A · 8–12 岁孩子</span>
+        <h3 style="margin-top:0">习惯与对策</h3>
+        <table>
+          <thead><tr><th>习惯</th><th>设计判据</th></tr></thead>
+          <tbody>
+            <tr><td>不预读文字，先看「哪儿能点」</td><td>每个视口必须有一个明确最高优先级的可点物；装饰卡不可长得像按钮</td></tr>
+            <tr><td>单任务视野，一次只看一件事</td><td>一屏一条对齐轴；同屏最多 3 个信息块</td></tr>
+            <tr><td>手眼协调未成熟，点不准</td><td>主控件 ≥52px，紧凑控件 ≥44px；可点区含 padding</td></tr>
+            <tr><td>靠结果反馈学习，不靠解释</td><td>判定后 200ms 内出现视觉反馈；反馈先给结论再给理由</td></tr>
+            <tr><td>对「我错了」敏感，会关掉页面</td><td>禁用红叉 + 「错误/失败」；用「再想想」+ 引导式追问</td></tr>
+            <tr><td>会自己去点任何看起来能点的东西</td><td>语言切换、清档等破坏性操作必须加门槛；锁态必须写清「怎么解锁」</td></tr>
+            <tr><td>无时间感，但有「还剩多少」焦虑</td><td>儿童端零倒计时、零停留计时</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <span class="eyebrow">用户 B · 25–45 岁家长（真正的付费决策人）</span>
+        <h3 style="margin-top:0">习惯与对策</h3>
+        <table>
+          <thead><tr><th>习惯</th><th>设计判据</th></tr></thead>
+          <tbody>
+            <tr><td>碎片时间扫读，只看标题和小结</td><td>家长中心结论前置：先给「今天他做了什么」，再给解释</td></tr>
+            <tr><td>要「我该做什么」，不要「我们很用心」</td><td>必须有可执行产出（今晚可以聊什么），不做纯理念陈列</td></tr>
+            <tr><td>对儿童产品默认不信任</td><td>安全边界要写在数据旁边，不是写在另一页</td></tr>
+            <tr><td>关心时长，但不该被时长驱动</td><td>时长只在家长端、且明确标注「不作为解锁与评价依据」</td></tr>
+            <tr><td>会截图转发给伴侣</td><td>家长端单屏可截图即完整（≤1 屏）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="spec"><b>这条最容易被忽略：</b>家长要时长、孩子不该看见时长 → 结论是<strong>同一个数据两种呈现</strong>，而不是「删掉时长」。顶栏那个数字改掉，家长中心补上，冲突就解了。</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s2">
+    <h2><i>§2</i>诊断 · 现状 10 项</h2>
+    <p>全部来自只读扫描（脚本落在 <code>.workbuddy/tmp-audit/</code>，可重跑）。P0 = 影响可用性或立场；P1 = 影响一致性与理解；P2 = 影响首访体验。</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:4%">#</th><th style="width:22%">现象</th><th style="width:38%">实测证据</th><th style="width:28%">影响</th><th style="width:8%">优先级</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>焦点环四套颜色，且全部不达标</td><td><code>--coral</code> 2.33:1 · <code>#92b74e</code> 2.21:1 · <code>#237d9a</code> 4.49/3.93:1 · <code>#cbbbf8</code>；正确口径需 ≥3:1</td><td>键盘与开关设备用户看不清焦点在哪，尤其落在彩色卡片上</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>2</td><td>弱化文字没有配对规则</td><td><code>--muted #61746f</code> 在 23 个表面里 <strong>15 个 &lt;4.5:1</strong>（最差 2.04 on coral）；<code>styles.css</code> 非令牌区还有 <strong>44 个</strong>去重色值，多为手调深绿/棕</td><td>同一种「辅助说明」在不同卡片上深浅不一；改色要全仓搜</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>3</td><td>把「停留分钟」当指标</td><td>顶栏 <code>#reputation-stat = activeSeconds/60</code>；学习页 <code>#study-time</code>「本次 0:00」；家长端却写「时长不用于解锁」</td><td>与「时长不是 KPI」的立场冲突；孩子会学会「挂着页面就算学了」</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>4</td><td>首屏不是主行动</td><td>首页 DOM：2 张外链样板课卡 → 店铺 hero → 任务地图（第三块）</td><td>孩子首屏不知道该点哪；「继续学习」需要滚动</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>5</td><td>不可点的卡片长得像可点</td><td><code>.coming-worlds</code> 3 张 <code>&lt;article&gt;</code> 既无按钮也无 href；卡片有描边、有硬边、有图标</td><td>点不动 = 挫败，且会训练出「这里的卡片可能都没用」</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>6</td><td>两套解锁口径并存</td><td>节点按钮文案：「完成上一关」×3、「达到等级2」×1</td><td>孩子不知道到底要做什么才能解锁市场实验室</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>7</td><td>标题语义超标</td><td><code>index.html</code> 有 <strong>8 个 <code>&lt;h1&gt;</code></strong>、13 个 <code>&lt;h2&gt;</code>，但只有 1 个 <code>aria-live</code>、7 个 <code>aria-label</code></td><td>屏幕阅读器无法按标题跳转；判定反馈不播报</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>8</td><td>三页三套底色与断点</td><td>非令牌区色值：<code>thinking.css</code> 42 个去重 / 19（money-lab）/ 19（dialogue）；断点 6 个值：640·650·760·1100·1120·900</td><td>孩子跨页时页面底色会跳；同一宽度下不同页排版不一致</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>9</td><td>成就页没有空态</td><td>4 张徽章卡静态写在 HTML（会被 JS 覆盖），未获得时既无引导也无「怎么拿」</td><td>首访成就页 = 4 张灰卡，孩子不知道要做什么</td><td><span class="tag p2">P2</span></td></tr>
+          <tr><td>10</td><td>语言切换无门槛</td><td>首次进入页与顶栏的 <code>.language-switch</code> 均为一次点击即切，无确认</td><td>儿童误触后整页变英文，读不懂也切不回来</td><td><span class="tag p2">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>顺带登记（不改，但要知道）</h3>
+    <ul class="plain">
+      <li><code>state.reputation</code> 同时被当作声誉值（<code>50</code>）和顶栏的分钟数显示 —— 语义污染，后续做数据统计一定会踩。</li>
+      <li>家长中心 <code>#parent-progress</code> 用 <code>.learning-notice</code>（提示样式）承载进度数据，语义错误。</li>
+      <li>零花钱小镇的「捐」口袋用 <code>#fff0ed</code>（红系底）—— 捐赠被染上警示感。</li>
+      <li>思考站焦点色是蓝 <code>#237d9a</code>，与主应用 coral 不是一套；<code>video.css</code> 又自带一个 <code>#cbbbf8</code>。</li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s3">
+    <h2><i>§3</i>设计原则 · 6 条</h2>
+    <p>每条都写成「可验收的判据」，而不是口号。这才是能在代码评审里用的东西。</p>
+    <div class="grid g2">
+      <div class="card"><span class="tag">原则 1</span><h4>一屏一件事，行动在首屏</h4><p style="margin:0"><small>判据：每页首个主 CTA 在 100vh 内，无需滚动。首页信息块同屏 ≤3。</small></p></div>
+      <div class="card"><span class="tag">原则 2</span><h4>要么可点，要么说明为什么不可点</h4><p style="margin:0"><small>判据：任何带描边 + 硬边 + 图标的元素必须响应点击；锁态必须带锁图标 <em>且</em> 写清解锁条件。</small></p></div>
+      <div class="card"><span class="tag">原则 3</span><h4>反馈先结论、后理由，且不评判</h4><p style="margin:0"><small>判据：文案禁用「错误/失败/错/笨」；用「再想想 / 差一点」。判定后 200ms 内出反馈。</small></p></div>
+      <div class="card"><span class="tag">原则 4</span><h4>文字有配对，颜色不兼职</h4><p style="margin:0"><small>判据：每个填充色都有 <code>--on-*</code>；文字对比 ≥4.5:1，非文本（焦点、图标）≥3:1；饱和底不承载弱化文字。</small></p></div>
+      <div class="card"><span class="tag">原则 5</span><h4>目标够大，节奏有公共分母</h4><p style="margin:0"><small>判据：儿童端主控件 ≥52px；同屏相邻块间距只取 <code>--sp-*</code> 五档。</small></p></div>
+      <div class="card"><span class="tag">原则 6</span><h4>时间不进孩子的视野</h4><p style="margin:0"><small>判据：儿童端零倒计时、零停留计时、零「你已学习 X 分钟」；时长只出现在家长端，并标注不作为评价依据。</small></p></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s4">
+    <h2><i>§4</i>设计系统 v2 · 5 个补丁</h2>
+    <p>全部是增量，不推翻现有 49 个令牌。每个值都算过对比度，可直接粘贴进 <code>styles.css :root</code>。</p>
+
+    <h3>补丁 1 · <code>--on-*</code> 配对令牌（解决 P0-2）</h3>
+    <p>实测结论比预想的干净：<strong><code>--ink</code> 一个值就能覆盖所有浅色表面</strong>，所以配对表可以很短。真正需要修的是「弱化文字」那一档。</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>表面</th><th>正文 / 标题</th><th>实测比值</th><th>弱化文字</th><th>实测比值</th></tr></thead>
+        <tbody>
+          <tr><td><code>--paper</code> #fbfaf4</td><td rowspan="6"><code>--ink</code> #173f37</td><td rowspan="6" class="ratio pass">4.79 – 11.65 : 1<br /><small>最差在 coral 上，仍过 AA</small></td><td rowspan="6"><code>--muted</code> <strong>#4f6d67</strong>（新值）</td><td rowspan="6" class="ratio pass">4.58 – 5.65 : 1<br /><small>16 个浅面全部通过</small></td></tr>
+          <tr><td><code>--white</code> / <code>--cream</code></td></tr>
+          <tr><td>淡色底 ×8（lime / purple / blue / yellow / coral 系）</td></tr>
+          <tr><td><code>--lime</code> / <code>--yellow</code> / <code>--blue</code> / <code>--purple</code></td></tr>
+          <tr><td><code>--coral</code>（最紧的一档）</td></tr>
+          <tr><td>—</td></tr>
+          <tr><td><code>--ink</code> / <code>--deep</code>（侧栏、顶栏、深底封面）</td><td><code>--white</code> 或 <code>--lime</code></td><td class="ratio pass">10.07 – 14.25 : 1</td><td><code>--on-dark-soft</code> <strong>#b9c9c4</strong>（新增）</td><td class="ratio pass">6.78 / 8.29 : 1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec">
+      <b>两条硬规则（写给实现，避免再次手调）：</b><br />
+      ① <strong>饱和填充（lime / coral / blue / purple / yellow）禁止白字</strong> —— 实测白字最低 1.16:1（on lime），最高也只有 2.43:1（on coral）。这些底只承载 <code>--ink</code>。<br />
+      ② <strong>饱和填充禁止弱化文字</strong> —— 因为饱和底的明度都落在中间，比 ink 更浅的前景一律不达标（<code>--muted</code> 最好也只有 4.28:1 on lime）。所以「辅助说明」只允许出现在纸底与淡底色上。<br />
+      ③ <code>--muted</code> 从 <code>#61746f</code> 换到 <strong><code>#4f6d67</code></strong>（= ink 混白 24%），最差从 <strong>4.02 → 4.58</strong>，一眼看不出变深，但把 15 处失败清零。
+    </div>
+
+    <h3>补丁 2 · 统一焦点环（解决 P0-1）</h3>
+    <p>结论：<strong>没有任何单一颜色能在所有表面上过 3:1</strong>（实测 coral 底上连深橙都只有 1.54:1）。所以采用「按表面明暗二选一」而不是调色。</p>
+    <div class="grid g2">
+      <div class="card">
+        <span class="lab">浅色表面 · 全部达标</span>
+        <div class="stage" style="box-shadow:none;border-style:dashed"><button class="d-btn d-btn--secondary" style="outline:var(--bw-strong) solid var(--ink);outline-offset:2px">焦点态（ink 环）</button></div>
+        <div class="spec"><code>outline: 3px solid var(--ink); outline-offset: 2px;</code><br />21 个浅色表面实测 <span class="ratio pass">4.79 – 11.65 : 1</span>，最差也超 3:1 一档有余。</div>
+      </div>
+      <div class="on-dark">
+        <span class="lab" style="color:var(--on-dark-soft)">深色表面 · 换白环</span>
+        <div class="stage" style="background:transparent;border-color:var(--paper);box-shadow:none"><button class="d-btn d-btn--secondary" style="outline:var(--bw-strong) solid var(--white);outline-offset:2px;background:var(--lime)">焦点态（white 环）</button></div>
+        <div class="spec" style="background:rgba(255,255,255,.1);border-left-color:var(--lime);color:var(--paper)"><code>.on-dark :focus-visible { outline-color: var(--white) }</code><br />ink 底 <span class="ratio pass">11.65:1</span> · deep 底 <span class="ratio pass">14.25:1</span></div>
+      </div>
+    </div>
+    <p></p>
+    <div class="spec"><b>同时删掉</b> <code>#92b74e</code>、<code>#237d9a</code>、<code>#cbbbf8</code> 三个焦点色，新增 <code>--focus: var(--ink)</code> / <code>--focus-on-dark: var(--white)</code> / <code>--focus-width: 3px</code> / <code>--focus-offset: 2px</code>，五个 CSS 文件统一引用。</div>
+
+    <h3>补丁 3 · 主按钮补一档按压量（解决 README §4 ⑥）</h3>
+    <div class="stage">
+      <div>
+        <span class="lab">落地页主按钮 · 76px / 7px 边</span>
+        <button class="d-btn d-btn--primary d-btn--lg">开始学习 <span aria-hidden="true">→</span></button>
+      </div>
+      <div>
+        <span class="lab">卡片式主控件 · ≥46px / 4px 边</span>
+        <button class="d-btn d-btn--primary">开始任务</button>
+      </div>
+      <div>
+        <span class="lab">工具栏紧凑控件 · 40–48px / 3px 边</span>
+        <button class="d-btn d-btn--secondary" style="min-height:44px;box-shadow:0 var(--btn-drop-sm) 0 var(--ink)">暂停休息</button>
+      </div>
+    </div>
+    <div class="spec">新增 <code>--btn-drop-lg: 7px</code>。原来 <code>.primary-button</code> 写死 5px（hover 4 / active 5），既不成档也没名字 —— 现在按压量 = 边缘高度这条物理规则在三档里都成立。</div>
+
+    <h3>补丁 4 · 标题档落地（解决 README §4 ③）</h3>
+    <div class="spec">把 <code>--fs-h1 / --fs-h2</code> 从固定值改为流式，页面就不必绕开 token 写 <code>clamp()</code>：<br />
+      <code>--fs-h1: clamp(26px, 3.4vw, 34px);</code><br />
+      <code>--fs-h2: clamp(22px, 2.6vw, 28px);</code><br />
+      <code>--fs-h3: 22px;</code>　→ 三处页面标题改回吃 token，token 表与实际用法重新对齐。</div>
+
+    <h3>补丁 5 · 断点收敛到 3 档（解决 P1-8）</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>现状（6 个值）</th><th>收敛到</th><th>理由</th></tr></thead>
+        <tbody>
+          <tr><td><code>640</code> · <code>650</code> · <code>651</code></td><td><strong>640</strong></td><td>640 与 650 差 10px，唯一效果是同一台设备在两页触发不同布局</td></tr>
+          <tr><td><code>760</code>（thinking / money-lab）</td><td><strong>900</strong></td><td>760 是「不宽不窄」的中间态；两页共用主应用的中轴规则即可</td></tr>
+          <tr><td><code>900</code></td><td><strong>900</strong>（保留）</td><td>抽屉态与桌面态的分界，语义明确</td></tr>
+          <tr><td><code>1100</code> · <code>1120</code></td><td><strong>1200</strong></td><td>差 20px 无实际意义；合并为「大桌面」一档</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="spec"><b>三步走，不一次性改：</b>① 先只改「差 10px 无意义」的两组（651→640、1120→1100 合并为 1200）；② 再把 thinking/money-lab 的 760 对齐到 900 并回归验证；③ 最后把 1100 也并到 1200。每步单独构建 + 巡检，避免一次改三处定位不到回归来源。</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s5">
+    <h2><i>§5</i>组件规格 · 真实渲染</h2>
+    <p>下面不是示意图，是可直接对照实现的 DOM 与状态。每块都给规格注释。</p>
+
+    <h3>5.1 按钮三档 · 全套状态</h3>
+    <div class="stage">
+      <button class="d-btn d-btn--primary">开始任务</button>
+      <button class="d-btn d-btn--secondary">再看一次讲解</button>
+      <button class="d-btn d-btn--quiet">跳过</button>
+      <button class="d-btn d-btn--primary" disabled>完成上一关</button>
+    </div>
+    <div class="spec">
+      主 = lime 底 + <code>--deep</code> 边；次 = 白底 + ink 边；文字 = 无底无边的下划线。
+      禁用态<strong>收掉硬边</strong>（<code>box-shadow: 0 0 0</code>）——「看着能按但按不动」是最常见的儿童挫败点。
+      Tab 到任意一个看焦点环（ink 3px）。
+    </div>
+
+    <h3>5.2 任务节点卡 · 4 态（含锁态说清条件）</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(215px,1fr))">
+      <div class="d-node">
+        <div class="num">01 · 可开始</div>
+        <div class="ico">★</div><h5>钱的第一课</h5><p>先认识钱的流入、流出和剩余。</p>
+        <div class="meta"><span>+30 XP　+20 ★</span><span class="tag ok">可开始</span></div>
+        <button type="button">开始任务</button>
+      </div>
+      <div class="d-node is-done">
+        <div class="num">02 · 已达成</div>
+        <div class="ico" style="background:var(--lime)">✓</div><h5>第一次采购</h5><p>用有限预算买齐开店材料。</p>
+        <div class="meta"><span>已获得 +30 XP</span><span class="tag ok">已完成</span></div>
+        <button type="button">再看一次</button>
+      </div>
+      <div class="d-node is-locked">
+        <div class="num">03 · 未解锁</div>
+        <div class="ico" style="background:var(--cream)">🔒</div><h5>开门营业</h5><p>为顾客做定价和经营决定。</p>
+        <div class="meta"><span>完成后可得 +40 XP</span><span class="tag">未解锁</span></div>
+        <button type="button" disabled>先完成「第一次采购」</button>
+        <div class="why">用前一个节点的名字，不用「完成上一关」</div>
+      </div>
+      <div class="d-node is-locked" style="background:var(--white);opacity:1">
+        <div class="num">04 · 阶段门</div>
+        <div class="ico" style="background:var(--purple)">📈</div><h5>市场实验室</h5><p>用虚构公司认识股票和风险。</p>
+        <div class="meta"><span>需 2 枚能力徽章</span><span class="tag">未解锁</span></div>
+        <button type="button" disabled>还差 1 枚徽章</button>
+        <div class="why">阶段门用「差值」而不是门槛值：说还差多少，不说要达到多少</div>
+      </div>
+    </div>
+    <div class="spec">
+      <b>锁态的三条规格：</b>① 背景换 <code>--cream</code> 且<strong>收掉硬边</strong>（不再像可按的纸片）；② 按钮虚线下边框 + 明确的前置条件；③ 条件文案用「还差 X」而不是「达到 Y」—— 前者是进度，后者是门槛。
+    </div>
+
+    <h3>5.3 反馈条 · 鼓励式，不用红叉</h3>
+    <div class="stage col">
+      <div class="d-feedback"><span class="mark">✓</span><div><strong>这个决定很稳</strong><p>你先看了成本，再看客户能接受多少 —— 这是定价最重要的顺序。</p></div></div>
+      <div class="d-feedback retry"><span class="mark">↻</span><div><strong>再想一步</strong><p>如果价格比成本低，每卖一杯会怎么样？把这两个数字放在一起看看。</p></div></div>
+    </div>
+    <div class="spec">
+      结构调整：<strong>先给结论（一句话），再给理由（一句话）</strong>。禁用元素：红叉、红底、分数、「错误」「失败」。左边框用语义色区分（成功 <code>--down</code> 绿 / 待改进 <code>#c98a22</code> 琥珀），不用红。
+    </div>
+
+    <h3>5.4 步骤条 · 宽屏 / 窄屏两态</h3>
+    <div class="stage col">
+      <div>
+        <span class="lab">≥641px · 全部可见</span>
+        <ol class="d-steps">
+          <li class="done">1 认识</li><li class="done">2 看看</li><li aria-current="step">3 一起试试</li><li>4 你来</li><li>5 说说</li>
+        </ol>
+      </div>
+      <div>
+        <span class="lab">≤640px · 只留当前 + 总数</span>
+        <ol class="d-steps narrow"><li class="done">1</li><li class="done">2</li><li aria-current="step">3 一起试试</li><li>4</li><li>5</li></ol>
+      </div>
+    </div>
+    <div class="spec">窄屏压缩策略已在学习页落地（<code>li{display:none}</code> + <code>[aria-current]{display:block}</code> + <code>ol::after</code>）。规格要点：<strong>总数必须保留</strong> —— 孩子需要「还剩几步」这个信息，但不需要看到全部五步的名词。</div>
+
+    <h3>5.5 语言分段控件 · 加门槛（解决 P2-10）</h3>
+    <div class="grid g2">
+      <div class="card">
+        <span class="lab">现状 · 一次点击即切</span>
+        <div class="d-seg"><button type="button" aria-pressed="true">中文</button><button type="button" aria-pressed="false">EN</button></div>
+        <p style="margin-top:12px"><small>儿童误触 → 整页英文 → 读不懂也切不回来。</small></p>
+      </div>
+      <div class="card">
+        <span class="lab">提案 · 长按或家长区才可切</span>
+        <div class="d-seg locked"><button type="button" aria-pressed="true">中文</button><button type="button" aria-pressed="false">EN</button></div>
+        <p style="margin-top:12px"><small>做法：顶栏的分段控件改为<strong>只显示当前语言</strong>（不可点），切换能力移到家长中心；或保留控件但要求长按 1 秒（与家长中心入口同一个意图确认模式）。</small></p>
+      </div>
+    </div>
+
+    <h3>5.6 家长话术卡 · 新增组件（真正的复访理由）</h3>
+    <div class="grid g3">
+      <div class="d-talk"><span class="tag new">先肯定</span><p class="q">「你今天算利润的时候，是先看成本再定价的，这个顺序对的。」</p><p class="why">具体到动作，不评价孩子本人</p></div>
+      <div class="d-talk"><span class="tag new">再提问</span><p class="q">「如果奶茶涨到 8 枚星币一杯，你还会先买包装吗？」</p><p class="why">换一个数字问同一件事，检验是否真懂</p></div>
+      <div class="d-talk"><span class="tag new">生活延伸</span><p class="q">「超市里同样的水，为什么大瓶反而每毫升更便宜？」</p><p class="why">把课堂概念接到真实场景</p></div>
+    </div>
+    <div class="spec">
+      这是家长中心唯一有回访价值的产出，必须<strong>预置在课程数据里</strong>（<code>parent.talk[3]</code>），不做 AI 实时生成 —— 质量可控，且不把儿童数据发出去。每课三张，卡片本身要能单屏截图。
+    </div>
+
+    <h3>5.7 空态 · 成就页</h3>
+    <div class="d-empty">
+      <div class="big" aria-hidden="true">★</div>
+      <strong>还没有徽章，这很正常</strong>
+      <p style="margin:0 auto 12px;max-width:44ch"><small>徽章会在你完成课程里的挑战后出现。第一枚「利润小侦探」在第一课结束就能拿到。</small></p>
+      <button class="d-btn d-btn--primary">去第一课看看</button>
+    </div>
+    <div class="spec">规格：空态必须给出<strong>下一件事</strong>（一个可点按钮），而不只是解释。文案不给期限、不制造「你落后了」。</div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s6">
+    <h2><i>§6</i>页面级改造方案</h2>
+
+    <h3>6.1 经营地图首页 —— 问题在顺序</h3>
+    <div class="grid g2">
+      <div>
+        <span class="lab">现状 · 主行动在第三块</span>
+        <div class="skeleton">
+          <div class="bar">① 零花钱小镇（外链）<span>→</span></div>
+          <div class="bar">② 思维样板课（外链）<span>→</span></div>
+          <div class="bar">③ 店铺 hero + 三个统计</div>
+          <div class="bar hot">④ 任务地图 ← 真正的主行动</div>
+          <div class="bar cool">⑤ 后续商业场景（不可点）</div>
+        </div>
+      </div>
+      <div>
+        <span class="lab">提案 · 主行动提到首屏</span>
+        <div class="skeleton">
+          <div class="bar hot">① 继续学习：当前课名 + 进度 + 开始 <span>→</span></div>
+          <div class="bar">② 任务地图（横向 4 节点，弱化已完成项）</div>
+          <div class="bar">③ 店铺 hero（缩为一条状态条）</div>
+          <div class="bar">④ 两张样板课卡（移到地图之后，标注「另一个场景」）</div>
+          <div class="bar cool">⑤ 后续场景 → 改为<strong>可点的「想看哪个」投票卡</strong>或直接移除</div>
+        </div>
+      </div>
+    </div>
+    <ul class="plain">
+      <li><strong>新增「继续学习」条</strong>：读存档算出下一个未完成节点，文案是「接着上次：第一次采购」，按钮直达。这是 8–12 岁用户最需要的唯一信息。</li>
+      <li><strong>店铺 hero 降级</strong>：它现在占了一整屏（<code>minmax(320px,.75fr)</code> 的插画列），功能是氛围。保留视觉但压缩到一条横向状态条。</li>
+      <li><strong><code>.coming-worlds</code> 二选一</strong>：要么每张卡加按钮变成「我想玩这个」的投票（顺带产出真实的用户偏好数据），要么整块移除。现状「长得像入口但点不动」是最差的选项。</li>
+    </ul>
+
+    <h3>6.2 顶栏 —— 撤掉时长，补上「今天做了什么」</h3>
+    <div class="grid g2">
+      <div class="card">
+        <span class="lab">现状 3 个统计</span>
+        <ul class="plain" style="margin-bottom:0">
+          <li><code>0 / 6</code> 课（footsteps）</li>
+          <li><code>0</code> 分钟（stopwatch）← <strong>与立场冲突</strong></li>
+          <li><code>LV.1</code> 等级（star）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="lab">提案 3 个统计</span>
+        <ul class="plain" style="margin-bottom:0">
+          <li><code>0 / 6</code> 课（不变）</li>
+          <li>今日「发现」计数，如 <code>2 件事</code>（不用时间单位）</li>
+          <li><code>LV.1</code> 等级（不变）</li>
+        </ul>
+        <p style="margin:12px 0 0"><small>数据本身照旧计时（家长端要用），只是<strong>不把分钟数显示给孩子</strong>。</small></p>
+      </div>
+    </div>
+    <div class="spec">顺带修 <code>state.reputation</code> 的语义污染：拆成 <code>state.reputation</code>（声誉，仅游戏内）与顶栏独立读取的派生值，别让同一个字段承担两种含义。</div>
+
+    <h3>6.3 学习页 —— 已完成的「上图下题」还差一步</h3>
+    <p>结构与视觉已经改完（视觉区三选一 / 课头压成一行 / 760px 中轴 / 选项纵向等宽）。剩下三件事：</p>
+    <ul class="plain">
+      <li><strong>第 1 步的「看视频」按钮提到视觉区内</strong>：现在配片时主按钮在题目区，桌面 1005px 高度下需要滚 51px 才看见。视频卡本身就是那一步的主行动，按钮应当贴着封面。</li>
+      <li><strong>练习 / 挑战两步的视觉区仍是角色舞台</strong>：这两步的孩子任务是「做」，配一张题目情境的可视化（货架、顾客、罐子）比角色表情更有效。</li>
+      <li><strong>对白字号分级要统一</strong>：目前第 1/5 步 20–23px、其余 18px。要么全部 <code>--fs-body</code>，要么把「叙事步」提升为一档正式 token（<code>--fs-lead: clamp(20px,2.2vw,23px)</code>），不要留成裸值。</li>
+    </ul>
+
+    <h3>6.4 家长中心 —— 从「理念陈列」改成「今晚能做什么」</h3>
+    <table>
+      <thead><tr><th>区块</th><th>现状</th><th>提案</th></tr></thead>
+      <tbody>
+        <tr><td>开头</td><td>3 张解释卡（教什么 / 安全边界 / 怎么问）</td><td><strong>换成一句话结论 + 今天的数据</strong>：「今天完成了 2 件事：认识钱的进出、第一次采购。没有计时，也不用于解锁。」</td></tr>
+        <tr><td>核心产出</td><td>无</td><td>新增 <strong>§5.6 话术卡 ×3</strong>（预置在课程数据里）</td></tr>
+        <tr><td>安全边界</td><td>单独一张卡</td><td>下沉为进度旁边的一行小字 —— 说明要写在数据旁边才有人看</td></tr>
+        <tr><td>解释性内容</td><td>3 段长文</td><td>折叠到「这套课在教什么」的展开区（默认收起）</td></tr>
+        <tr><td>进度提示</td><td><code>#parent-progress</code> 用 <code>.learning-notice</code> 样式</td><td>换成语义正确的数据块（描述列表 <code>&lt;dl&gt;</code>）</td></tr>
+        <tr><td>语言切换</td><td>顶栏随处可切</td><td><strong>切到这里</strong>（解决 P2-10 的门槛问题）</td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.5 成就页 · 补空态与获取路径</h3>
+    <ul class="plain">
+      <li>删掉写死在 HTML 里的 4 张徽章卡（现在会被 JS 覆盖，属死代码）。</li>
+      <li>加空态（见 §5.7）：未获得时给「下一件事」按钮。</li>
+      <li>每张未获得徽章卡加一行<strong>怎么拿</strong>（「完成第一课即可获得」），已获得加获得时间。</li>
+      <li>保留免责声明「徽章不代表真实投资水平」—— 这条必须留。</li>
+    </ul>
+
+    <h3>6.6 思考站 / 零花钱小镇 · 对齐主应用</h3>
+    <ul class="plain">
+      <li><strong>断点</strong> 760 → 900；<strong>焦点色</strong> <code>#237d9a</code> → 统一焦点环。</li>
+      <li>两页的非令牌色值（42 + 19 个去重）按 §4 补丁 1/补丁 5 收敛；这一步会顺带把「跨页底色跳变」消掉，是这三页一致性的主要来源。</li>
+      <li>小镇「捐」口袋 <code>#fff0ed</code> → 换中性或绿色系，<strong>捐赠不能被涂成警示色</strong>。</li>
+      <li>两页加入 <code>sw.js</code> 的 <code>CORE_FILES</code>，否则离线不可用（README §4 ⑤）。</li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s7">
+    <h2><i>§7</i>验收清单</h2>
+    <p>可以逐条勾的东西。A 组能在 CI 里自动断言，B 组需要人工看一眼。</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="lab">A 组 · 可自动断言（建议进构建）</span>
+        <ul class="check">
+          <li>非令牌区硬编码色值 = 0（<code>styles.css</code> 现 44 → 0；<code>thinking.css</code> 42 → 0；<code>money-lab.css</code> 19 → 0；<code>dialogue.css</code> 19 → 0）</li>
+          <li>字号裸值 = 0（<code>.8em</code> 这类漏网值优先）</li>
+          <li>带模糊半径的投影 = 0（保持）</li>
+          <li>断点集合 ⊆ {640, 900, 1200}</li>
+          <li>焦点样式只有 2 种来源：<code>--focus</code> / <code>--focus-on-dark</code></li>
+          <li>每个填充色都有配对的 <code>--on-*</code> 声明</li>
+          <li>对比度脚本全绿：正文 ≥4.5:1，非文本 ≥3:1</li>
+          <li>每份 HTML 的 <code>&lt;h1&gt;</code> ≤1（现 8）</li>
+          <li>每份 HTML 引用的 JS 清单与规范一致（<code>icons → reward-coin → dialogues → teaching-media → video-lessons → lessons → app</code>）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="lab">B 组 · 人工验收</span>
+        <ul class="check">
+          <li>键盘 Tab 走完全站，焦点环在每一种底色上都看得见（含 lime、coral、深底侧栏）</li>
+          <li>儿童端任何一屏都找不到倒计时或停留计时</li>
+          <li>每页首个主 CTA 在 1280×800 与 500×805 下都不用滚动即可见</li>
+          <li>所有看起来像按钮/卡片的元素，点击都有反馈；不可点的已改成非卡样式或写明原因</li>
+          <li>锁态文案用「还差 X」而非「达到 Y」，且写的是前一个节点的名字</li>
+          <li>把浏览器文字缩放到 200%，家长中心仍完整可读（长文可折行，按钮文字不裁切）</li>
+          <li>开着「减少动画」，学习页仍能完整走完 5 步</li>
+          <li>家长中心单屏可截图即完整（含三张话术卡）</li>
+          <li>切到英文后，家长中心仍能切回中文；儿童端无法误触切换</li>
+          <li>跨页底色一致：主应用 / 思考站 / 小镇在同一设备上无跳变</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s8">
+    <h2><i>§8</i>落地顺序</h2>
+    <p>按「先零视觉变化、后有视觉变化」排，每批都能独立验收、独立回滚。第 1 批不产生任何像素变化，但把后面所有批次的风险降下来。</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:6%">批</th><th style="width:26%">内容</th><th style="width:34%">改动面</th><th style="width:34%">回验方式</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1</strong><br /><span class="tag ok">零视觉</span></td><td>令牌层：<code>--on-*</code>、<code>--muted</code> 修正、<code>--focus*</code>、<code>--btn-drop-lg</code>、<code>--fs-h1/h2</code> 流式化</td><td><code>styles.css :root</code> 单点新增；不改任何选择器</td><td>截图逐页比对，应与改前完全一致（<code>--muted</code> 换值会有极轻微变化，单独确认）</td></tr>
+          <tr><td><strong>2</strong><br /><span class="tag p0">P0</span></td><td>无障碍：焦点环统一到 2 个令牌、删 3 个旧焦点色、<code>h1</code> 层级、补 <code>aria-live</code> 播报、锁态补 <code>aria-label</code></td><td>5 份 CSS 的 <code>:focus-visible</code> 块 + <code>index.html</code> 标题层级 + <code>app.js</code> 播报</td><td>对比度脚本全绿（≥3:1）；Tab 走查；屏幕阅读器读一遍首页</td></tr>
+          <tr><td><strong>3</strong><br /><span class="tag p0">P0</span></td><td>信息层级：首页首屏重排（加「继续学习」条、hero 降级、样板课卡下移）、撤掉时长显示、<code>.coming-worlds</code> 可点化或移除、解锁文案统一</td><td><code>index.html</code> 首页区块顺序 + <code>app.js</code> 统计渲染 + <code>styles.css</code> 首页相关规则</td><td>1280×800 / 500×805 首屏截图；点一遍完整流程（<code>?drive=1</code>）</td></tr>
+          <tr><td><strong>4</strong><br /><span class="tag p1">P1</span></td><td>一致性与补全：三份 CSS 取色收敛到令牌、断点分三步收敛、成就页空态、家长中心改版（话术卡 + 语言切换移入）、小镇捐口袋换色、两页进 <code>sw.js</code> 清单</td><td>4 份 CSS 全量 + <code>index.html</code> 两页 + <code>thinking-course.js</code> / <code>money-lab.js</code></td><td>对比度脚本 + 断点断言 + 三页无头巡检（图标数 / JS 错误 0）+ 构建断言</td></tr>
+          <tr><td><strong>5</strong><br /><span class="tag new">护栏</span></td><td>把 A 组断言写成 <code>build-private.mjs</code> 的一部分，或在 preview 里加一个 <code>?audit=1</code> 面板</td><td><code>scripts/build-private.mjs</code> / <code>scripts/preview.mjs</code></td><td>故意写一个 <code>#ff0000</code> 与一个 11px 字号，确认构建失败</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="spec">
+      <b>顺序上唯一不能调的是第 1 批必须在第 2 批之前。</b>焦点环统一要引用 <code>--focus</code>，<code>--muted</code> 修正会改动一批文字色 —— 如果先改选择器再加令牌，中间态会出现「令牌引用了还不存在的值」，一切排查都会变得很贵。
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s9">
+    <h2><i>§9</i>待确认（5 条）</h2>
+    <ol class="plain">
+      <li><strong>时长数据的最终归宿</strong>：是从孩子视野撤掉、只留家长端（本方案默认），还是连家长端也不显示、只保留「完成了什么」？后者更彻底，但会失去家长最敏感的那个数字。</li>
+      <li><strong><code>.coming-worlds</code> 三张卡</strong>：改成可点的「我想玩这个」投票（会产出真实偏好数据，但需要一个新的存档字段与计数），还是直接移除？</li>
+      <li><strong>语言切换的门槛形态</strong>：收到家长中心（最干净，但家长要先进家长中心）、还是顶栏改长按 1 秒（复用家长中心入口的意图确认模式）？</li>
+      <li><strong>饱和色作为文字底</strong>：本方案给的是「只承载 ink 正文」。但如果品牌上需要 lime 底上的白字，就得把 lime 加深一档（会连带动效、奖励弹窗与图标配色），需要设计侧先确认要不要走这条路。</li>
+      <li><strong>第 5 批护栏的形态</strong>：断言进构建（会拖慢构建，但强制）、还是做成 <code>?audit=1</code> 的自查面板（不拦人，靠自觉）？</li>
+    </ol>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s10">
+    <h2><i>§10</i>落地进度 · 批 1 + 批 2</h2>
+    <p>已落地的部分记在这里。每一条都附「怎么验的」—— 这一轮的做法是<strong>先写断言脚本、再动代码</strong>，下面所有数字都能用 <code>node .workbuddy/tmp-audit/verify-b2.js</code> 复现。</p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:7%">批</th><th style="width:30%">内容</th><th style="width:63%">状态与实测</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td>令牌层（只动 <code>styles.css</code> 的 <code>:root</code>，零选择器改动）</td>
+            <td><span class="tag ok">已落地</span> 新增 9 个令牌、改 2 个。全部对比度断言通过：<code>--ink</code> 4.79–11.65、<code>--muted</code> 新值 4.58–5.65（16 个浅面全过）、<code>--focus</code> ≥4.79、<code>--focus-on-dark</code> 11.65–14.25、<code>--on-dark-soft</code> 6.78–8.29</td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td>无障碍：焦点环统一、h1 层级、播报、锁态可读名</td>
+            <td><span class="tag ok">已落地</span> 焦点环从 4 套不达标颜色收敛到 2 个令牌；index.html 的 h1 从 8 收到 1；新增 <code>#a11y-announcer</code>；锁态补读屏文字与节点名</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td>信息层级：首页首屏重排、撤时长、<code>.coming-worlds</code></td>
+            <td><span class="tag ok">部分落地</span> 首页首屏重排 + 解锁文案统一已做（见 §11）；「撤时长」与「<code>.coming-worlds</code> 二选一」正好就是 §9 的 ①②，按约定留着不动</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td>一致性：三份 CSS 取色收敛、断点、空态、家长中心改版</td>
+            <td><span class="tag p1">待做</span> 本轮的取色收敛只做到「新令牌可用」，存量 133 处硬编码色值原样未动 —— 提案里就是排在批 4</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td>护栏：把 A 组断言写进构建或 <code>?audit=1</code> 面板</td>
+            <td><span class="tag new">已备好脚本</span> <code>verify-b2.js</code> 已经是可直接搬的形态（只读、有退出码、能读真文件）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>批 1 实际加了什么</h3>
+    <div class="spec">
+      新增：<code>--on-light</code> / <code>--on-light-soft</code> / <code>--on-dark</code> / <code>--on-dark-soft #b9c9c4</code> / <code>--focus: var(--ink)</code> / <code>--focus-on-dark: var(--white)</code> / <code>--focus-width: 3px</code> / <code>--focus-offset: 2px</code> / <code>--btn-drop-lg: 7px</code>。<br />
+      改动：<code>--muted #61746f → #4f6d67</code>；<code>--fs-h2 / --fs-h1</code> 从固定值改为流式 <code>clamp()</code>。<br />
+      <strong>这一批唯一的可见变化是 <code>--muted</code></strong>：弱化文字整体深了一档（ink 混白 24%）。肉眼几乎看不出，但它把那 15 处不达标的比值一次清掉；其余全部是零像素改动。
+    </div>
+
+    <h3>批 2 实际改了什么</h3>
+    <div class="spec">
+      <b>① 焦点环</b>：<code>button/input/a/[tabindex]:focus-visible</code> 统一引用 <code>--focus-width</code> / <code>--focus</code>；深色表面（<code>.game-sidebar</code> / <code>.coming-worlds</code> / <code>.lesson-wallet</code> / <code>.supply-budget</code>）换 <code>--focus-on-dark</code>。删除 <code>#92b74e</code>（叙述高亮）、<code>#237d9a</code>（思考站）、<code>#cbbbf8</code>（视频模块自带）三套颜色，以及 <code>--coral</code> 这套默认环。浏览器实测：<code>outline: solid 3px rgb(23,63,55) offset 2px</code>，全站只剩 2 条焦点规则。<br />
+      <b>② h1 层级</b>：<code>index.html</code> 8 → 1。<strong>标签和 CSS 必须同改</strong> —— 所有标题样式都是「祖先 + 标签」写的（<code>.shop-copy h1</code> 之类），只改标签不改选择器，标题会整片掉回浏览器默认字号。共动了 <code>index.html</code> 7 行、<code>styles.css</code> 7 处、<code>dialogue.css</code> 2 处、<code>lessons.js</code> 1 处（<code>#lesson-heading</code> 的 id 保留，焦点依赖它）。<br />
+      <b>③ 播报</b>：新增 <code>.sr-only</code> 工具类与常驻的 <code>#a11y-announcer</code>；<code>window.mqAnnounce()</code> 挂在 <code>app.js</code>（先清空再写，让重复文案也能再播）。接上了「视图切换」「关卡页标题」「课程换步」三处；课程换步用 <code>announcedStepKey</code> 去重，同一步内点道具不重播。<br />
+      <b>④ 锁态可读名</b>：锁图标由图标系统统一 <code>aria-hidden</code>，读屏完全读不到「这一课还锁着」—— 补了 <code>sr-only</code> 状态文字；节点按钮名并进节点标题（否则六个锁着的节点读出来全是一模一样的一句）；顶栏「市场实验室」锁住时说明原因。
+    </div>
+
+    <h3>与原提案的 3 处偏差（都是刻意）</h3>
+    <ol class="plain">
+      <li><strong>没有把三处页面标题回接 <code>--fs-h1/h2</code>。</strong>提案补丁 4 提到「三处页面标题改回吃 token」，但那会把 <code>clamp(31px,4vw,48px)</code> 换成 <code>clamp(26px,3.4vw,34px)</code> —— 是字号改版，不是批 1 的「零视觉变化」。本轮只把 token 从「声明了却全站没人用」改成不再撒谎，回接留给批 4 与取色收敛一起做。</li>
+      <li><strong>撤掉 <code>#mission-layer</code> 的 <code>aria-live="polite"</code>，而不是只在旁边加播报区。</strong>那一层每次换步都被 <code>innerHTML</code> 整体替换，粗粒度 live region 会把每个变动的文本节点都排进播报队列；而已有 <code>role="status"</code> 覆盖了对白气泡、答题反馈、朗读状态。真正缺的只有「视图切换」和「课程换步」，所以做法是<strong>一处收敛 + 两处补齐</strong>，而不是单纯加东西。</li>
+      <li><strong>只降 h1，没有把 h2 级联降到 h3。</strong><code>.page-heading h2</code> 底下挂着 <code>.parent-grid h2</code>、<code>.quiz-card h2</code>、<code>.speech-bubble h2</code>，严格说是「平铺大纲」。定级正确要动 6 个选择器 + 15 处标签，而 A 组只要求 h1 ≤ 1，故留作后续。</li>
+    </ol>
+
+    <h3>顺带修掉的第 3 个真 bug</h3>
+    <div class="spec">
+      <code>money-lab.html</code> 的 <code>&lt;dialog id="lab-modal" aria-labelledby="lab-modal-title"&gt;</code> —— 被引用的标题 <code>h2</code> 是 <code>money-lab.js</code> 在打开前才拼进去的，所以页面刚加载时这个引用指向一个不存在的节点，对话框在无障碍树里有一段时间是「无名」的。修法：把关联挪到内容拼完之后、<code>showModal()</code> 之前。实测影响为零，但静态审计一直报断链，且它确实是 WCAG 4.1.2 的名字来源问题。
+    </div>
+
+    <h3>验收记录（全部可复跑）</h3>
+    <ul class="check">
+      <li><code>verify-b2.js</code> —— 全绿：6 条对比度断言 + 9 个令牌存在性 + 焦点来源 + h1 层级 + 8 条播报/可读名断言</li>
+      <li><code>a11y.js</code> —— 三页全绿（h1 ≤1、aria 引用无断链、无名按钮 0、缺 alt 0、无标签控件 0）</li>
+      <li><code>sweep.js</code> —— 4 个目标（首页 / 思考站 / 小镇 / 学习页）JS 错误 <strong>0</strong>；h1 ≤1；图标宿主 32/32 全部拿到 SVG；令牌在浏览器里解析为新值；实焦环为 ink</li>
+      <li><code>probe-step.js</code> —— 换步播报实测：打开「第 1 步 · 故事时间」→ 推进后「第 2 步 · 陪你看一遍」；同一步内点道具<strong>不重复</strong>播报（去重生效）</li>
+      <li><code>build.js</code> —— 25 项构建断言通过；源 ↔ dist 一致（含两处刻意的构建变换）</li>
+      <li>换行符：5 份 CSS 纯 LF、HTML/JS 纯 CRLF，无混合</li>
+    </ul>
+
+    <div class="spec">
+      <b>回滚点</b>：<code>.workbuddy/backup/before-batch12/</code>（15 个文件）。<br />
+      <b>缓存戳</b>：<code>sw.js</code> 从 <code>…-20260922-8</code> 提到 <code>…-9</code> —— 这次不换戳的后果比上一轮更明显：焦点环会整片消失。<br />
+      <b>剩下的</b>：批 4 / 5，以及 §9 那 5 条待确认。批 3 已部分落地，见 §11；其后又按产品侧口径做了两轮调整（启动流、课程地图题头），见 §12 —— 其中「撤时长」与「<code>.coming-worlds</code> 二选一」就是 §9 的 ①②，按「待确认暂时都不动」的约定保留原状。另：批 3 没有动顶栏品牌标签（仍然是 <code>strong</code>），因为「游戏态没有可见 h1」这件事和撤时长一样，取决于 §9 ① 的取舍。
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s11">
+    <h2><i>§11</i>落地进度 · 批 3</h2>
+    <p>批 3 的原始范围是四项：首页首屏重排、撤掉时长显示、<code>.coming-worlds</code> 二选一、解锁文案统一。其中<strong>后两项正好就是 §9 的 ① 与 ②</strong>，本轮约定「待确认暂时都不动」，所以只落地了不依赖它们的两项，另两项保留原状。</p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:22%">项</th><th style="width:34%">改前（实测）</th><th style="width:44%">改后（实测）</th></tr></thead>
+        <tbody>
+          <tr><td>首屏第一眼</td><td>两张外链卡（<code>top 100 / 211</code>）</td><td><strong>「继续学习」条</strong>（<code>top 106</code>）：当前课名 + 进度 + 直达按钮</td></tr>
+          <tr><td>任务地图第一张卡的 <code>top</code></td><td>约 <strong>973</strong>（整排在首屏之外，要滚过封面）</td><td><strong>474</strong>（1280 宽）／<strong>570</strong>（500 宽）—— 第一排卡已在首屏内</td></tr>
+          <tr><td>店铺 hero 高度</td><td><strong>410px</strong> 整屏封面</td><td><strong>256px</strong> 横向状态条（插画等比缩到 <code>zoom:.44</code>）</td></tr>
+          <tr><td>店铺标题字号</td><td><code>clamp(47px,6vw,78px)</code></td><td><code>clamp(24px,2.8vw,32px)</code></td></tr>
+          <tr><td>任务地图列数</td><td>写死 <code>repeat(3,…)</code>，7 张卡排成 3+3+1</td><td><code>repeat(auto-fit,minmax(220px,1fr))</code></td></tr>
+          <tr><td>锁态按钮文案</td><td>「先学会前一课」「先学完六节基础课」</td><td>「先完成「&lt;前一课标题&gt;」」「还差 N 节基础课」</td></tr>
+          <tr><td>静态死标记</td><td>3 张旧 mission 卡，含错误文案「达到等级2」</td><td>已删，<code>#mission-road</code> 交给 <code>renderTaskMap()</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>11.1 「继续学习」条</h3>
+    <div class="spec">
+      读存档算出<strong>第一个未完成的节点</strong>（<code>nextLesson()</code>），文案分两态：有进度说「接着上次 · 第 N / 6 课」，没有说「下一步 · 第 N / 6 课」；副行放该课的目标句，不重复顶栏已有的进度数字。六节全学完时改成「六节课都学完了」并指向成就页 —— 不假装还有下一步。<br />
+      按钮目标写在 <code>data-continue-target</code> 上、<strong>点击那一刻才读</strong>：绑定时缓存的话，学完一课后按钮还指向旧节点。<br />
+      底色用 <code>--lime</code>，文字一律 <code>--on-light</code>（＝<code>--ink</code>）—— 遵守批 1 立的「饱和填充禁白字、禁弱化文字」。
+    </div>
+
+    <h3>11.2 店铺 hero 降级</h3>
+    <div class="spec">
+      从 grid 整屏封面改成 flex 横向状态条：保留店名、一句话、两个状态 chip，插画保留但等比缩到 44%。<br />
+      用 <code>zoom</code> 而不是重写尺寸 —— 插画内部全是<strong>绝对定位的固定像素</strong>（招牌 <code>top:-22px</code>、树 <code>right:-45px</code>、门 <code>151px</code> 高），逐个改会漂。<code>zoom</code> 会连同 <code>--e4</code> 硬边一起缩放，视觉上仍是同一支笔画出来的。
+    </div>
+
+    <h3>11.3 解锁文案统一（提案 §5.2 的两条规则）</h3>
+    <div class="spec">
+      ① <strong>说出前置条件的具体名字</strong>，不用「完成上一关」这种要靠记忆推断的说法 → <code>先完成「我的钱有多少？」</code>。<br />
+      ② <strong>阶段门用「还差 X」而不是「达到 Y」</strong> —— 前者是进度，后者是门槛 → <code>还差 6 节基础课</code>。<br />
+      顺带查清一件事：<code>TASKS = [lesson-1…lesson-6, mission-4]</code>，而 <code>isUnlocked()</code> 是<strong>纯顺序解锁</strong>（只看前一个节点是否完成）。所以「市场实验室」的真实门槛是<strong>学完第 6 课</strong>，与等级、徽章都无关 —— 静态标记里那句「达到等级2」是错的，已随死标记一起删掉。
+    </div>
+
+    <h3>11.4 顺带修的两件事</h3>
+    <ol class="plain">
+      <li><strong>既存 bug：<code>app.js:422</code> 的 <code>$('[data-view]')</code>。</strong><code>$</code> 是 <code>querySelector</code>（返回单个元素），<code>$$</code> 才返回数组 —— 这行在<strong>每次切视图时都抛 <code>$(...).forEach is not a function</code></strong>。视图本身还会切（上一行 421 是 <code>$$</code>），所以肉眼看不出来，但 422 之后的全部逻辑都被跳过：侧栏高亮不更新、移动端抽屉不自动关、切视图不回到顶部。<strong>批 2 加的「视图切换播报」也因此从来没真正响过</strong> —— 当时只做了静态断言（代码里有这次调用），没做点击实测。已修，并加了回归断言。</li>
+      <li><strong>静态任务卡是死标记。</strong><code>renderTaskMap()</code> 每次都会整体替换 <code>#mission-road</code> 的 innerHTML，所以 HTML 里那 4 张卡从未被渲染过；它们还停留在「3 关」的旧结构上，文案也与真实解锁规则脱节。已删 —— <code>#game-app</code> 初始就带 <code>hidden</code>，静态内容本来也没有任何人看见过。</li>
+    </ol>
+
+    <h3>11.5 验收记录（全部可复跑）</h3>
+    <ul class="check">
+      <li><code>verify-b3.js</code> —— 全绿：区块顺序 6 条 + 继续学习条接线 7 条 + 解锁文案 4 条 + 布局样式 5 条 + <code>$$</code> 回归 3 条</li>
+      <li><code>verify-b2.js</code> —— 仍全绿（两处过期断言已随改动更新：<code>.shop-copy h2</code> 3→2、顶栏锁态文案）</li>
+      <li><code>probe-b3.js</code> —— 1280×800 与 500×805 两档：JS 错误 0、控制台报错 0、第一排卡均在首屏内、无横向溢出、7 张卡等宽</li>
+      <li><code>drive-b3.js</code> —— 真实点击：三个视图都能切（此前会抛错）、继续学习条直达课程（<code>#guided-lesson.is-active</code>）</li>
+      <li><code>a11y.js</code> —— 三页全绿（<code>#continue-go</code> 的默认文案补上后，无名按钮 0）</li>
+      <li><code>build.js</code> —— 25 项构建断言通过；源 ↔ dist 21 项逐字节一致</li>
+      <li>换行：5 份 CSS 纯 LF、HTML/JS 纯 CRLF，无混合</li>
+    </ul>
+
+    <div class="spec">
+      <b>回滚点</b>：<code>.workbuddy/backup/before-batch3/</code>（5 个文件）。<br />
+      <b>缓存戳</b>：<code>sw.js</code> <code>…-20260922-9</code> → <code>…-10</code>。<br />
+      <b>没做的</b>：撤掉给孩子看的时长（§9 ①）、<code>.coming-worlds</code> 二选一（§9 ②）、以及批 4 / 批 5。
+    </div>
+  </section>
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <section id="s12">
+    <h2><i>§12</i>后续调整 · 启动流与课程地图顺序</h2>
+    <p>批 3 之后又按产品侧口径做了两轮小调整，都不属于批 3 的原始范围，单独记在这里。</p>
+
+    <h3>12.1 启动流（<code>20260922-11</code>）</h3>
+    <div class="spec">
+      <strong>① 启动页永远第一屏。</strong>原先 <code>initialise()</code> 调 <code>renderShell()</code>，后者按 <code>state.started</code> 分流 —— 有存档的回访用户被直接送进游戏态，<strong>根本看不到「开始学习」</strong>。现在改调 <code>showStartScreen()</code>，只负责切两块 <code>hidden</code>。<br />
+      <strong>② 点「开始学习」落课程地图</strong>，不再 <code>openMission("lesson-1")</code> 直跳第一课。存档因此只剩一个职责：决定「继续学习」条指向哪一课。<br />
+      <strong>③ 场景默认奶茶店</strong>：<code>defaultState.scenario</code> 由 <code>""</code> 改 <code>"bubble-tea"</code>，并在 <code>loadState()</code> 里归一化旧存档的空串。<strong>没有动 <code>version</code></strong> —— 这是纠偏不是改 schema，动版本号会把老用户的进度一起重置。顺带修掉一个显示 bug：旧存档下家长中心的场景选择器一个都不高亮，看着像「没选」。<br />
+      <strong>④ 首页两张「另一个场景」外链卡 MVP 整体下线</strong>：只加 <code>hidden</code>，源码与样式都留着，去掉属性即恢复。CSS 必须补一条 <code>.sample-lessons[hidden]{display:none}</code> 兜底 —— <strong>作者样式的 <code>display</code> 会盖掉 UA 的 <code>[hidden]</code>（作者来源优先，与特异性无关）</strong>。<br />
+      <strong>顺带逮到一个真 bug</strong>：家长中心的「清除本机进度并重新开始」<strong>从未生效过</strong> —— <code>removeItem()</code> 后紧跟 <code>reload()</code>，reload 触发 <code>pagehide</code>，而 <code>pagehide</code> 的监听正是 <code>saveState()</code>，把刚删掉的存档原样写了回去。修法是加一个 <code>storageDisabled</code> 闸门，写入函数首行拦截、清除按钮里先关闸再删。
+    </div>
+
+    <h3>12.2 课程地图题头（<code>20260922-12</code>）</h3>
+    <div class="spec">
+      「你的第一个模拟生意 · 星光奶茶铺」原本排在任务地图<strong>之后</strong>（<code>top≈1613</code>，整屏之外），现提到 <code>#home-view</code> 最前 —— 先给身份，再给行动与任务清单。
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:26%">#home-view 子块</th><th style="width:37%">改前 top（1280×800）</th><th style="width:37%">改后 top</th></tr></thead>
+        <tbody>
+          <tr><td>店铺题头 <code>.shop-hero</code></td><td><strong>1613</strong>（需滚动 1613px 才看见）</td><td><strong>82</strong>（首屏内）</td></tr>
+          <tr><td>继续学习条 <code>#continue-bar</code></td><td>106</td><td>362</td></tr>
+          <tr><td>任务地图 <code>.mission-map-section</code></td><td>245</td><td>501</td></tr>
+          <tr><td>第一排任务卡的 <code>top</code></td><td>474（1280）／570（500）</td><td><strong>730（1280）／923（500）</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="spec">
+      <b>已知代价（待权衡）</b>：店铺题头高 256px（1280）／346px（500），置顶后把第一排任务卡压到 <code>top=730</code>（1280 下只露 70px）／<code>923</code>（500 下已出首屏）。要把卡片拉回首屏，只能<strong>再压店铺条高度</strong>（缩插画 / 收状态 chip / 或降级成一行标题栏），尚未做。
+    </div>
+
+    <h3>12.3 验收与回滚</h3>
+    <ul class="check">
+      <li><code>drive-start.js</code> —— 22 项断言：三场景（有存档 / 全新 / 清除进度）首屏都是启动页、点「开始学习」后都落课程地图、任务卡 7 张、外链卡计算样式 <code>display:none</code>；JS 未捕获错误 0 / 控制台报错 0</li>
+      <li><code>probe-b3.js</code> —— 两档宽度量「子块顺序 + 首排卡 <code>top</code> + 横向溢出」。<strong>注意</strong>：启动流改动后它必须显式点一次「开始学习」，否则量到的尺寸全是 0（它一度静默全报 0）</li>
+      <li><code>shot-home.js</code>（新）—— 同源 iframe 加载真实首页 + 真实点一次「开始学习」+ 整页截图，用于纯视觉改动的肉眼验收</li>
+      <li><code>a11y.js</code> / <code>sweep.js</code> / <code>verify-b2.js</code> / <code>verify-b3.js</code> / <code>spotcheck-b3.js</code> / <code>build.js</code> / <code>check-dist.js</code> —— 全绿；<code>verify-b3.js</code> 的「首屏顺序」断言已改成由数组生成标签，不再写死</li>
+    </ul>
+    <div class="spec">
+      <b>回滚点</b>：<code>.workbuddy/backup/before-start-flow/</code>、<code>…/before-shop-first/</code>。<br />
+      <b>缓存戳</b>：<code>…-20260922-10</code> → <code>…-11</code> → <code>…-12</code>。
+    </div>
+  </section>
+
+  <section id="s13">
+    <h2><i>§13</i>新增 · 启动页礼花</h2>
+    <p>需求是「给首页加个彩纸特效，让它看上去更精美」。随需求一起给的是一份 React + shadcn + Tailwind 的组件集成说明 —— 与本项目的技术栈完全不兼容，<strong>照搬只会产出一堆跑不起来的死代码</strong>，所以只保留了<strong>效果本身</strong>，用本项目的方式重写。</p>
+
+    <h3>13.1 为什么不引 <code>canvas-confetti</code></h3>
+    <div class="spec">
+      <b>栈不匹配（逐项核对）</b>：组件要 React（<code>forwardRef</code>/<code>useRef</code>/<code>createContext</code>）、要 TypeScript（<code>.tsx</code> + <code>import type</code>）、要 Tailwind 的 <code>className</code>、要 shadcn 的 <code>/components/ui</code> 与 <code>@/lib/utils</code> 别名，还要 <code>npm i</code> 三个包。本项目的实际状态是：<code>package.json</code> <strong>零依赖</strong>（只有一条构建脚本），<code>components/</code> <code>src/</code> <code>lib/</code> 目录<strong>都不存在</strong>，无 tsconfig、无打包器。<br />
+      <b>而且会撞构建断言</b>：<code>build-private.mjs</code> 要求 <code>dist/</code> 顶层<strong>恰好等于</strong>白名单（多一个文件即失败），往产物里塞 <code>.tsx</code> 不只是无效，会直接把构建搞挂。<br />
+      <b>决定：手写。</b>项目约定是零第三方运行时依赖，全站唯一例外是 <code>vendor/lottie</code>（只服务「星币到账」，取舍已记档）。礼花是纯装饰，不值得再开第二个例外 —— 这条效果真正需要的只是「一批带重力的矩形纸片」，手写不到 200 行。
+    </div>
+
+    <h3>13.2 实现（<code>confetti.js</code>，<code>20260922-13</code>）</h3>
+    <div class="spec">
+      <strong>形态</strong>：左下与右下两门炮<strong>对射</strong>，两轮齐射（88 + 60 片），约 2.5 秒自然落尽后<strong>画布自行销毁</strong>，页面上不留常驻节点。<br />
+      <strong>触发</strong>：<code>app.js</code> 的 <code>showStartScreen()</code> 里 <code>setTimeout(…, 260)</code> —— 延后一拍让 hero 先落位，同时起跳会互相抢注意力。API 是通用的 <code>window.mqConfetti.cannons()</code>，日后要用在别的高光时刻直接调即可。<br />
+      <strong>设计一致性</strong>：配色不写死在 JS 里，<strong>从 <code>:root</code> 读设计令牌</strong>（<code>--lime</code>/<code>--coral</code>/<code>--blue</code>/<code>--purple</code>/<code>--yellow</code>/<code>--white</code>/<code>--ink</code>），改令牌即改彩纸；形状只有矩形／方片／飘带，<strong>「翻面」靠横向压缩模拟自转，不做 3D 透视</strong> —— 与方向 A 的硬边纸片是同一套语言。<br />
+      <strong>接线四处缺一不可</strong>：<code>index.html</code> 脚本表（排在 <code>app.js</code> 之前）、<code>build-private.mjs</code> 的 <code>assets</code>（21 → <strong>22 项</strong>）、<code>sw.js</code> 的 <code>CORE_FILES</code>、以及换缓存戳。<strong>新增脚本文件不换戳 = 老缓存里旧 HTML 去引一个不存在的文件</strong>。只有 <code>index.html</code> 引它 —— 思考站与零花钱小镇不加载 <code>app.js</code>，不需要。
+    </div>
+
+    <h3>13.3 降级与无障碍（硬约束）</h3>
+    <ul class="check">
+      <li><code>prefers-reduced-motion: reduce</code> 命中 → <strong>连画布都不创建、不启 rAF</strong>（不是「放慢」）。优先于页面设置，与全站既有的 5 处降级同一口径</li>
+      <li>画布 <code>aria-hidden="true"</code> + <code>pointer-events:none</code>：不进 tab 序、不吃点击。<strong>实测视口中心 <code>elementFromPoint</code> 从未命中它</strong>，「开始学习」按钮照常可点</li>
+      <li>纯装饰，不往 <code>#a11y-announcer</code> 写任何东西 —— 读屏用户听到的仍是页面本身</li>
+      <li>任何异常静默吞掉：礼花挂了绝不能挡住「开始学习」这个唯一出口</li>
+    </ul>
+
+    <h3>13.4 验收（<code>drive-confetti.js</code>，CDP 版）</h3>
+    <div class="spec">
+      <b>为什么不能用 <code>--dump-dom</code></b>：本机 headless Chrome <strong>恒定报告 <code>prefers-reduced-motion: reduce</code></strong>（实测无 flag / <code>--force-prefers-reduced-motion</code> / <code>=no-preference</code> 全为 reduce，<strong>后者是无效值被静默忽略</strong>）。照旧写法「常规轮」根本跑不到发弹路径，会<strong>假通过</strong>。改用 DevTools 协议：<code>Emulation.setEmulatedMedia</code> 精确指定取值，<code>Runtime.evaluate</code> 直接读子页画布 <code>getImageData</code>，<code>Page.captureScreenshot</code> 在动画中途精确截图。
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th style="width:18%">轮次</th><th style="width:26%">媒体特性</th><th style="width:56%">实测</th></tr></thead>
+        <tbody>
+          <tr><td>A 常规</td><td><code>no-preference</code></td><td>画布在 t+140ms 出现，非透明像素 3 → <strong>4046（t+600ms 峰值）</strong> → 3605；画布 1264×805 跟随 <code>innerWidth/Height</code>；<code>position:fixed</code> / <code>pointer-events:none</code> / <code>aria-hidden="true"</code>；t+2400ms <strong>画布已移除</strong></td></tr>
+          <tr><td>B 降级</td><td><code>reduce</code></td><td>全程 6 个采样点<strong>一次都没创建过画布</strong>；模块仍就位</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="spec">
+      两轮均：未捕获异常 0、控制台报错 0。<strong>断言里带一条自检</strong> —— 「环境确实是 <code>no-preference</code>，否则本轮无意义」，就是它第一时间拦下了那次假通过。<br />
+      <b>回归</b>：<code>a11y</code>（三页）/ <code>sweep</code>（四目标 JS 错误 0）/ <code>verify-b2</code> / <code>verify-b3</code> / <code>spotcheck-b3</code>（25/25）/ <code>drive-start</code>（22/22）/ <code>build</code>（26 资源）/ <code>check-dist</code>（<strong>24 项</strong>，assets 22 项逐字节一致）/ 行尾全合规 —— 全绿。
+    </div>
+    <div class="spec">
+      <b>回滚点</b>：<code>.workbuddy/backup/before-confetti/</code>。<br />
+      <b>缓存戳</b>：<code>…-20260922-12</code> → <code>…-13</code>。
+    </div>
+  </section>
+
+  <section id="s14">
+    <h2><i>§14</i>新增 · 星币实体系统与结课仪式（游戏感改造 · 第一刀）</h2>
+    <p>用户判断：产品「有点廉价」「太像做题，不像游戏」，第一章内容深度不足。拆解后的结论是：画面不丑（方向 A 的视觉语言已经成立），缺的是游戏感三支柱 —— <strong>没有可操作的东西、没有场景、没有高光时刻</strong>。钱这个财商游戏的绝对主角，此前只是一行数字和圆点字符。参考了 Explore Prespa（插画场景热区 / 按压 squash / 有生命的物件 / 通关证书）的交互语法，全部零依赖移植。</p>
+
+    <h3>14.1 新模块 <code>coins.js</code>（<code>20260922-14</code>）</h3>
+    <div class="spec">
+      <strong>只做一件事</strong>：在两个「区」之间搬运星币，把搬运做出手感。<code>window.MoneyCoins.mount(host, config)</code> ——
+      手动模式（币是按钮，点一枚动一枚，孩子自己凑数）与自动模式（币是装饰 span，由 <code>setCounts()</code> 按商品成本驱动）。
+      飞动用「量旧位 → 重挂 → 量新位 → 从旧位飞过去」的 FLIP 写法；带一点回弹的缓动（<code>cubic-bezier(.2,.7,.3,1.25)</code>）。
+      <br /><strong>状态零存储</strong>：分布完全由调用方（<code>lessons.js</code> 的进度对象）给出，重挂载原样恢复 —— 本模块不碰 localStorage。
+    </div>
+
+    <h3>14.2 硬币声与按压手感</h3>
+    <div class="spec">
+      <strong>硬币声</strong>：<code>TeachingMedia.playCoin()</code>（<code>teaching-media.js</code>）—— 三角波高频双击（约 1.9–2.4kHz，两次随机微移音高），
+      与答对 chime 共用 AudioContext 但用<strong>独立的 tones 池</strong>（硬币连响不掐断答对音）；静音偏好共用一把闸，AudioContext 未解锁时安静放弃。
+      <strong>为什么放 teaching-media</strong>：静音状态不该有两个主人。新模块只借用，不另建存储。<br />
+      <strong>按压</strong>：<code>.mq-coin:active</code> = 拍扁（scale .9）+ 沉进底边 —— 与全站按钮 <code>--btn-drop</code> 同一套物理语言；入场后第一枚币「请」一次（单次 wobble），不做常驻呼吸动画（会和 ：active 打架）。
+    </div>
+
+    <h3>14.3 第 1 课重做：「亲手数、亲手付」</h3>
+    <div class="spec">
+      第 2 步从「2 选 1 选择题」改为三段式付款场景（新练习类型 <code>payScene</code>，视觉区即场景）：
+      <strong>数钱</strong>（10 枚逐枚点进柜台，数字是孩子数出来的）→ <strong>付钱</strong>（恰好 6 枚才成交；差/多只是托盘摇一摇 + 状态行说明，
+      币留在原地让孩子自己调整 —— <strong>错误由物件暴露，不由文字批评</strong>，且不触发对白、不重渲染）→
+      <strong>货架</strong>（果汁 3 可买；贴纸 5 会把托盘画出虚线缺口位，「买不起」由装不满这个物理事实讲出来），最后才出现原来的选择题 ——
+      此刻孩子带着刚数出的缺口作答。对白按相位切换（<code>dialogues.js</code> 的 <code>paySceneChats</code>）。
+      一节课的真实决策点从 2 个升到 7–9 个。
+    </div>
+
+    <h3>14.4 购物篮长出星币托盘 + 复习变体</h3>
+    <div class="spec">
+      所有 <code>basket</code> 类练习的视觉区改为「还没花的 / 准备付」双区币场：加减货时币按成本自动飞进飞出，
+      过关时「准备付」区的币先付给店家（逐枚飞走），再落答对庆祝 —— <strong>钱的动作在前，奖励在后</strong>。
+      购物篮改成<strong>就地更新</strong>（不再整页重渲染），否则币的飞动每次都被 innerHTML 重置。<br />
+      <strong>复习变体</strong>：<code>open()</code> 在「再次查看」时置 <code>p.variant = 1</code>，challenge 可带 <code>variants</code> 数组
+      （第 1 课换成郊游：水 2 + 面包 4 必需、小礼物 4 想要、预算 8）—— 第二次是练习而不是默写。首学永远用主版本。
+    </div>
+
+    <h3>14.5 结课仪式（峰终定律的「终」）</h3>
+    <div class="spec">
+      首次完成一课：<code>#lesson-ceremony</code> 深底幕布 + 白卡（kicker / 课图标 / 课名 / +20 XP 与星星徽片 / 唯一出口按钮），
+      <strong>礼花从启动页挪到仪式</strong> —— 庆祝的是孩子的成就，不是「他打开了网页」。复习完成不走仪式，安静回图。
+      焦点管理：仪式打开时焦点落在唯一按钮；关闭后回到地图上这一课的节点。
+    </div>
+
+    <h3>14.6 约束核对与验收</h3>
+    <ul class="check">
+      <li>降级：<code>reduce</code> / <code>.less-motion</code> 下所有飞动退化为直接落位（coins.js <code>still()</code> 与 reward-coin 同口径）；静音关币声；纯文本路径完整</li>
+      <li>无障碍：币是原生 button（键盘可数），托盘累计数带 <code>role=status</code>（每次放币播报累计 —— 读屏孩子也数得到）；错误反馈零音效（产品红线）</li>
+      <li>数学不变量未动：basket 的 check 逻辑（required/预算/剩货）一行没改，只是渲染层换了；每个练习独立钱袋照旧</li>
+      <li>接线：新文件 <code>coins.js</code> 进 <code>index.html</code> 脚本表（video-lessons 之后、lessons 之前）、构建白名单（22 → 23 项 JS）、<code>sw.js</code> CORE_FILES，缓存戳 <code>-13</code> → <code>-14</code>；行尾 JS/HTML CRLF、CSS LF</li>
+      <li>验收：<code>drive-pay-scene.js</code> 全流程 30+ 断言全绿（数 10 → 故意错付 4 枚看「还差 2 枚」且币不清走 → 付 6 成交 → 果汁/贴纸缺口 → 选择 → 托盘超预算 12&gt;9 封顶 → 过关 → 仪式 → 变体复习），第 4/5 课旧练习回归通过，移动 390px 无横向溢出，未捕获异常 0；<code>spotcheck-b3</code> 25/25（含换戳自检）、<code>a11y</code>、<code>sweep</code> 全绿；英文模式两区文案为英文</li>
+    </ul>
+    <div class="spec">
+      <b>遗留（下一刀）</b>：岛链地图与店面随进度成长（P2）、付款场景推广到 2–6 课（P3）、拖拽作为点选的增强（P2+）。
+    </div>
+  </section>
+
+  <footer>
+    <p style="margin:0 0 6px"><strong>依据来源</strong>：现有 3 份 HTML + 5 份 CSS 的只读扫描（<code>.workbuddy/tmp-audit/measure.js</code> / <code>contrast.js</code> / <code>contrast2.js</code> / <code>solve.js</code>，可重跑）；<code>docs/page-design/</code> 8 份页面文档；<code>docs/ui-audit.html</code>。</p>
+    <p style="margin:0">本方案只覆盖界面与设计系统，不改变产品立场（时长非 KPI、无抽奖与排行榜、不给财商分、不涉及真实交易与儿童个人信息）。</p>
+  </footer>
+</div>
+</body>
+</html>

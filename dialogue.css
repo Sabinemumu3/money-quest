@@ -1,103 +1,307 @@
 /* Character-led learning: one short bubble, then one small action. */
-.thinking-course-entry { display:flex; align-items:center; gap:14px; padding:18px 22px; margin:18px auto; width:min(1140px,calc(100% - 36px)); border:1px solid #a8c385; border-radius:20px; background:#e8f5cd; color:#173f37; text-decoration:none; }
+.thinking-course-entry { display:flex; align-items:center; gap:14px; padding:18px 22px; margin:18px auto; width:min(1140px,calc(100% - 36px)); border:var(--bw) solid var(--ink); border-radius:var(--radius-lg); background:#e8f5cd; color:#173f37; text-decoration:none; }
 .thinking-course-entry > span:first-child { font-size:32px; }
 .thinking-course-entry > span:nth-child(2) { flex:1; }
-.thinking-course-entry strong { display:block; font-size:18px; line-height:1.5; }
-.thinking-course-entry small { display:block; margin-top:4px; font-size:14px; line-height:1.6; }
+.thinking-course-entry strong { display:block; font-size:var(--fs-body); line-height:1.5; }
+.thinking-course-entry small { display:block; margin-top:4px; font-size:var(--fs-sm); line-height:1.6; }
 .thinking-course-entry b { font-size:26px; }
 .sunny-sprite { display:inline-block; flex:none; width:128px; height:128px; background:url("sunny-expressions.png") 0 0 / 200% 200% no-repeat; }
 .sunny-sprite[data-mood="curious"] { background-position:100% 0; }
 .sunny-sprite[data-mood="happy"] { background-position:0 100%; }
 .sunny-sprite[data-mood="gentle"] { background-position:100% 100%; }
-.mascot-welcome .sunny-sprite { width:92px; height:92px; }
-.mascot-welcome .tuan-welcome { object-fit:contain; width:86px; height:86px; }
-.mascot-welcome { gap:8px; }
-.mascot-welcome p { flex:1; font-size:16px; line-height:1.8; }
 .character-conversation { max-width:720px; margin:0 auto; }
 .dialogue-cast { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 18px; }
-.dialogue-actor { display:flex; flex-direction:column; align-items:center; color:#66745b; font-size:12px; font-weight:700; transition:transform 220ms; }
+.dialogue-actor { display:flex; flex-direction:column; align-items:center; color:#66745b; font-size:var(--fs-sm); font-weight:700; transition:transform 220ms; }
 .dialogue-actor > img { width:128px; height:128px; object-fit:contain; }
-.cast-caption { color:#6c775f; font-size:13px; letter-spacing:.04em; text-align:center; }
+.cast-caption { color:#6c775f; font-size:var(--fs-sm); letter-spacing:.04em; text-align:center; }
 .character-conversation[data-speaker="sunny"] .actor-sunny,
 .character-conversation[data-speaker="tuan"] .actor-tuan { transform:translateY(-4px); color:#173f37; }
-.dialogue-bubble { position:relative; min-height:112px; padding:19px 24px; margin-top:12px; border:2px solid #c9ddac; border-radius:23px; background:#f7fbe9; }
-.dialogue-bubble::before { content:""; position:absolute; top:-10px; left:67px; width:16px; height:16px; border-top:2px solid #c9ddac; border-left:2px solid #c9ddac; transform:rotate(45deg); background:#f7fbe9; }
-[data-speaker="tuan"] .dialogue-bubble { background:#fff4e8; border-color:#edd1b4; }
-[data-speaker="tuan"] .dialogue-bubble::before { left:auto; right:67px; background:#fff4e8; border-color:#edd1b4; }
-.dialogue-speaker { display:block; font-size:13px; color:#557436; margin-bottom:6px; }
+.dialogue-bubble { position:relative; min-height:112px; padding:19px 24px; margin-top:12px; border:var(--bw) solid var(--ink); border-radius:var(--radius-lg); background:#f7fbe9; }
+.dialogue-bubble::before { content:""; position:absolute; top:-10px; left:67px; width:16px; height:16px; border-top:var(--bw) solid var(--ink); border-left:var(--bw) solid var(--ink); transform:rotate(45deg); background:#f7fbe9; }
+[data-speaker="tuan"] .dialogue-bubble { background:#fff4e8; }
+[data-speaker="tuan"] .dialogue-bubble::before { left:auto; right:67px; background:#fff4e8; }
+.dialogue-speaker { display:block; font-size:var(--fs-sm); color:#557436; margin-bottom:6px; }
 [data-speaker="tuan"] .dialogue-speaker { color:#875538; }
 .dialogue-bubble .dialogue-line { margin:0; font-size:clamp(19px,2.4vw,24px); font-weight:650; line-height:1.65; overflow-wrap:anywhere; }
 .dialogue-controls { display:flex; align-items:center; gap:12px; margin:14px 0 0; }
-.dialogue-controls button { min-height:44px; padding:8px 18px; border:1px solid #cddbc0; border-radius:14px; background:#fff; color:#234536; font:inherit; font-weight:700; cursor:pointer; }
-.dialogue-controls [data-dialogue="next"] { margin-left:auto; background:#e8f3ce; }
-.dialogue-controls button:disabled { opacity:.55; cursor:default; }
-.dialogue-count { font-size:13px; color:#64725d; }
-#guided-lesson .mission-title { position:relative; padding:20px 24px; margin-bottom:16px; }
-#guided-lesson .mission-title h1 { font-size:clamp(24px,3vw,34px); }
-#guided-lesson .mission-title .learning-star-count { position:absolute; top:16px; right:18px; font-size:14px; padding:4px 8px; background:#fff8d8; border-radius:20px; }
-#guided-lesson .mission-title div > p:first-child { padding-right:52px; }
-#guided-lesson .lesson-steps { margin:14px 0; }
-#guided-lesson .mission-title > span { width:64px; height:64px; font-size:36px; }
+.dialogue-controls button { min-height:44px; padding:8px 18px; border:var(--bw) solid var(--ink); border-radius:var(--radius-md); background:#fff; color:#234536; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 var(--btn-drop-sm) 0 var(--btn-edge-soft); transition:transform var(--press), box-shadow var(--press), border-color 160ms ease; }
+.dialogue-controls button:hover:not(:disabled) { transform:translateY(1px); border-color:var(--ink); box-shadow:0 calc(var(--btn-drop-sm) - 1px) 0 var(--btn-edge-soft); }
+.dialogue-controls button:active:not(:disabled) { transform:translateY(var(--btn-drop-sm)); box-shadow:0 0 0 var(--btn-edge-soft); }
+.dialogue-controls [data-dialogue="next"] { margin-left:auto; background:#e8f3ce; box-shadow:0 var(--btn-drop-sm) 0 var(--ink); }
+.dialogue-controls [data-dialogue="next"]:active:not(:disabled) { transform:translateY(var(--btn-drop-sm)); box-shadow:0 0 0 var(--btn-edge-soft); }
+.dialogue-controls button:disabled { opacity:.55; cursor:default; box-shadow:0 0 0 var(--btn-edge-soft); }
+.dialogue-count { font-size:var(--fs-sm); color:#64725d; }
 .mission-content { padding-top:24px; }
 .lesson-stage { padding:24px; background:#fffefb; }
-@media (min-width:900px) {
-  .lesson-stage.has-demonstration { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 32px; align-items:start; }
-  .has-demonstration > .dialogue-slot { grid-column:1; grid-row:1 / 4; }
-  .has-demonstration > .demo-heading { grid-column:2; grid-row:1; }
-  .has-demonstration > .teaching-animation { grid-column:2; grid-row:2; }
-  .has-demonstration > .primary-button { grid-column:2; grid-row:3; justify-self:start; }
-  .has-demonstration .scene-groups { grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
-  .has-demonstration .dialogue-bubble { min-height:158px; }
-  .has-demonstration .dialogue-cast { padding:0; }
-  .has-demonstration .cast-caption { max-width:90px; }
+
+/* ==========================================================================
+   学习页排版（作用域：body.is-lesson / #guided-lesson）
+   --------------------------------------------------------------------------
+   这一节的四件事：
+     ① 顶栏与步骤条分工：顶栏只说「在哪一步、要不要休息」；
+     ② 课头卡从「封面」降级为「一行标题」，不再占掉半屏；
+     ③ 舞台收成「上图下题」：.stage-visual 放要「看」的东西（视频 / 星币
+        演示 / 角色舞台），.stage-task 放要「做」的事（对白、题目、动作按钮）；
+     ④ 全页收成一根 760px 的阅读中轴，动作按钮在轴上放大居中。
+   全部选择器都带 #guided-lesson 或 body.is-lesson —— 思考站与零花钱小镇
+   共用 .dialogue-* / .character-conversation 结构，不受本节影响。
+   ========================================================================== */
+
+/* 顶栏：步骤条已经说明了「第几步 / 共几步」，顶栏再写一遍「任务进度」
+   就是重复信息。课程页把它删掉，只留下一条进度槽。 */
+body.is-lesson .mission-header { min-height:60px; padding:10px clamp(14px,4vw,40px); }
+body.is-lesson .mission-header > div { grid-template-columns:1fr auto; font-size:var(--fs-sm); letter-spacing:0; }
+body.is-lesson .mission-header > div > span:first-child { display:none; }
+
+/* 阅读中轴：课程页整体收窄到 760px。关卡页（mission-1…4）仍用 .mission-content
+   的 1060px —— 那几页是「摊开的工作台」，课程页是「一次一件事」，两者不该同宽。 */
+body.is-lesson .mission-content { width:min(760px,calc(100% - 30px)); padding-top:16px; }
+
+/* 课头卡：从 clamp(34px,5vw,56px) 的封面标题压成一行 —— 图标 92 → 36px，
+   标题回到正文字号，硬边 e3（9px）→ e1（4px）。它现在读作「页头」，不是「封面」。
+   首屏因此腾出约 50px 交给舞台 —— 视觉区能不能进首屏，主要就靠这一刀。
+   这几条原本散在 styles.css（含窄屏那一组），集中到本节，免得两处各写一半。 */
+/* position:relative 必须留着：星级角标是绝对定位的，抽掉它角标会落回网格里多占一行。 */
+#guided-lesson .mission-title { position:relative; grid-template-columns:auto minmax(0,1fr); gap:var(--sp-2); padding:9px 13px; margin-bottom:var(--sp-2); border-radius:var(--radius-md); box-shadow:var(--e1); }
+#guided-lesson .mission-title > span { width:36px; height:36px; font-size:20px; border-radius:var(--radius-sm); }
+#guided-lesson .mission-title h2 { margin:2px 0 0; font-size:var(--fs-body); line-height:1.25; letter-spacing:0; }
+#guided-lesson .mission-title div > p:first-child { padding-right:46px; font-size:var(--fs-xs); letter-spacing:0; }
+#guided-lesson .mission-title .learning-star-count { position:absolute; top:8px; right:10px; padding:2px 7px; background:#fff8d8; border-radius:var(--radius-lg); font-size:var(--fs-xs); }
+
+/* 五步标签条：当前步是亮绿 + ink 描边，已完成退成浅底，未到的是灰底。
+   孩子的视线应该落在「我正在哪一步」，而不是「我做过哪几步」。 */
+#guided-lesson .lesson-steps { gap:var(--sp-1); margin:0 0 var(--sp-3); }
+#guided-lesson .lesson-steps li { padding:4px 10px; color:var(--muted); background:var(--paper); border-color:var(--line); font-size:var(--fs-xs); font-weight:700; }
+#guided-lesson .lesson-steps li.done { color:var(--ink); background:#eef4e6; }
+#guided-lesson .lesson-steps li[aria-current] { color:var(--ink); background:var(--lime); border-color:var(--ink); font-weight:900; }
+
+/* ── 上图下题：舞台拆成「看」与「做」两段 ────────────────────────────────
+   视觉区三种内容按优先级取一种：配了片 → 视频卡；第 2 步 → 星币分步演示；
+   其余 → 角色舞台。它带一个最小高度，这样既没视频也没演示的第 3、5 步不会
+   塌成一条缝 —— 孩子每翻一步，眼睛都落回同一块区域。
+   底色用 #eef4e6（步骤条「已完成」档已在用），不新增色值。 */
+#guided-lesson .lesson-stage { display:flex; flex-direction:column; padding:0; overflow:hidden; }
+#guided-lesson .stage-visual { display:grid; place-items:center; min-height:clamp(160px,26vh,300px); padding:var(--sp-4); background:#eef4e6; border-bottom:var(--bw) solid var(--ink); }
+/* 练习与挑战（第 3、4 步）的视觉区只是「今天在哪一关」的舞台，不是主角 ——
+   真正要看的题目在下面。这两步单独压低：舞台和人一起收一档，把高度还给选项。
+   （小芽 144 → 120px 是关键：flex 行的高度由它顶着，不缩它 min-height 就形同虚设。） */
+#guided-lesson .lesson-stage[data-step="2"] .stage-visual,
+#guided-lesson .lesson-stage[data-step="3"] .stage-visual { min-height:clamp(132px,20vh,212px); }
+#guided-lesson .lesson-stage[data-step="2"] .lesson-scene .sunny-sprite,
+#guided-lesson .lesson-stage[data-step="3"] .lesson-scene .sunny-sprite { width:120px; height:120px; }
+#guided-lesson .stage-visual > * { width:100%; max-width:600px; margin-inline:auto; }
+#guided-lesson .stage-visual .teaching-animation,
+#guided-lesson .stage-visual .demo-money,
+#guided-lesson .stage-visual .lesson-video { margin:0; }
+
+/* 角色舞台：课图标当道具，小芽按当前情绪换表情（四格取自 sunny-expressions.png）。
+   这一屏只回答「现在是谁、什么心情」，不承载任何题目。 */
+#guided-lesson .lesson-scene { display:grid; justify-items:center; gap:var(--sp-3); }
+#guided-lesson .lesson-scene .scene-cast { display:flex; align-items:center; gap:var(--sp-3); }
+#guided-lesson .lesson-scene .scene-prop { display:grid; place-items:center; width:96px; height:96px; background:var(--white); border:var(--bw-strong) solid var(--ink); border-radius:var(--radius-xl); box-shadow:var(--e2); }
+#guided-lesson .lesson-scene .scene-prop .mq-icon { width:52px; height:52px; }
+#guided-lesson .lesson-scene .sunny-sprite { width:144px; height:144px; }
+#guided-lesson .lesson-scene .scene-note { margin:0; color:#3d5c50; font-size:var(--fs-ui); font-weight:700; text-align:center; }
+
+/* 任务区：对白、题目、反馈、动作按钮走同一条中轴，块间统一 --sp-3。
+   旧的「每个元素各写一次 margin」全部收掉 —— 垂直节奏没有公共分母，
+   一屏之内就会读成「乱」。 */
+#guided-lesson .stage-task { padding:var(--sp-4); }
+#guided-lesson .stage-task > * { margin:0; }
+#guided-lesson .stage-task > * + * { margin-top:var(--sp-3); }
+#guided-lesson .stage-task > .primary-button { display:flex; width:100%; max-width:460px; margin:var(--sp-4) auto 0; }
+#guided-lesson .stage-task > .quiet-button { display:block; width:fit-content; margin:var(--sp-2) auto 0; }
+#guided-lesson .lesson-bottom { justify-content:center; margin:var(--sp-3) auto 0; }
+
+/* 角色条与气泡尾巴必须对位：小芽站在左端、团团站在右端（谁说话谁的
+   头像正下方就是尾巴尖）。团团的头像翻到名牌外侧，尾巴、头像、名牌
+   才在同一条垂直线上 —— 之前两头像都挤在左边，团团说话时尾巴指向空处。 */
+#guided-lesson .dialogue-cast { justify-content:space-between; gap:var(--sp-2); padding:0; }
+#guided-lesson .dialogue-actor { flex-direction:row; gap:var(--sp-1); font-size:var(--fs-xs); opacity:.45; }
+#guided-lesson .dialogue-actor.actor-tuan { flex-direction:row-reverse; }
+#guided-lesson .character-conversation[data-speaker="sunny"] .actor-sunny,
+#guided-lesson .character-conversation[data-speaker="tuan"] .actor-tuan { opacity:1; }
+#guided-lesson .cast-caption { display:none; }
+@media (min-width:651px) {
+  #guided-lesson .dialogue-actor .sunny-sprite,
+  #guided-lesson .dialogue-actor > img { width:40px; height:40px; }
 }
-.dialogue-slot .narration-bar { max-width:720px; margin:12px auto 20px; padding:10px 0; border:0; background:transparent; box-shadow:none; }
-.narration-bar > .narration-controls { align-items:center; }
-.narration-controls [data-media="listen"] { background:#fff4da; color:#614e23; border-color:#ead291; }
-.voice-options { margin-top:10px; font-size:13px; }
-.voice-options summary { font-size:13px; color:#64725d; }
-.lesson-stage .voice-options p, .voice-options p { font-size:13px; line-height:1.6; }
+
+#guided-lesson .dialogue-bubble { margin-top:var(--sp-2); padding:var(--sp-2) var(--sp-3); min-height:142px; }
+/* 换相位换对白，行数在 1–3 行之间浮动：把气泡预留到三行，题目和游戏框
+   就不会因为对白长短不一而上下跳。 */
+/* 尾巴尖对准头像中心：头像 40px → 中心 20px，尾巴菱形 16px 宽 → 偏移 12px。 */
+#guided-lesson .dialogue-bubble::before { left:12px; }
+#guided-lesson [data-speaker="tuan"] .dialogue-bubble::before { left:auto; right:12px; }
+
+/* 对白字号分两级：故事（第 1 步）与发现（第 5 步）里对白就是正文，保持 20–23px；
+   示范与练习（第 2–4 步）里主角是视觉区，对白退成解说，落到正文字号 18px。
+   同一句话在两种位置承担不同职责，字号就该跟着变。 */
+#guided-lesson .dialogue-bubble .dialogue-line { font-size:var(--fs-body); line-height:1.7; }
+#guided-lesson .lesson-stage[data-step="0"] .dialogue-bubble .dialogue-line,
+#guided-lesson .lesson-stage[data-step="4"] .dialogue-bubble .dialogue-line { font-size:clamp(20px,2.2vw,23px); }
+
+/* 朗读与设置：压成气泡正下方的一行。原来它夹在「对白」和「要动手做的事」
+   之间，孩子读完故事得越过一排播放控件才能看到题目。 */
+#guided-lesson .narration-bar { display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-1) var(--sp-3); max-width:100%; margin:var(--sp-2) auto 0; padding:0; border:0; background:transparent; box-shadow:none; }
+#guided-lesson .narration-controls { gap:var(--sp-1); }
+#guided-lesson .narration-controls button { min-height:44px; padding:8px 14px; font-size:var(--fs-sm); }
+#guided-lesson .narration-bar .voice-options { margin-top:0; }
+#guided-lesson .narration-bar .voice-options > summary { min-height:44px; color:var(--muted); font-size:var(--fs-sm); }
+
+/* 选项：从「横排可换行的胶囊」改成一列等宽卡片 —— 孩子的眼睛只需上下移动，
+   不必在换行后的两行之间判断谁对谁。商品篮（basket）是「从货架上挑」，
+   份数（quantity）是「1–5 的量尺」，两者各有自己的空间语义，保持原样。 */
+#guided-lesson .lesson-choices:not(.basket-choices):not(.quantity-choices) { display:grid; gap:var(--sp-2); }
+#guided-lesson .lesson-choices:not(.basket-choices):not(.quantity-choices) > button { width:100%; text-align:left; }
+#guided-lesson .lesson-hint { color:var(--muted); font-size:var(--fs-sm); }
+
+/* 学习页顶栏收到 60px，休息遮罩的起点必须跟着走，否则顶栏下方会露出 12px 白条。
+   限定 ≥651px：窄屏顶栏会折成两行，起点由 styles.css 的 120px 规则负责。 */
+@media (min-width:651px) { body.is-lesson .study-pause { inset:60px 0 0; } }
+
+/* 窄屏：课头再压一档，角色舞台缩小，把高度让给题目。 */
+@media (max-width:650px) {
+  /* 五步 chip 在窄屏折成两行要吃掉 ~70px，而这一步只需要回答「我在哪、还有几步」。
+     只留当前步 + 总步数（data-total 写在 ol 上），一行读完。 */
+  #guided-lesson .lesson-steps { flex-wrap:nowrap; align-items:center; gap:var(--sp-1); }
+  #guided-lesson .lesson-steps li { display:none; }
+  #guided-lesson .lesson-steps li[aria-current] { display:block; }
+  #guided-lesson .lesson-steps::after { content:"/ " attr(data-total); align-self:center; color:var(--muted); font-size:var(--fs-sm); font-weight:700; }
+  #guided-lesson .mission-title { gap:10px; padding:8px 11px; border-radius:var(--radius-md); }
+  #guided-lesson .mission-title > span { width:32px; height:32px; font-size:18px; border-radius:var(--radius-sm); }
+  #guided-lesson .mission-title h2 { margin:1px 0 0; font-size:var(--fs-ui); }
+  #guided-lesson .mission-title .learning-star-count { top:6px; right:8px; }
+  #guided-lesson .stage-visual { min-height:150px; padding:var(--sp-3); }
+  #guided-lesson .lesson-scene { gap:var(--sp-2); }
+  #guided-lesson .lesson-scene .scene-prop { width:72px; height:72px; border-radius:var(--radius-lg); }
+  #guided-lesson .lesson-scene .scene-prop .mq-icon { width:40px; height:40px; }
+  #guided-lesson .lesson-scene .sunny-sprite { width:108px; height:108px; }
+  #guided-lesson .lesson-scene .scene-note { font-size:var(--fs-sm); }
+  #guided-lesson .stage-task { padding:var(--sp-3); }
+  #guided-lesson .dialogue-actor .sunny-sprite,
+  #guided-lesson .dialogue-actor > img { width:36px; height:36px; }
+  /* 窄屏头像 36px → 中心 18px → 尾巴偏移 10px。 */
+  #guided-lesson .dialogue-bubble::before { left:10px; }
+  #guided-lesson [data-speaker="tuan"] .dialogue-bubble::before { left:auto; right:10px; }
+}
+
+.dialogue-slot .narration-bar { max-width:720px; margin:12px auto 20px; padding:10px 0; border:0; background:transparent; box-shadow:none; }.narration-bar > .narration-controls { align-items:center; }
+.narration-controls [data-media="listen"] { background:#fff4da; color:#614e23; }
+.voice-options { margin-top:10px; font-size:var(--fs-sm); }
+.voice-options summary { font-size:var(--fs-sm); color:#64725d; }
+.lesson-stage .voice-options p, .voice-options p { font-size:var(--fs-sm); line-height:1.6; }
 .voice-options > .narration-controls { margin-top:12px; }
-.lesson-stage .demo-heading, .lesson-stage .exercise-heading { font-size:18px; margin:14px 0 10px; }
-.demo-heading small { color:#67735d; font-size:13px; font-weight:normal; }
+.lesson-stage .demo-heading, .lesson-stage .exercise-heading { font-size:var(--fs-body); margin:14px 0 10px; }
+.demo-heading small { color:#67735d; font-size:var(--fs-sm); font-weight:normal; }
 .teaching-animation { margin-top:10px; }
-.scene-equation { margin:10px 0 0; }
+/* 演示等式行常驻一行高：有的帧没有等式，没有这行高，帧切换时面板会抖。 */
+.scene-equation { margin:10px 0 0; min-height:1.5em; }
 .scene-controls[hidden], .scene-caption[hidden], .teaching-animation > small[hidden] { display:none !important; }
 .lesson-stage .primary-button:disabled { opacity:.45; cursor:default; }
 .lesson-stage .answer-reward { padding:12px 16px; }
-.answer-reward strong { font-size:17px; }
-.lesson-stage .answer-reward p { margin:4px 0; font-size:14px; }
-.answer-reward small { font-size:12px; }
-.lesson-stage .stock-result p { font-size:16px; line-height:1.6; }
-.stock-result details { font-size:14px; }
+.answer-reward strong { font-size:var(--fs-body); }
+.lesson-stage .answer-reward p { margin:4px 0; font-size:var(--fs-sm); }
+.answer-reward small { font-size:var(--fs-sm); }
+.lesson-stage .stock-result p { font-size:var(--fs-ui); line-height:1.6; }
+.stock-result details { font-size:var(--fs-sm); }
 #market-event { display:none !important; } /* Its explanation is now spoken in the character chat. */
-.market-controls > p, #risk-feedback { font-size:16px; }
-#market-dialogue { padding:20px 24px 0; margin-bottom:16px; border-radius:24px; background:#fffefb; border:1px solid #dce3d2; }
+.market-controls > p, #risk-feedback { font-size:var(--fs-ui); }
+#market-dialogue { padding:20px 24px 0; margin-bottom:16px; border-radius:var(--radius-lg); background:#fffefb; border:var(--bw) solid var(--ink); }
 .is-narrating .character-conversation[data-speaker="sunny"] .actor-sunny,
 .is-narrating .character-conversation[data-speaker="tuan"] .actor-tuan { animation:chat-bob 1.1s ease-in-out infinite; }
 .less-motion .dialogue-actor { animation:none !important; transition:none; }
 @keyframes chat-bob { 0%,100% { transform:translateY(-3px) rotate(-1deg); } 50% { transform:translateY(-7px) rotate(1deg); } }
 @media (prefers-reduced-motion:reduce) { .dialogue-actor { animation:none !important; transition:none; } }
 @media (max-width:650px) {
-  #guided-lesson .mission-title { padding:14px; }
-  #guided-lesson .mission-title > span { width:48px; height:48px; font-size:28px; }
-  #guided-lesson .mission-title h1 { font-size:23px; }
-  #guided-lesson .lesson-steps { gap:5px; margin:10px 0; }
-  #guided-lesson .lesson-steps li { font-size:11px; padding:6px; }
-  .lesson-stage { padding:16px; border-radius:22px; }
+  .lesson-stage { padding:16px; border-radius:var(--radius-lg); }
   .dialogue-cast { padding:0 4px; gap:6px; }
   .dialogue-actor .sunny-sprite, .dialogue-actor > img { width:94px; height:94px; }
-  .cast-caption { font-size:11px; max-width:72px; }
+  .cast-caption { font-size:var(--fs-sm); max-width:72px; }
   .dialogue-bubble { min-height:128px; padding:15px 16px; }
   .dialogue-bubble::before { left:44px; }
   [data-speaker="tuan"] .dialogue-bubble::before { right:44px; }
   .dialogue-bubble .dialogue-line { font-size:20px; line-height:1.65; }
   .dialogue-controls { gap:8px; }
-  .dialogue-controls button { padding:8px 12px; font-size:15px; }
+  .dialogue-controls button { padding:8px 12px; font-size:var(--fs-ui); }
   .narration-controls { gap:8px; }
-  .narration-controls button { padding:9px 12px; font-size:14px; }
-  .mascot-welcome .sunny-sprite { width:66px; height:66px; }
-  .mascot-welcome .tuan-welcome { width:60px; height:60px; }
-  .mascot-welcome p { font-size:13px; }
+  .narration-controls button { padding:9px 12px; font-size:var(--fs-sm); }
   #market-dialogue { padding:14px 16px 0; }
+}
+
+/* ==========================================================================
+   星币实体场景（coins.js 的挂载样式 + 第 1 课付款场景）
+   --------------------------------------------------------------------------
+   为什么存在：财商游戏的主角是钱。把「数钱 / 付钱」做成可以上手的动作，
+   是这版从「做题」走向「游戏」的核心一刀。三条硬规矩：
+     ① 币是按钮 —— 键盘可数、读屏可听（区累计数带 role=status）；
+     ② 按压要有物理感：按下 = 拍扁 + 沉进底边，与全站按钮同一套语言；
+     ③ 飞动 / 入场 / 摇晃全部可关：prefers-reduced-motion 与 .less-motion
+       下由 coins.js 直接落位，这里的动画只做锦上添花。
+   ========================================================================== */
+
+/* 视觉区占位：场景在时舞台让位给场景，压掉「上图下题」的最小高度，
+   让柜台和货架整体进首屏。 */
+#guided-lesson .lesson-stage.has-coin-scene .stage-visual { min-height:clamp(230px,34vh,350px); align-content:start; }
+#guided-lesson .coin-scene-slot { width:100%; max-width:620px; margin-inline:auto; }
+
+.mq-pay-scene { display:grid; gap:var(--sp-2); }
+
+/* 双区币场：口袋 / 柜台（或柜台 / 托盘）。 */
+.mq-coin-scene { display:flex; align-items:stretch; justify-content:center; gap:var(--sp-2); width:100%; }
+.mq-coin-zone { flex:1; min-width:0; padding:10px 12px 12px; border:var(--bw) solid var(--ink); border-radius:var(--radius-lg); background:var(--white); box-shadow:var(--e1); }
+.mq-coin-zone-name { display:flex; align-items:baseline; gap:6px; margin:0 0 8px; color:#3d5c50; font-size:var(--fs-sm); font-weight:800; }
+.mq-coin-zone-count { margin-left:auto; color:var(--ink); }
+.mq-coin-field { display:flex; flex-wrap:wrap; align-content:flex-start; gap:6px; min-height:44px; }
+
+/* 一枚星币：面额 1、硬边底座。按压 = 拍扁下沉（prespa 式 squash），
+   松手弹回 —— 交互要有手感，先从「按下去有反应」开始。 */
+.mq-coin { display:grid; place-items:center; flex:none; width:38px; height:38px; padding:0; border:2px solid var(--ink); border-radius:50%; background:var(--yellow); color:#624816; font:700 var(--fs-ui)/1 var(--font-ui); box-shadow:0 2px 0 rgba(23,63,55,.35); }
+button.mq-coin { cursor:pointer; transition:transform var(--press), box-shadow var(--press); }
+button.mq-coin:hover { transform:translateY(-1px); }
+button.mq-coin:active { transform:translateY(1px) scale(.9); box-shadow:0 0 0 rgba(23,63,55,.35); }
+/* 缺口的虚线位：托盘装不满，位子自己说话。 */
+.mq-coin--ghost { border-style:dashed; background:transparent; box-shadow:none; color:var(--muted); }
+
+/* 数量不对：整区左右一摇。纯视觉、零音效（错误不起声，产品红线）。 */
+.mq-coin-zone.is-shake .mq-coin { animation:mq-coin-shake 300ms ease 2; }
+@keyframes mq-coin-shake { 0%,100% { translate:0 0; } 25% { translate:-5px 0; } 75% { translate:5px 0; } }
+
+/* 入场后请一次：「来数我呀」。只请第一枚、只请一次，频繁晃眼就成了骚扰。
+   reduce / less-motion 下 coins.js 不入场，这里的动画也一并关掉。 */
+button.mq-coin:first-child { animation:mq-coin-nudge 2.2s ease-in-out 1 1s; }
+@keyframes mq-coin-nudge { 0%,100% { rotate:0deg; } 20% { rotate:-6deg; } 45% { rotate:5deg; } 70% { rotate:-3deg; } }
+.less-motion button.mq-coin, .less-motion .mq-coin-zone.is-shake .mq-coin { animation:none !important; }
+@media (prefers-reduced-motion:reduce) { button.mq-coin { animation:none !important; } .mq-coin-zone.is-shake .mq-coin { animation:none !important; } }
+
+/* 付款场景的货架：目标物 / 可买物排成一排，买到的盖上「已买到」。
+   min-height 从数钱段就预留 —— 货架在付款段才长出内容，不预留的话
+   整个舞台会在换段瞬间往下顶一截。 */
+.mq-goods-shelf { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; min-height:100px; align-content:start; }
+.mq-goods { display:grid; justify-items:center; gap:4px; min-width:96px; padding:10px 14px; border:var(--bw) solid var(--ink); border-radius:var(--radius-md); background:var(--white); box-shadow:0 var(--btn-drop) 0 var(--btn-edge-soft); }
+.mq-goods .mq-icon { width:34px; height:34px; }
+.mq-goods strong { font-size:var(--fs-sm); }
+.mq-goods-price { display:inline-flex; align-items:center; gap:3px; color:#624816; font-size:var(--fs-sm); font-weight:800; }
+button.mq-goods { cursor:pointer; font:inherit; transition:transform var(--press), box-shadow var(--press); }
+button.mq-goods:hover { transform:translateY(-1px); }
+button.mq-goods:active { transform:translateY(var(--btn-drop)); box-shadow:0 0 0 var(--btn-edge-soft); }
+.mq-goods.is-bought { background:#eef4e6; }
+.mq-goods.is-bought .mq-goods-price { color:var(--muted); }
+
+/* 付款状态行：数到几、差几枚，一直读得到。role=status 让每次变化都播报。 */
+#guided-lesson .pay-status { margin:0; color:var(--ink); font-size:var(--fs-ui); font-weight:800; text-align:center; }
+#guided-lesson .mq-pay-scene + * { margin-top:0; }
+
+/* 反馈行空的时候隐形但仍占一行：答错的提示出现 / 消失不再把按钮顶得上下跳。
+   （不能只用 min-height——反馈行自带底色和描边，空着时会是橙色空条。） */
+#guided-lesson .lesson-feedback:empty { visibility:hidden; }
+
+/* 窄屏：币和货架都收一档，双区改上下排。 */
+@media (max-width:650px) {
+  .mq-coin-scene { flex-direction:column; gap:8px; }
+  .mq-coin-zone { padding:8px 10px 10px; }
+  .mq-coin { width:34px; height:34px; font-size:var(--fs-sm); }
+  .mq-goods { min-width:84px; padding:8px 10px; }
+  .mq-goods .mq-icon { width:28px; height:28px; }
+  .mq-goods-shelf { min-height:90px; }
 }

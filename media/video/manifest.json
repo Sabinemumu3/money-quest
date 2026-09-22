@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-22",
+  "_readme": "这里是视频资产的登记处。放片流程见 media/video/README.md，接口契约见 docs/VIDEO-MODULE.md。没有登记的课节会安静跳过视频，课程流程与配片前完全一致。",
+  "_schema": {
+    "lessons.<lessonId>.<stage>": {
+      "src": "媒体文件路径（相对站点根）。必填 —— 没有 src 等于没配片。",
+      "webm": "可选。填了优先播 WebM，浏览器不支持时自动回退到 src。",
+      "poster": "封面图，建议 1280×720。首帧不要压字幕和 logo。",
+      "captions": { "zh": ".vtt 字幕路径", "en": ".vtt 字幕路径" },
+      "transcript": "文字版（字符串或 { zh, en }）。缺字幕时它是无障碍兜底，建议必填。",
+      "duration": "秒数。只用来显示「大约 1 分钟」，不参与任何统计。",
+      "title": "卡片标题（字符串或 { zh, en }）",
+      "summary": "一句话说明这段片看什么（字符串或 { zh, en }）",
+      "aiGenerated": "AI 生成内容必须置 true。置 true 时封面不再显示角标，但「看文字版」折叠区内保留 AI 生成与人工审核的完整说明。",
+      "status": "ready（默认，正常播放）| planned（先占位、暂不播，等成片）"
+    },
+    "stage": {
+      "hook": "第 0 步 · 节前钩子。MVP 只启用这个位置。",
+      "demo": "第 1 步 · 陪你看一遍（预留）",
+      "practice": "第 2 步 · 一起试试（预留）",
+      "challenge": "第 3 步 · 这次我来（预留）",
+      "discovery": "第 4 步 · 我的发现（预留）"
+    }
+  },
+  "lessons": {
+    "lesson-1": {
+      "hook": {
+        "src": "media/video/lesson-1-hook.mp4",
+        "poster": "media/video/lesson-1-hook.jpg",
+        "captions": { "zh": "media/video/lesson-1-hook.zh.vtt" },
+        "transcript": "小芽今天带 10 枚星币去野餐……",
+        "duration": 78,
+        "aiGenerated": true,
+        "title": { "zh": "10 枚星币，够买什么？", "en": "Ten coins: what fits?" },
+        "summary": { "zh": "先看小芽怎么数钱，再轮到你。", "en": "Watch Sunny count, then it is your turn." }
+      }
+    }
+  }
+}

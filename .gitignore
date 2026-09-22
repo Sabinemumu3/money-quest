@@ -9,3 +9,10 @@ preview-*.png
 !.env.example
 *.log
 .sites-runtime/
+
+# 本地开发与工具产物（不进仓库）
+.workbuddy/
+.claude/
+.agents/
+CLAUDE.md
+skills-lock.json

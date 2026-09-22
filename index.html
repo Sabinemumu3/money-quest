@@ -11,13 +11,26 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="dialogue.css" />
+    <link rel="stylesheet" href="video.css" />
+    <script src="icons.js" defer></script>
+    <script src="reward-coin.js" defer></script>
+    <script src="confetti.js" defer></script>
     <script src="dialogues.js" defer></script>
     <script src="teaching-media.js" defer></script>
+    <script src="video-lessons.js" defer></script>
+    <script src="coins.js" defer></script>
     <script src="lessons.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content"><span class="zh">跳到主要内容</span><span class="en">Skip to content</span></a>
+
+    <!-- 播报区：全站唯一的「主动播报」出口。只用于那些没有自带 live region 的事件
+         （视图切换、课程换步）。对白气泡、答题反馈、朗读状态各自带 role="status"，
+         不要再往这里写一遍，否则同一句话会被播两遍。
+         为什么不直接给 #mission-layer 挂 aria-live：那一层每次换步都被 innerHTML
+         整体替换，aria-live 会把每个变动的文本节点都排队播出来。 -->
+    <p class="sr-only" id="a11y-announcer" role="status" aria-live="polite" aria-atomic="true"></p>
 
     <section class="start-screen" id="start-screen">
       <header class="start-header">
@@ -31,48 +44,20 @@
         </div>
       </header>
 
-      <a class="thinking-course-entry" href="thinking.html"><span aria-hidden="true">🌱</span><span><strong><span class="zh">新样板课：10枚星币的野餐计划</span><span class="en">New sample: a 10-coin picnic</span></strong><small><span class="zh">先猜、再试、改主意。直接体验，不用创建角色。</span><span class="en">Predict, try and rethink. Play without creating a profile.</span></small></span><b aria-hidden="true">→</b></a>
-      <a class="thinking-course-entry" href="money-lab.html"><span aria-hidden="true">🏦</span><span><strong><span class="zh">零花钱小镇：存、花、捐，由你决定</span><span class="en">Money town: choose how to save, spend and give</span></strong><small><span class="zh">体验模拟银行、利息和实物愿望清单 · 中文体验</span><span class="en">A pretend bank, interest and a family wish list · Chinese-language sample</span></small></span><b aria-hidden="true">→</b></a>
-      <div class="start-layout">
-        <div class="start-story">
-          <p class="eyebrow"><span class="zh">8–12岁 · 游戏化财商与商业管理</span><span class="en">AGES 8–12 · MONEY & BUSINESS GAME</span></p>
-          <h1><span class="zh">欢迎来到<br /><em>财商经营岛</em></span><span class="en">Welcome to<br /><em>Money Quest Island</em></span></h1>
-          <p class="start-lede"><span class="zh">10 枚星币，先买什么？<br />和小芽、团团一起聊一聊，再动手试试。</span><span class="en">10 coins. What comes first?<br />Chat with Sunny and Tuan, then have a go.</span></p>
-          <div class="mascot-welcome"><span class="sunny-sprite" data-mood="welcome" aria-hidden="true"></span><p><span class="zh">小芽：慢慢来，我陪你！<br />团团：咦，钱够不够呀？</span><span class="en">Sunny: Take your time. I'm here!<br />Tuan: Hmm, do we have enough?</span></p><img class="tuan-welcome" src="tuan-buddy.png" width="96" height="96" alt="" /></div>
-          <div class="game-loop" aria-label="Game loop">
-            <span>📚 <b><span class="zh">学习</span><span class="en">Learn</span></b></span>
-            <i>→</i><span>🎮 <b><span class="zh">挑战</span><span class="en">Play</span></b></span>
-            <i>→</i><span>🪙 <b><span class="zh">经营</span><span class="en">Earn</span></b></span>
-            <i>→</i><span>🔓 <b><span class="zh">解锁</span><span class="en">Unlock</span></b></span>
-          </div>
-          <div class="island-preview" aria-hidden="true">
-            <div class="preview-island island-one"><span>🧋</span><small>LEVEL 1</small></div>
-            <div class="island-path"><i></i><i></i><i></i></div>
-            <div class="preview-island island-two"><span>💅</span><small>LEVEL 1</small></div>
-            <div class="island-path locked"><i></i><i></i><i></i></div>
-            <div class="preview-island island-three"><span>🐷</span><small>MY WISH</small></div>
-          </div>
+      <!-- 首次进入：只有一个入口。孩子第一次看见的应该是「开始学习」，
+           而不是场景选择、昵称、协议勾选。场景与昵称移至家长中心（回访用户可见）。 -->
+      <div class="start-hero">
+        <div class="start-cast" aria-hidden="true">
+          <span class="sunny-sprite" data-mood="welcome"></span>
+          <img src="tuan-buddy.png" width="96" height="96" alt="" />
         </div>
-
-        <form class="player-setup" id="player-setup">
-          <span class="setup-step"><span class="zh">家长入口 · 创建本机角色</span><span class="en">PARENT START · LOCAL PLAYER</span></span>
-          <h2><span class="zh">选择第一个经营场景</span><span class="en">Choose your first business scenario</span></h2>
-          <p><span class="zh">这是第一个可玩版本。昵称和进度只保存在这台设备，不会上传儿童个人资料。</span><span class="en">This is the first playable version. Nickname and progress stay on this device; no child personal data is uploaded.</span></p>
-
-          <div class="career-picker" role="radiogroup" aria-label="Business simulation selection">
-            <button type="button" class="career-choice" data-career="bubble-tea" role="radio" aria-checked="false">
-              <span class="career-emoji">🧋</span><span><strong><span class="zh">奶茶店经营</span><span class="en">Bubble Tea Shop</span></strong><small><span class="zh">采购、定价、现金流</span><span class="en">Buying, pricing and cash flow</span></small></span><i>✓</i>
-            </button>
-            <button type="button" class="career-choice" data-career="nail-artist" role="radio" aria-checked="false">
-              <span class="career-emoji">💅</span><span><strong><span class="zh">美甲店经营</span><span class="en">Nail Studio</span></strong><small><span class="zh">材料、服务、利润管理</span><span class="en">Materials, service and profit</span></small></span><i>✓</i>
-            </button>
-          </div>
-
-          <label class="nickname-field"><span><span class="zh">游戏昵称（选填）</span><span class="en">Game nickname (optional)</span></span><input id="nickname" type="text" maxlength="16" autocomplete="off" data-placeholder-zh="例如：小小店长" data-placeholder-en="For example: Sunny" /></label>
-          <label class="parent-confirm"><input id="parent-confirm" type="checkbox" required /><span><span class="zh">我是家长或监护人。我了解游戏使用虚拟货币和虚构公司，仅用于一般教育，不提供投资建议。</span><span class="en">I am a parent or guardian. I understand the game uses virtual money and fictional companies for general education, not investment advice.</span></span></label>
-          <button class="primary-button" type="submit"><span class="zh">开始我的财商经营游戏</span><span class="en">Start my money business game</span><span>→</span></button>
-          <p class="form-feedback" id="setup-feedback" role="status"></p>
-        </form>
+        <h1><span class="zh">欢迎来到<br /><em>财商经营岛</em></span><span class="en">Welcome to<br /><em>Money Quest Island</em></span></h1>
+        <p class="start-lede"><span class="zh">10 枚星币，先买什么？<br />跟小芽一起，从第一课开始。</span><span class="en">10 coins. What comes first?<br />Start lesson one with Sunny.</span></p>
+        <button class="start-button" id="start-learning" type="button">
+          <span class="zh">开始学习</span><span class="en">Start learning</span>
+          <b aria-hidden="true">→</b>
+        </button>
+        <p class="start-note"><span class="zh">进度只保存在这台设备 · 全部是虚拟星币 · 仅用于一般教育，不构成投资建议。点击开始即表示家长或监护人已知悉。</span><span class="en">Progress stays on this device · All coins are pretend · General education only, not investment advice. Tapping start means a parent or guardian has read this.</span></p>
       </div>
     </section>
 
@@ -84,9 +69,9 @@
           <span><strong><span class="zh">财商经营岛</span><span class="en">MONEY QUEST ISLAND</span></strong><small>FUTURE LIFE SKILLS</small></span>
         </a>
         <div class="player-stats" aria-label="Player stats">
-          <span title="Lessons completed">👣 <strong id="cash-stat">0 / 6</strong></span>
-          <span title="Active minutes this visit">⏱ <strong id="reputation-stat">0</strong></span>
-          <span title="Level">⭐ <strong>LV.<i id="level-stat">1</i></strong></span>
+          <span title="Lessons completed"><span data-icon="footsteps"></span> <strong id="cash-stat">0 / 6</strong></span>
+          <span title="Active minutes this visit"><span data-icon="stopwatch"></span> <strong id="reputation-stat">0</strong></span>
+          <span title="Level"><span data-icon="star"></span> <strong>LV.<i id="level-stat">1</i></strong></span>
         </div>
         <div class="language-switch">
           <button type="button" data-language="zh-CN" aria-pressed="true">中</button>
@@ -96,14 +81,14 @@
 
       <aside class="game-sidebar" id="game-sidebar">
         <div class="player-card">
-          <span class="avatar" id="player-avatar">🧋</span>
+          <span class="avatar" id="player-avatar" data-icon="tea"></span>
           <div><small><span class="zh">财商学习者</span><span class="en">MONEY EXPLORER</span></small><strong id="player-name">小小店长</strong></div>
         </div>
         <nav class="game-nav" aria-label="Game navigation">
-          <button type="button" class="is-active" data-view="home"><span>🗺️</span><span class="zh">经营地图</span><span class="en">Business map</span></button>
-          <button type="button" data-view="market" id="market-nav" disabled><span>📈</span><span class="zh">市场实验室</span><span class="en">Market lab</span><i>🔒</i></button>
-          <button type="button" data-view="badges"><span>🏅</span><span class="zh">我的成就</span><span class="en">My badges</span></button>
-          <button type="button" data-view="parent"><span>🛡️</span><span class="zh">家长中心</span><span class="en">Parent centre</span></button>
+          <button type="button" class="is-active" data-view="home"><span><span data-icon="map"></span></span><span class="zh">经营地图</span><span class="en">Business map</span></button>
+          <button type="button" data-view="market" id="market-nav" disabled><span><span data-icon="chart-up"></span></span><span class="zh">市场实验室</span><span class="en">Market lab</span><i><span data-icon="lock"></span></i></button>
+          <button type="button" data-view="badges"><span><span data-icon="medal"></span></span><span class="zh">我的成就</span><span class="en">My badges</span></button>
+          <button type="button" data-view="parent"><span><span data-icon="shield"></span></span><span class="zh">家长中心</span><span class="en">Parent centre</span></button>
         </nav>
         <div class="xp-card">
           <div><span><span class="zh">升级进度</span><span class="en">LEVEL PROGRESS</span></span><strong id="xp-label">0 / 100 XP</strong></div>
@@ -115,80 +100,97 @@
 
       <main class="game-main" id="main-content">
         <section class="game-view is-active" id="home-view" data-game-view="home">
-          <a class="thinking-course-entry" href="money-lab.html"><span aria-hidden="true">🏦</span><span><strong><span class="zh">零花钱小镇：存·花·捐</span><span class="en">Money town: save, spend and give</span></strong><small><span class="zh">20 枚怎么安排？模拟银行和实物清单等你来试。</span><span class="en">Plan 20 pretend coins, explore a bank and a wish list. Chinese-language sample.</span></small></span><b aria-hidden="true">→</b></a>
-          <a class="thinking-course-entry" href="thinking.html"><span aria-hidden="true">🌱</span><span><strong><span class="zh">思维样板课：10枚星币的野餐计划</span><span class="en">Thinking sample: a 10-coin picnic</span></strong><small><span class="zh">做一个预测，试一试自己的计划，再说说为什么。</span><span class="en">Make a prediction, try your plan and explain why.</span></small></span><b aria-hidden="true">→</b></a>
+          <!-- ① 课程地图的题头：先说清「你在经营什么」，再给下一步行动与任务清单。
+               这块原本排在任务地图之后（top≈1613，整屏之外），先给身份再给行动更顺。 -->
           <div class="shop-hero">
             <div class="shop-copy">
               <p class="eyebrow"><span class="zh">你的第一个模拟生意</span><span class="en">YOUR FIRST BUSINESS SIMULATION</span></p>
-              <h1 id="shop-name">星光奶茶铺</h1>
+              <h2 id="shop-name">星光奶茶铺</h2>
               <p id="shop-brief"><span class="zh">今天的目标：学会算利润，做好采购，并服务三位顾客。</span><span class="en">Today's goal: learn profit, plan supplies and serve three customers.</span></p>
               <div class="shop-status"><span><small><span class="zh">基础课发现</span><span class="en">DISCOVERIES</span></small><strong id="mission-count">0 / 6</strong></span><span><small><span class="zh">慢慢来</span><span class="en">TAKE YOUR TIME</span></small><strong id="reputation-label">一次学一件事</strong></span></div>
             </div>
             <div class="storefront" id="storefront" aria-label="Your shop">
               <div class="store-sign" id="store-sign">STAR TEA</div>
               <div class="store-awning"><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="store-window"><span id="store-emoji">🧋</span><small>OPEN</small></div>
+              <div class="store-window"><span id="store-emoji" data-icon="tea"></span><small>OPEN</small></div>
               <div class="store-door">✦</div>
-              <span class="store-tree">🌳</span>
+              <span class="store-tree"><span data-icon="tree"></span></span>
             </div>
           </div>
-
+          <!-- ② 首屏第二件事：下一步学什么。回访用户不该先滚过封面和两张外链卡。 -->
+          <section class="continue-bar" id="continue-bar">
+            <div class="continue-copy">
+              <p class="continue-kicker" id="continue-kicker"></p>
+              <strong id="continue-title"></strong>
+              <small id="continue-meta"></small>
+            </div>
+            <button class="primary-button" id="continue-go" type="button"><span class="zh">继续学习</span><span class="en">Continue</span></button>
+          </section>
           <section class="mission-map-section">
             <header class="section-heading"><div><p class="eyebrow"><span class="zh">小芽陪你一步一步学</span><span class="en">LEARN WITH SUNNY</span></p><h2><span class="zh">今天，你想发现什么？</span><span class="en">What will you discover?</span></h2></div><p><span class="zh">每次预留12–15分钟，可随时暂停</span><span class="en">Allow 12–15 minutes; pause anytime</span></p></header>
             <p id="learning-notice" class="learning-notice" role="status"><span class="zh">不用赶着通关。每课都有讲解，没看懂可以再看一次。</span><span class="en">No rush. Every lesson has an explanation you can revisit.</span></p>
-            <div class="mission-road" id="mission-road">
-              <article class="mission-node" data-task-card="mission-1">
-                <div class="node-top"><span class="node-number">01</span><span class="node-status" data-task-status="mission-1"><span class="zh">可开始</span><span class="en">READY</span></span></div>
-                <span class="node-icon">🪙</span><h3><span class="zh">钱的第一课</span><span class="en">Money First Steps</span></h3><p><span class="zh">先认识钱的流入、流出和剩余。</span><span class="en">See money come in, go out and remain.</span></p><div class="node-reward">+30 XP　+20 🪙</div><button type="button" data-open-mission="mission-1"><span class="zh">开始任务</span><span class="en">Start mission</span></button>
-              </article>
-              <span class="road-connector" aria-hidden="true">•••</span>
-              <article class="mission-node is-locked" data-task-card="mission-2">
-                <div class="node-top"><span class="node-number">02</span><span class="node-status" data-task-status="mission-2">🔒</span></div>
-                <span class="node-icon">📦</span><h3><span class="zh">第一次采购</span><span class="en">First Supply Run</span></h3><p><span class="zh">用有限预算买齐开店材料。</span><span class="en">Buy essentials within a budget.</span></p><div class="node-reward">+30 XP　🏷️</div><button type="button" data-open-mission="mission-2" disabled><span class="zh">完成上一关</span><span class="en">Finish previous</span></button>
-              </article>
-              <span class="road-connector" aria-hidden="true">•••</span>
-              <article class="mission-node is-locked" data-task-card="mission-3">
-                <div class="node-top"><span class="node-number">03</span><span class="node-status" data-task-status="mission-3">🔒</span></div>
-                <span class="node-icon">🏪</span><h3><span class="zh">开门营业</span><span class="en">Open for Business</span></h3><p><span class="zh">为顾客做定价和经营决定。</span><span class="en">Make pricing and service decisions.</span></p><div class="node-reward">+40 XP　💚</div><button type="button" data-open-mission="mission-3" disabled><span class="zh">完成上一关</span><span class="en">Finish previous</span></button>
-              </article>
-              <span class="road-connector" aria-hidden="true">•••</span>
-              <article class="mission-node market-node is-locked" data-task-card="mission-4">
-                <div class="node-top"><span class="node-number">04</span><span class="node-status" data-task-status="mission-4">🔒</span></div>
-                <span class="node-icon">📈</span><h3><span class="zh">市场实验室</span><span class="en">Market Laboratory</span></h3><p><span class="zh">用虚构公司认识股票和风险。</span><span class="en">Explore shares and risk with fictional firms.</span></p><div class="node-reward">+40 XP　🏅</div><button type="button" data-open-mission="mission-4" disabled><span class="zh">达到等级2</span><span class="en">Reach level 2</span></button>
-              </article>
-            </div>
+            <!-- ③ 节点由 app.js 的 renderTaskMap() 渲染：6 节基础课 + 市场实验室（阶段门）。
+                 这里刻意不再写死一份静态副本 —— 旧副本只有 3 关，文案（如「达到等级2」）
+                 早已与真实解锁规则脱节；而 #game-app 初始就是 hidden，静态内容从来没被看见过。 -->
+            <div class="mission-road" id="mission-road"></div>
           </section>
-
+          <!-- ④ 两张样板课卡（零花钱小镇 / 思维样板课）指向别的场景，MVP 暂时下线。
+               加 hidden 而不是删源码：内容与样式都留着，MVP 之后去掉这个属性就恢复。
+               注意 .sample-lessons 自身没有 display 声明，UA 的 [hidden]{display:none}
+               能生效；styles.css 里另有一条 .sample-lessons[hidden] 兜底，防止日后
+               给它加上 display 时这里静静失效。 -->
+          <section class="sample-lessons" hidden>
+            <p class="eyebrow"><span class="zh">另一个场景</span><span class="en">ANOTHER SCENE</span></p>
+            <a class="thinking-course-entry" href="money-lab.html"><span aria-hidden="true"><span data-icon="bank"></span></span><span><strong><span class="zh">零花钱小镇：存·花·捐</span><span class="en">Money town: save, spend and give</span></strong><small><span class="zh">20 枚怎么安排？模拟银行和实物清单等你来试。</span><span class="en">Plan 20 pretend coins, explore a bank and a wish list. Chinese-language sample.</span></small></span><b aria-hidden="true">→</b></a>
+            <a class="thinking-course-entry" href="thinking.html"><span aria-hidden="true"><span data-icon="seedling"></span></span><span><strong><span class="zh">思维样板课：10枚星币的野餐计划</span><span class="en">Thinking sample: a 10-coin picnic</span></strong><small><span class="zh">做一个预测，试一试自己的计划，再说说为什么。</span><span class="en">Make a prediction, try your plan and explain why.</span></small></span><b aria-hidden="true">→</b></a>
+          </section>
           <section class="coming-worlds">
             <div><p class="eyebrow"><span class="zh">后续商业场景</span><span class="en">BUSINESS WORLDS COMING NEXT</span></p><h2><span class="zh">在不同生意中练习同一套财商能力</span><span class="en">Practise the same money skills in new businesses</span></h2></div>
-            <div class="world-cards"><article><span>🐾</span><strong><span class="zh">宠物咖啡馆</span><span class="en">Pet Café</span></strong><small><span class="zh">需求预测</span><span class="en">Demand planning</span></small></article><article><span>🎮</span><strong><span class="zh">游戏设计师</span><span class="en">Game Designer</span></strong><small><span class="zh">项目预算</span><span class="en">Project budgets</span></small></article><article><span>🌱</span><strong><span class="zh">环保建筑师</span><span class="en">Eco Architect</span></strong><small><span class="zh">长期投资</span><span class="en">Long-term choices</span></small></article></div>
+            <div class="world-cards"><article><span><span data-icon="paw"></span></span><strong><span class="zh">宠物咖啡馆</span><span class="en">Pet Café</span></strong><small><span class="zh">需求预测</span><span class="en">Demand planning</span></small></article><article><span><span data-icon="gamepad"></span></span><strong><span class="zh">游戏设计师</span><span class="en">Game Designer</span></strong><small><span class="zh">项目预算</span><span class="en">Project budgets</span></small></article><article><span><span data-icon="seedling"></span></span><strong><span class="zh">环保建筑师</span><span class="en">Eco Architect</span></strong><small><span class="zh">长期投资</span><span class="en">Long-term choices</span></small></article></div>
           </section>
         </section>
 
         <section class="game-view simple-view" id="badges-view" data-game-view="badges">
-          <header class="page-heading"><p class="eyebrow"><span class="zh">学习记录</span><span class="en">LEARNING RECORD</span></p><h1><span class="zh">我的成就徽章</span><span class="en">My achievement badges</span></h1><p><span class="zh">徽章代表你已经练习过的能力，不代表真实投资水平。</span><span class="en">Badges show skills practised in the game; they do not represent real investment ability.</span></p></header>
+          <header class="page-heading"><p class="eyebrow"><span class="zh">学习记录</span><span class="en">LEARNING RECORD</span></p><h2><span class="zh">我的成就徽章</span><span class="en">My achievement badges</span></h2><p><span class="zh">徽章代表你已经练习过的能力，不代表真实投资水平。</span><span class="en">Badges show skills practised in the game; they do not represent real investment ability.</span></p></header>
           <div class="badge-grid">
-            <article data-badge="profit"><span>🧠</span><strong><span class="zh">利润小侦探</span><span class="en">Profit Detective</span></strong><small><span class="zh">完成店长训练营</span><span class="en">Complete Boss Bootcamp</span></small></article>
-            <article data-badge="buyer"><span>📦</span><strong><span class="zh">聪明采购员</span><span class="en">Smart Buyer</span></strong><small><span class="zh">在预算内采购</span><span class="en">Buy within a budget</span></small></article>
-            <article data-badge="owner"><span>🏪</span><strong><span class="zh">负责小店长</span><span class="en">Responsible Owner</span></strong><small><span class="zh">完成顾客经营挑战</span><span class="en">Finish the customer challenge</span></small></article>
-            <article data-badge="market"><span>📈</span><strong><span class="zh">风险观察员</span><span class="en">Risk Observer</span></strong><small><span class="zh">完成虚构市场实验</span><span class="en">Complete the fictional market lab</span></small></article>
+            <article data-badge="profit"><span><span data-icon="brain"></span></span><strong><span class="zh">利润小侦探</span><span class="en">Profit Detective</span></strong><small><span class="zh">完成店长训练营</span><span class="en">Complete Boss Bootcamp</span></small></article>
+            <article data-badge="buyer"><span><span data-icon="package"></span></span><strong><span class="zh">聪明采购员</span><span class="en">Smart Buyer</span></strong><small><span class="zh">在预算内采购</span><span class="en">Buy within a budget</span></small></article>
+            <article data-badge="owner"><span><span data-icon="store"></span></span><strong><span class="zh">负责小店长</span><span class="en">Responsible Owner</span></strong><small><span class="zh">完成顾客经营挑战</span><span class="en">Finish the customer challenge</span></small></article>
+            <article data-badge="market"><span><span data-icon="chart-up"></span></span><strong><span class="zh">风险观察员</span><span class="en">Risk Observer</span></strong><small><span class="zh">完成虚构市场实验</span><span class="en">Complete the fictional market lab</span></small></article>
           </div>
         </section>
 
         <section class="game-view simple-view" id="parent-view" data-game-view="parent">
-          <header class="page-heading"><p class="eyebrow"><span class="zh">家长中心</span><span class="en">PARENT CENTRE</span></p><h1><span class="zh">这个游戏在教什么？</span><span class="en">What does this game teach?</span></h1></header>
+          <header class="page-heading"><p class="eyebrow"><span class="zh">家长中心</span><span class="en">PARENT CENTRE</span></p><h2><span class="zh">这个游戏在教什么？</span><span class="en">What does this game teach?</span></h2></header>
           <div class="parent-grid">
             <article><span>01</span><h2><span class="zh">从孩子的问题出发</span><span class="en">Start with a child's question</span></h2><p><span class="zh">六课依次学习钱的限额、需要与想要、钱的进出、按需采购、储蓄和应对变化。每课先看故事和逐步示范，再陪练，最后换情境独立尝试。股票仅作课后拓展。</span><span class="en">Six lessons cover limited money, needs and wants, money in and out, stock planning, saving and changes. Each has a story, step-by-step demonstration, supported practice and a new challenge. Shares are an optional extra.</span></p></article>
             <article><span>02</span><h2><span class="zh">安全边界</span><span class="en">Safety boundaries</span></h2><p><span class="zh">不使用真实股票、实时行情或真实资金；不收集学校、地址、出生日期或家庭收入。</span><span class="en">No real stocks, live prices or real money. No collection of school, address, birth date or family income.</span></p></article>
             <article><span>03</span><h2><span class="zh">看看是否真的理解</span><span class="en">Check understanding together</span></h2><p><span class="zh">可以问：“你为什么先买这个？”“换个数字还会吗？”做过练习不等于完全掌握。每次12–15分钟是试测安排，不是统一的注意力上限；允许孩子更慢、暂停和复习。</span><span class="en">Ask 'Why did you choose this first?' and 'What if the numbers changed?' Completing practice does not prove mastery. 12–15 minutes is a trial session plan, not a universal attention limit. Allow extra time, breaks and review.</span></p></article>
           </div>
+          <!-- 原首次进入页的场景选择与昵称迁到这里：老用户（已开始过的用户）
+               直接落在主页面，这些设置仍需要一个去处，不能随入口页一起消失。 -->
+          <section class="parent-panel">
+            <span class="setup-step"><span class="zh">本机角色设置</span><span class="en">LOCAL PLAYER SETTINGS</span></span>
+            <h2><span class="zh">换一个经营场景</span><span class="en">Switch the business scenario</span></h2>
+            <p><span class="zh">场景只改变店铺名称、采购材料和顾客故事，已完成的课程记录会保留。昵称和进度只保存在这台设备，不会上传儿童个人资料。</span><span class="en">The scenario changes the shop name, supplies and customer stories only; completed lessons are kept. Nickname and progress stay on this device and no child personal data is uploaded.</span></p>
+            <div class="career-picker" role="radiogroup" aria-label="Business simulation selection">
+              <button type="button" class="career-choice" data-career="bubble-tea" role="radio" aria-checked="false">
+                <span class="career-emoji" data-icon="tea"></span><span><strong><span class="zh">奶茶店经营</span><span class="en">Bubble Tea Shop</span></strong><small><span class="zh">采购、定价、现金流</span><span class="en">Buying, pricing and cash flow</span></small></span><i>✓</i>
+              </button>
+              <button type="button" class="career-choice" data-career="nail-artist" role="radio" aria-checked="false">
+                <span class="career-emoji"><span data-icon="nails"></span></span><span><strong><span class="zh">美甲店经营</span><span class="en">Nail Studio</span></strong><small><span class="zh">材料、服务、利润管理</span><span class="en">Materials, service and profit</span></small></span><i>✓</i>
+              </button>
+            </div>
+            <label class="nickname-field"><span><span class="zh">游戏昵称（选填，不填就用「小小店长」）</span><span class="en">Game nickname (optional; defaults to Money Explorer)</span></span><input id="nickname" type="text" maxlength="16" autocomplete="off" data-placeholder-zh="例如：小小店长" data-placeholder-en="For example: Sunny" /></label>
+          </section>
           <p id="parent-progress" class="learning-notice"></p>
           <button class="danger-button" id="reset-game" type="button"><span class="zh">清除本机进度并重新开始</span><span class="en">Clear local progress and restart</span></button>
         </section>
       </main>
     </div>
 
-    <section class="mission-layer" id="mission-layer" hidden aria-live="polite">
+    <!-- 这里刻意不挂 aria-live：见 #a11y-announcer 的注释。 -->
+    <section class="mission-layer" id="mission-layer" hidden>
       <header class="mission-header">
         <button type="button" id="mission-back">← <span class="zh">返回经营地图</span><span class="en">Back to business map</span></button>
         <div><span><span class="zh">任务进度</span><span class="en">MISSION PROGRESS</span></span><div><i id="mission-progress-fill"></i></div><strong id="mission-progress-label">1 / 4</strong></div>
@@ -200,8 +202,8 @@
       <main class="mission-content">
         <section class="mission-screen" id="guided-lesson" data-mission="guided"></section>
         <section class="mission-screen" id="mission-1" data-mission="mission-1">
-          <header class="mission-title coral"><span>🪙</span><div><p><span class="zh">任务01 · 钱的第一课</span><span class="en">MISSION 01 · MONEY FIRST STEPS</span></p><h1><span class="zh">钱会流入，也会流出</span><span class="en">Money comes in and goes out</span></h1><p><span class="zh">先看懂最简单的一笔生意，再认识“利润”这个新词。</span><span class="en">Follow one simple sale first, then meet the new word “profit”.</span></p></div></header>
-          <div class="learning-formula"><article><span>🛍️</span><strong><span class="zh">流入：收入 Revenue</span><span class="en">Money in: Revenue</span></strong><p><span class="zh">顾客购买时，小店收到7星币</span><span class="en">A customer pays the shop 7 coins</span></p></article><b>−</b><article><span>📦</span><strong><span class="zh">流出：成本 Cost</span><span class="en">Money out: Cost</span></strong><p><span class="zh">制作产品已经花了4星币</span><span class="en">Making the product already cost 4 coins</span></p></article><b>=</b><article class="profit-card"><span>🪙</span><strong><span class="zh">剩余：利润 Profit</span><span class="en">Money left: Profit</span></strong><p><span class="zh">7 − 4 = 3星币</span><span class="en">7 − 4 = 3 coins</span></p></article></div>
+          <header class="mission-title coral"><span data-icon="coin"></span><div><p><span class="zh">任务01 · 钱的第一课</span><span class="en">MISSION 01 · MONEY FIRST STEPS</span></p><h2><span class="zh">钱会流入，也会流出</span><span class="en">Money comes in and goes out</span></h2><p><span class="zh">先看懂最简单的一笔生意，再认识“利润”这个新词。</span><span class="en">Follow one simple sale first, then meet the new word “profit”.</span></p></div></header>
+          <div class="learning-formula"><article><span><span data-icon="shopping-bag"></span></span><strong><span class="zh">流入：收入 Revenue</span><span class="en">Money in: Revenue</span></strong><p><span class="zh">顾客购买时，小店收到7星币</span><span class="en">A customer pays the shop 7 coins</span></p></article><b>−</b><article><span><span data-icon="package"></span></span><strong><span class="zh">流出：成本 Cost</span><span class="en">Money out: Cost</span></strong><p><span class="zh">制作产品已经花了4星币</span><span class="en">Making the product already cost 4 coins</span></p></article><b>=</b><article class="profit-card"><span data-icon="coin"></span><strong><span class="zh">剩余：利润 Profit</span><span class="en">Money left: Profit</span></strong><p><span class="zh">7 − 4 = 3星币</span><span class="en">7 − 4 = 3 coins</span></p></article></div>
           <div class="quiz-list">
             <article class="quiz-card" data-quiz="q1" data-correct="in"><span>01</span><div><h2><span class="zh">顾客支付7星币买产品，这笔钱对小店来说是什么？</span><span class="en">A customer pays 7 coins. What is this money to the shop?</span></h2><div><button type="button" data-answer="in"><span class="zh">流入：收入</span><span class="en">Money in: revenue</span></button><button type="button" data-answer="out"><span class="zh">流出：成本</span><span class="en">Money out: cost</span></button></div></div></article>
             <article class="quiz-card" data-quiz="q2" data-correct="out"><span>02</span><div><h2><span class="zh">小店花4星币购买制作材料，这笔钱是什么？</span><span class="en">The shop pays 4 coins for materials. What is this money?</span></h2><div><button type="button" data-answer="in"><span class="zh">流入：收入</span><span class="en">Money in: revenue</span></button><button type="button" data-answer="out"><span class="zh">流出：成本</span><span class="en">Money out: cost</span></button></div></div></article>
@@ -211,16 +213,16 @@
         </section>
 
         <section class="mission-screen" id="mission-2" data-mission="mission-2">
-          <header class="mission-title blue"><span>📦</span><div><p><span class="zh">任务02 · 第一次采购</span><span class="en">MISSION 02 · FIRST SUPPLY RUN</span></p><h1><span class="zh">35星币能买什么？</span><span class="en">What can 35 coins buy?</span></h1><p><span class="zh">买齐三种必需材料，再选择一种能让店铺更有特色的升级。</span><span class="en">Buy all three essentials, then choose one upgrade that makes your shop special.</span></p></div></header>
-          <div class="supply-board"><div class="supply-budget"><span><span class="zh">采购预算</span><span class="en">SUPPLY BUDGET</span></span><strong>35 🪙</strong><div><i id="supply-fill"></i></div><small id="supply-left"><span class="zh">还剩35星币</span><span class="en">35 coins left</span></small></div><div class="supply-grid" id="supply-grid"></div></div>
-          <div class="business-tip"><span>💡</span><p><strong><span class="zh">经营提示</span><span class="en">BUSINESS TIP</span></strong><span class="zh">“想要”和“需要”也存在于生意里。没有必需材料就无法开店；装饰可以等待。</span><span class="en">Businesses have needs and wants too. A shop cannot open without essentials; decoration can wait.</span></p></div>
+          <header class="mission-title blue"><span><span data-icon="package"></span></span><div><p><span class="zh">任务02 · 第一次采购</span><span class="en">MISSION 02 · FIRST SUPPLY RUN</span></p><h2><span class="zh">35星币能买什么？</span><span class="en">What can 35 coins buy?</span></h2><p><span class="zh">买齐三种必需材料，再选择一种能让店铺更有特色的升级。</span><span class="en">Buy all three essentials, then choose one upgrade that makes your shop special.</span></p></div></header>
+          <div class="supply-board"><div class="supply-budget"><span><span class="zh">采购预算</span><span class="en">SUPPLY BUDGET</span></span><strong>35 <span data-icon="coin"></span></strong><div><i id="supply-fill"></i></div><small id="supply-left"><span class="zh">还剩35星币</span><span class="en">35 coins left</span></small></div><div class="supply-grid" id="supply-grid"></div></div>
+          <div class="business-tip"><span><span data-icon="tip"></span></span><p><strong><span class="zh">经营提示</span><span class="en">BUSINESS TIP</span></strong><span class="zh">“想要”和“需要”也存在于生意里。没有必需材料就无法开店；装饰可以等待。</span><span class="en">Businesses have needs and wants too. A shop cannot open without essentials; decoration can wait.</span></p></div>
           <footer class="mission-actions"><p id="mission-2-feedback" role="status"><span class="zh">选择三种必需材料和一种升级，总额不能超过35星币。</span><span class="en">Choose three essentials and one upgrade without spending more than 35 coins.</span></p><button class="primary-button" id="submit-supplies" type="button"><span class="zh">确认采购</span><span class="en">Confirm supply order</span></button></footer>
         </section>
 
         <section class="mission-screen" id="mission-3" data-mission="mission-3">
-          <header class="mission-title lime"><span>🏪</span><div><p><span class="zh">任务03 · 开门营业</span><span class="en">MISSION 03 · OPEN FOR BUSINESS</span></p><h1><span class="zh">今天谁来光顾？</span><span class="en">Who is visiting today?</span></h1><p><span class="zh">面对三位顾客，做出定价、诚信和预算决定。</span><span class="en">Meet three customers and make decisions about pricing, honesty and budgets.</span></p></div></header>
+          <header class="mission-title lime"><span><span data-icon="store"></span></span><div><p><span class="zh">任务03 · 开门营业</span><span class="en">MISSION 03 · OPEN FOR BUSINESS</span></p><h2><span class="zh">今天谁来光顾？</span><span class="en">Who is visiting today?</span></h2><p><span class="zh">面对三位顾客，做出定价、诚信和预算决定。</span><span class="en">Meet three customers and make decisions about pricing, honesty and budgets.</span></p></div></header>
           <div class="customer-game">
-            <div class="customer-scene"><div class="customer-avatar" id="customer-avatar">🧒</div><div class="speech-bubble"><span id="customer-count">顾客 1 / 3</span><h2 id="customer-title"></h2><p id="customer-story"></p></div></div>
+            <div class="customer-scene"><div class="customer-avatar" id="customer-avatar"><span data-icon="customer-1"></span></div><div class="speech-bubble"><span id="customer-count">顾客 1 / 3</span><h2 id="customer-title"></h2><p id="customer-story"></p></div></div>
             <div class="customer-options" id="customer-options"></div>
             <div class="decision-feedback" id="decision-feedback" hidden><span id="decision-icon">✓</span><div><strong id="decision-title"></strong><p id="decision-copy"></p></div></div>
             <button class="primary-button next-customer" id="next-customer" type="button" hidden><span class="zh">下一位顾客</span><span class="en">Next customer</span> →</button>
@@ -229,12 +231,12 @@
         </section>
 
         <section class="mission-screen" id="mission-4" data-mission="mission-4">
-          <header class="mission-title purple"><span>📈</span><div><p><span class="zh">选学 · 市场实验室</span><span class="en">OPTIONAL · MARKET LAB</span></p><h1><span class="zh">公司的价格会变吗？</span><span class="en">Can a company's share price change?</span></h1></div></header>
+          <header class="mission-title purple"><span><span data-icon="chart-up"></span></span><div><p><span class="zh">选学 · 市场实验室</span><span class="en">OPTIONAL · MARKET LAB</span></p><h2><span class="zh">公司的价格会变吗？</span><span class="en">Can a company's share price change?</span></h2></div></header>
           <div class="dialogue-slot" id="market-dialogue"></div>
-          <div class="market-safety"><span>🛡️</span><p><span class="zh">全是虚构 · 不用真钱 · 不预测真实投资</span><span class="en">All pretend · No real money · Not an investment prediction</span></p></div>
-          <div class="market-wallet"><div><span><span class="zh">可用实验币</span><span class="en">LAB CASH</span></span><strong id="market-cash">100 🪙</strong></div><div><span><span class="zh">组合当前价值</span><span class="en">PORTFOLIO VALUE</span></span><strong id="portfolio-value">100 🪙</strong></div><div><span><span class="zh">持有公司</span><span class="en">COMPANIES OWNED</span></span><strong id="company-count">0 / 3</strong></div></div>
+          <div class="market-safety"><span><span data-icon="shield"></span></span><p><span class="zh">全是虚构 · 不用真钱 · 不预测真实投资</span><span class="en">All pretend · No real money · Not an investment prediction</span></p></div>
+          <div class="market-wallet"><div><span><span class="zh">可用实验币</span><span class="en">LAB CASH</span></span><strong id="market-cash">100 <span data-icon="coin"></span></strong></div><div><span><span class="zh">组合当前价值</span><span class="en">PORTFOLIO VALUE</span></span><strong id="portfolio-value">100 <span data-icon="coin"></span></strong></div><div><span><span class="zh">持有公司</span><span class="en">COMPANIES OWNED</span></span><strong id="company-count">0 / 3</strong></div></div>
           <div class="company-grid" id="company-grid"></div>
-          <div class="market-event" id="market-event" hidden><span>📰</span><div><strong><span class="zh">市场一周后</span><span class="en">ONE MARKET WEEK LATER</span></strong><p id="market-event-copy"></p></div></div>
+          <div class="market-event" id="market-event" hidden><span><span data-icon="news"></span></span><div><strong><span class="zh">市场一周后</span><span class="en">ONE MARKET WEEK LATER</span></strong><p id="market-event-copy"></p></div></div>
           <div class="market-controls"><p id="market-feedback" role="status"><span class="zh">先购买至少两家不同公司的股票，体验“分散”。</span><span class="en">Buy shares in at least two different companies to try diversification.</span></p><button class="primary-button" id="run-market" type="button"><span class="zh">运行市场一周</span><span class="en">Run one market week</span></button></div>
           <div class="risk-check" id="risk-check" hidden><span class="setup-step"><span class="zh">最后一题</span><span class="en">FINAL CHECK</span></span><h2><span class="zh">把钱分散到不同公司，是否保证一定不会亏损？</span><span class="en">Does spreading money across companies guarantee you will never lose money?</span></h2><div><button type="button" data-risk-answer="yes"><span class="zh">是，一定不会亏</span><span class="en">Yes, loss is impossible</span></button><button type="button" data-risk-answer="no"><span class="zh">不是，只是减少单一公司的影响</span><span class="en">No, it only reduces the impact of one company</span></button></div><p id="risk-feedback" role="status"></p></div>
         </section>
@@ -242,7 +244,22 @@
     </section>
 
     <div class="reward-popover" id="reward-popover" hidden role="dialog" aria-modal="true" aria-labelledby="reward-title">
-      <div><span class="reward-rays" aria-hidden="true">✦</span><p><span class="zh">任务完成</span><span class="en">MISSION COMPLETE</span></p><h2 id="reward-title"></h2><span class="reward-badge" id="reward-badge">🏅</span><strong id="reward-copy"></strong><button class="primary-button" id="collect-reward" type="button"><span class="zh">领取奖励并继续</span><span class="en">Collect and continue</span></button></div>
+      <div><span class="reward-rays" aria-hidden="true">✦</span><p><span class="zh">任务完成</span><span class="en">MISSION COMPLETE</span></p><h2 id="reward-title"></h2><span class="reward-badge" id="reward-badge"><span data-icon="medal"></span></span><span class="reward-coin" id="reward-coin" aria-hidden="true" hidden></span><strong id="reward-copy"></strong><button class="primary-button" id="collect-reward" type="button"><span class="zh">领取奖励并继续</span><span class="en">Collect and continue</span></button></div>
     </div>
+
+    <!-- 结课仪式：首次完成一课时的一次性画面（峰终定律的「终」）。
+         内容由 app.js 的 showCeremony() 填充；礼花也在这里放，
+         庆祝的是孩子的成就，不是「打开了网页」。 -->
+    <section class="lesson-ceremony" id="lesson-ceremony" hidden role="dialog" aria-modal="true" aria-labelledby="ceremony-title">
+      <div class="ceremony-card">
+        <span class="ceremony-rays" aria-hidden="true">✦</span>
+        <p id="ceremony-kicker"></p>
+        <span class="ceremony-icon" id="ceremony-icon" aria-hidden="true"></span>
+        <h2 id="ceremony-title"></h2>
+        <strong id="ceremony-copy"></strong>
+        <div class="ceremony-chips"><span id="ceremony-xp"></span><span id="ceremony-stars"></span></div>
+        <button class="primary-button" id="ceremony-go" type="button"><span class="zh">带着发现回地图 →</span><span class="en">Take my discovery to the map →</span></button>
+      </div>
+    </section>
   </body>
 </html>
