@@ -1,0 +1,5 @@
+# 禁止 Git 做任何行尾转换：仓库里存什么字节，检出就是什么字节。
+# 本项目的行尾纪律：JS/HTML 用 CRLF，CSS/MD/docs/*.html 用 LF。
+# 缺这条时，core.autocrlf=true（本机为 system 级）会在检出时把 CSS/MD 改成 CRLF，
+# 破坏构建断言与补丁脚本；反之在 Linux/Mac 上会把 JS/HTML 改成 LF。
+* -text
